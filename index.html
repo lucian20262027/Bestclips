@@ -1,823 +1,967 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-theme="dark" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BestClips — Curated Hair Clips by City & Mood</title>
-  <!-- Google AI Studio 同款 DM Sans + DM Mono + Playfair Display 字体 -->
+  <title>BestClips — Engineered Hair Architecture</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"DM Sans"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
             mono: ['"DM Mono"', 'monospace'],
-            serif: ['"Playfair Display"', 'serif'],
           }
         }
       }
     }
   </script>
   <style>
-    /* 1. 借鉴 Material Flask 的全局胶片颗粒质感层 */
-    .grain-overlay {
+    :root[data-theme="dark"] {
+      --bg-primary: #0d1110;
+      --bg-elevated: #141918;
+      --bg-card: rgba(24, 30, 28, 0.72);
+      --bg-pill: rgba(255, 255, 255, 0.05);
+      --bg-pill-active: rgba(255, 255, 255, 0.12);
+      --text-primary: #f5f7f6;
+      --text-secondary: rgba(245, 247, 246, 0.64);
+      --text-muted: rgba(245, 247, 246, 0.42);
+      --border-hairline: rgba(255, 255, 255, 0.09);
+      --border-active: rgba(255, 255, 255, 0.38);
+      --accent-cta: #567d64;
+      --accent-cta-hover: #659175;
+      --contour-stroke: rgba(255, 255, 255, 0.03);
+    }
+
+    :root[data-theme="light"] {
+      --bg-primary: #f7f7f5;
+      --bg-elevated: #efefeb;
+      --bg-card: rgba(255, 255, 255, 0.82);
+      --bg-pill: rgba(0, 0, 0, 0.04);
+      --bg-pill-active: rgba(0, 0, 0, 0.09);
+      --text-primary: #121514;
+      --text-secondary: rgba(18, 21, 20, 0.64);
+      --text-muted: rgba(18, 21, 20, 0.44);
+      --border-hairline: rgba(18, 21, 20, 0.09);
+      --border-active: rgba(18, 21, 20, 0.42);
+      --accent-cta: #1c2421;
+      --accent-cta-hover: #33423c;
+      --contour-stroke: rgba(0, 0, 0, 0.035);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-x: hidden;
+    }
+
+    /* Topographic organic contour background (Material Flask signature) */
+    .topo-bg {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 9999;
-      opacity: 0.032;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(150,160,155,0.055)' stroke-width='1'%3E%3Cpath d='M-100 200 C 150 100, 350 350, 600 200 S 850 50, 950 250'/%3E%3Cpath d='M-100 320 C 180 220, 380 470, 640 320 S 850 170, 950 370'/%3E%3Cpath d='M-100 460 C 200 360, 400 610, 660 460 S 850 310, 950 510'/%3E%3Cpath d='M-100 620 C 220 520, 420 770, 680 620 S 850 470, 950 670'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 900px 900px;
     }
-    /* 2. 首屏 3D 磁吸倾斜舞台 */
-    .hero-perspective { perspective: 1000px; }
-    .tilt-card { transition: transform 0.15s ease-out; transform-style: preserve-3d; }
-    /* 3. 对比滑块禁用文本选中 */
+
+    .surface-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .hairline-t { border-top: 1px solid var(--border-hairline); }
+    .hairline-b { border-bottom: 1px solid var(--border-hairline); }
+    .hairline-border { border: 1px solid var(--border-hairline); }
+
+    /* Hardware-accelerated studio stage transitions */
+    .stage-img {
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+      will-change: transform, opacity, filter;
+    }
+
+    .stage-img.morphing {
+      opacity: 0;
+      transform: scale(0.96) translateY(6px);
+    }
+
+    .pill-option {
+      background: transparent;
+      border: 1px solid var(--border-hairline);
+      color: var(--text-secondary);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pill-option:hover {
+      border-color: var(--border-active);
+      color: var(--text-primary);
+    }
+    .pill-option.active {
+      background: var(--bg-pill-active);
+      border-color: var(--border-active);
+      color: var(--text-primary);
+    }
+
+    .cta-btn {
+      background-color: var(--accent-cta);
+      color: #ffffff;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cta-btn:hover {
+      background-color: var(--accent-cta-hover);
+      transform: translateY(-1px);
+    }
+
     .no-select { user-select: none; -webkit-user-select: none; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
   </style>
 </head>
-<body class="bg-[#FAF8F5] text-stone-900 min-h-screen flex flex-col justify-between antialiased font-sans">
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-emerald-800 selection:text-white">
 
-  <!-- 全局胶片噪点层 -->
-  <div class="grain-overlay" aria-hidden="true"></div>
+  <!-- Topographic Subtle Background -->
+  <div class="topo-bg" aria-hidden="true"></div>
 
-  <!-- 0. 顶部公告栏 -->
-  <div class="bg-stone-900 text-[#FAF8F5] text-xs py-2.5 px-4 text-center tracking-wide font-medium">
-    Free US Shipping on Orders $35+ &nbsp;·&nbsp; Free Mini Clip Gift at $50+ &nbsp;·&nbsp;
-    <span class="text-rose-300 underline cursor-pointer" onclick="applyQuickPromo('PRETTY15')">Tap to Apply 15% Off Code: PRETTY15</span>
-  </div>
+  <!-- 1. Minimalist Sticky Glass Header (Material Flask Style) -->
+  <header class="sticky top-0 z-40 hairline-b bg-[var(--bg-primary)]/80 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#hero" class="flex items-center gap-2.5 text-base font-semibold tracking-tight">
+        <svg class="w-5 h-5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 17l5-9 4 6 3-4 4 7H4z" />
+        </svg>
+        <span>BestClips</span>
+      </a>
 
-  <!-- 1. 顶部主导航栏 -->
-  <header class="bg-[#FAF8F5]/95 backdrop-blur-md sticky top-0 z-40 border-b border-stone-200/80">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-8">
-        <a href="#" class="text-2xl font-serif font-bold tracking-tight text-stone-950 flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span>
-          BestClips
-        </a>
-        <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
-          <a href="#series-cali" class="hover:text-rose-500 transition">Spring in Cali</a>
-          <a href="#series-miami" class="hover:text-rose-500 transition">Hot Miami</a>
-          <a href="#series-nyc" class="hover:text-rose-500 transition">NYC Office OOTD</a>
-          <a href="#series-tokyo" class="hover:text-rose-500 transition">Tokyo Trade</a>
-          <a href="#hair-finder" class="hover:text-rose-500 transition text-rose-600">Hair Fit Finder</a>
-          <a href="#finish-compare" class="hover:text-rose-500 transition">Finish Guide</a>
-          <a href="#community-reviews" class="hover:text-rose-500 transition">Reviews</a>
-        </nav>
-      </div>
+      <nav class="hidden md:flex items-center gap-7 text-xs font-medium tracking-wide" style="color: var(--text-secondary);">
+        <a href="#city-cali" class="hover:opacity-100 transition">Spring in Cali</a>
+        <a href="#city-miami" class="hover:opacity-100 transition">Hot Miami</a>
+        <a href="#city-nyc" class="hover:opacity-100 transition">NYC Office</a>
+        <a href="#city-tokyo" class="hover:opacity-100 transition">Tokyo Trade</a>
+        <a href="#showcase" class="hover:opacity-100 transition">Lookbook</a>
+        <a href="#craft" class="hover:opacity-100 transition">Specs</a>
+      </nav>
 
-      <div class="flex items-center gap-3">
-        <div id="sync-badge" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono text-stone-500 bg-white border border-stone-200 px-3 py-1.5 rounded-full">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" id="sync-dot"></span>
-          <span id="sync-text">Syncing Studio...</span>
+      <div class="flex items-center gap-2.5">
+        <div id="sync-pill" class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono hairline-border" style="color: var(--text-muted);">
+          <span id="sync-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span id="sync-text">Studio Live</span>
         </div>
 
-        <button onclick="openQuizModal()" class="hidden md:inline-flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 text-xs font-semibold px-3.5 py-2 rounded-full transition">
-          <span>✨ Find My Clip</span>
+        <!-- Theme Switcher (Dark / Light) -->
+        <button onclick="toggleTheme()" aria-label="Toggle theme" class="w-9 h-9 rounded-full hairline-border flex items-center justify-center hover:opacity-80 transition">
+          <svg id="theme-icon-sun" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"></path>
+          </svg>
         </button>
 
-        <button onclick="openCart()" class="bg-stone-900 text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-rose-500 transition flex items-center gap-2 shadow-xs">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        <!-- Circular Bag Trigger -->
+        <button onclick="openCart()" class="relative w-9 h-9 rounded-full hairline-border flex items-center justify-center hover:opacity-80 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
-          <span>Bag</span>
-          <span id="cart-count" class="bg-white text-stone-950 font-mono text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          <span id="cart-count" class="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-mono font-semibold flex items-center justify-center text-white" style="background-color: var(--accent-cta);">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 2. 主视觉 Hero 首屏（3D 磁吸倾斜交互 + Sanity 最新单品联动） -->
-  <section class="bg-white border-b border-stone-200/80">
-    <div class="max-w-7xl mx-auto px-6 py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-      <div class="lg:col-span-6 space-y-5">
-        <div class="inline-flex items-center gap-2 bg-rose-50 border border-rose-200/80 text-rose-700 text-xs px-3.5 py-1.5 rounded-full font-semibold">
-          <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-          4 City Capsule Drops · Multi-Angle Studio View
-        </div>
-        <h1 class="text-4xl sm:text-5xl font-serif font-bold text-stone-950 tracking-tight leading-[1.12]">
-          One clip for every city, outfit &amp; hair volume.
-        </h1>
-        <p class="text-base text-stone-600 leading-relaxed max-w-xl">
-          From breezy California pastel claws to bold Miami tiger-stripe acetate, sleek NYC office gold clips, and Harajuku pearl pins—hand-polished for zero-snag all-day hold.
-        </p>
-        <div class="pt-2 flex flex-wrap items-center gap-3">
-          <a href="#series-cali" class="bg-stone-900 text-white px-6 py-3 rounded-full font-semibold text-xs uppercase tracking-wider hover:bg-rose-500 transition">
-            Explore 4 Collections
-          </a>
-          <button onclick="openQuizModal()" class="bg-rose-50 text-rose-700 border border-rose-200 px-6 py-3 rounded-full font-semibold text-xs uppercase tracking-wider hover:bg-rose-100 transition">
-            Take 15s Hair Fit Quiz
-          </button>
-        </div>
-        <div class="pt-3 flex items-center gap-6 text-xs text-stone-500">
-          <div class="flex items-center gap-1.5">
-            <span class="text-amber-500 font-bold">★★★★★</span>
-            <span>4.9/5 from 2,400+ reviews</span>
-          </div>
-          <span>·</span>
-          <div>Plant-Based Cellulose Acetate</div>
-        </div>
-      </div>
+  <main class="relative z-10">
 
-      <div class="lg:col-span-6 hero-perspective" id="hero-stage">
-        <div id="hero-tilt-card" class="tilt-card relative rounded-3xl overflow-hidden bg-stone-100 border border-stone-200 shadow-xl aspect-[16/10]">
-          <img id="hero-featured-img" src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Featured Hair Clip" class="w-full h-full object-cover" />
-          <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-stone-200/80 shadow-sm flex items-center justify-between">
-            <div>
-              <div id="hero-featured-badge" class="text-[11px] font-bold uppercase tracking-wider text-rose-500">Spring in Cali Flagship</div>
-              <div id="hero-featured-title" class="text-sm font-bold text-stone-900">Malibu Sunset Pastel Claw — $16.00</div>
+    <!-- 2. Hero Section ("Built for all-day hold." — Single Central Asset + Floating Mood Switcher) -->
+    <section id="hero" class="max-w-6xl mx-auto px-6 pt-16 pb-24 lg:py-28">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Copy -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium hairline-border" style="background: var(--bg-pill); color: var(--text-secondary);">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>4 City Editions · Botanical Cellulose Acetate</span>
+          </div>
+
+          <h1 class="font-bold tracking-[-0.03em] leading-[1.06]" style="font-size: clamp(2.6rem, 5.5vw, 4.4rem);">
+            Sculpted for effortless hold.
+          </h1>
+
+          <p class="text-base leading-relaxed max-w-md" style="color: var(--text-secondary);">
+            Four city-inspired hair clip capsules carved from plant-based cellulose acetate and calibrated with double-coil tension springs. Zero snagging. All-day balance.
+          </p>
+
+          <div class="pt-2 flex flex-wrap items-center gap-3">
+            <a href="#city-cali" class="cta-btn px-7 py-3.5 rounded-full text-sm font-semibold">
+              Configure Your Clip
+            </a>
+            <a href="#showcase" class="pill-option px-7 py-3.5 rounded-full text-sm font-medium">
+              Explore Lookbook
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Interactive Stage with Floating Variant Switcher -->
+        <div class="lg:col-span-6 flex flex-col items-center">
+          <div class="surface-card relative w-full rounded-3xl overflow-hidden aspect-[4/3] flex items-center justify-center group">
+            <img id="hero-stage-img" src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="BestClips Hero" class="stage-img w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent"></div>
+
+            <!-- Minimal Floating Overlay Info -->
+            <div class="absolute bottom-5 left-6 right-6 flex items-end justify-between text-white">
+              <div>
+                <div id="hero-stage-city" class="text-[11px] font-mono uppercase tracking-widest opacity-75">01 · Spring in Cali</div>
+                <div id="hero-stage-name" class="text-lg font-semibold tracking-tight">Malibu Sunset Pastel Claw</div>
+              </div>
+              <button id="hero-stage-cta" onclick="addToCart('cali-1')" class="bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white text-xs font-medium px-4 py-2 rounded-full transition tabular-nums">
+                Quick Add — $16
+              </button>
             </div>
-            <button id="hero-featured-btn" onclick="addToCart('cali-1')" class="bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-rose-500 transition shrink-0">
-              Quick Add +
+          </div>
+
+          <!-- Floating Segmented City Switcher Pill Dock (Material Flask Hero Switcher) -->
+          <div class="mt-4 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full surface-card">
+            <button onclick="switchHeroCity('cali')" data-hero="cali" class="hero-pill pill-option active px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full" style="background:#F5B7B1;"></span>
+              <span>Spring in Cali</span>
+            </button>
+            <button onclick="switchHeroCity('miami')" data-hero="miami" class="hero-pill pill-option px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full" style="background:#D97706;"></span>
+              <span>Hot Miami</span>
+            </button>
+            <button onclick="switchHeroCity('nyc')" data-hero="nyc" class="hero-pill pill-option px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full" style="background:#D4AF37;"></span>
+              <span>NYC Office</span>
+            </button>
+            <button onclick="switchHeroCity('tokyo')" data-hero="tokyo" class="hero-pill pill-option px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full" style="background:#F4C2C2;"></span>
+              <span>Tokyo Trade</span>
             </button>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 2.5 新增：按发量/发质快速匹配筛选栏 (Find Your Clip by Hair Type) -->
-  <section id="hair-finder" class="bg-[#FAF8F5] border-b border-stone-200/80 py-6 px-6 sticky top-[69px] z-30 backdrop-blur-md bg-[#FAF8F5]/95">
-    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-wider text-stone-400 font-mono">Filter by Hair Volume:</span>
-        <span id="active-filter-hint" class="text-xs text-rose-600 font-medium hidden sm:inline">Showing all 20 signature clips</span>
+    <!-- 3. THE 4 CITY CONFIGURATOR STAGES (Material Flask #order Paradigm for LA, Miami, NYC, Tokyo) -->
+    <!-- Instead of a cluttered 20-card grid, each city is a sleek two-column interactive configurator -->
+    <div id="city-stages-container" class="space-y-28 py-12">
+      <!-- Populated dynamically by renderCityStages() -->
+    </div>
+
+    <!-- 4. Full-Bleed Editorial Showcase with Segmented Angle Tabs (Material Flask #showcase Paradigm) -->
+    <section id="showcase" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">All-Day Carry</div>
+          <h2 class="font-bold tracking-[-0.03em]" style="font-size: clamp(2rem, 4vw, 3rem);">Four cities. Endless styling.</h2>
+        </div>
+        <p class="text-sm max-w-sm" style="color: var(--text-secondary);">
+          Switch angles to inspect how our hand-tumbled cellulose acetate and hollow-arch alloys catch natural light.
+        </p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2" id="hair-filter-pills">
-        <button onclick="setHairFilter('all')" data-filter="all" class="hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-stone-900 text-white shadow-2xs">
-          All Hair Types
-        </button>
-        <button onclick="setHairFilter('thick')" data-filter="thick" class="hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-700 border border-stone-200 hover:border-stone-400">
-          Thick, Long &amp; Curly <span class="text-[10px] text-stone-400 ml-1">11cm+ Double-Coil</span>
-        </button>
-        <button onclick="setHairFilter('fine')" data-filter="fine" class="hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-700 border border-stone-200 hover:border-stone-400">
-          Fine &amp; Silky <span class="text-[10px] text-stone-400 ml-1">Non-Slip Matte Grip</span>
-        </button>
-        <button onclick="setHairFilter('medium')" data-filter="medium" class="hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-700 border border-stone-200 hover:border-stone-400">
-          Medium &amp; Everyday <span class="text-[10px] text-stone-400 ml-1">Effortless Updo</span>
-        </button>
-        <button onclick="setHairFilter('halfup')" data-filter="halfup" class="hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-700 border border-stone-200 hover:border-stone-400">
-          Half-Up, Bangs &amp; Braids <span class="text-[10px] text-stone-400 ml-1">Mini &amp; Pins</span>
-        </button>
+      <div class="surface-card relative rounded-3xl overflow-hidden aspect-[16/9] max-h-[540px] w-full">
+        <img id="lookbook-img" src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Lookbook Angle" class="stage-img w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent"></div>
+
+        <!-- Bottom Left Caption -->
+        <div class="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 text-white max-w-md">
+          <div id="lookbook-tag" class="text-xs font-mono uppercase tracking-widest opacity-75">Angle 01 · Malibu Coastal Light</div>
+          <div id="lookbook-caption" class="text-lg sm:text-xl font-semibold mt-1">Hand-marbled pastel cellulose acetate in morning Pacific sun.</div>
+        </div>
+
+        <!-- Bottom Right Segmented Dash Tabs (Angle 1 - Angle 4) -->
+        <div class="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 flex items-center gap-2 bg-black/45 backdrop-blur-md p-1.5 rounded-full border border-white/15">
+          <button onclick="setLookbookAngle(0)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/20 transition">Angle 1</button>
+          <button onclick="setLookbookAngle(1)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 2</button>
+          <button onclick="setLookbookAngle(2)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 3</button>
+          <button onclick="setLookbookAngle(3)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 4</button>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 3. 四大城市主题系列展示区（实时对接 Sanity.io + 多角度画廊支持） -->
-  <main id="collections-container" class="max-w-7xl mx-auto px-6 py-14 w-full space-y-20">
-    <!-- 由 JS 自动合并 Sanity 后台商品与默认系列商品渲染 -->
-  </main>
-
-  <!-- 4. 交互式左右对比滑块（借鉴 Material Flask Thermal Slider：高光醋酸 vs 柔雾磨砂对比） -->
-  <section id="finish-compare" class="bg-white border-t border-stone-200/80 py-16 px-6">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-      <!-- 左侧可拖拽对比画布 -->
-      <div class="lg:col-span-7">
-        <div id="comp-container" class="no-select relative rounded-3xl overflow-hidden border border-stone-200 shadow-lg aspect-[16/10] cursor-ew-resize bg-stone-100">
-          <!-- 底层（右侧）：柔雾磨砂 Velvet Matte -->
-          <img src="https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Velvet Matte Finish" class="absolute inset-0 w-full h-full object-cover" />
-          <span class="absolute top-4 right-4 bg-stone-900/80 backdrop-blur text-white font-mono text-[11px] px-3 py-1 rounded-full">
-            Velvet Matte · Extra Grip
-          </span>
-
-          <!-- 顶层（左侧可裁剪）：高光琥珀醋酸 Glossy Acetate -->
-          <div id="comp-overlay" class="absolute inset-0 overflow-hidden" style="clip-path: inset(0 50% 0 0);">
-            <img src="https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Glossy Tortoise Acetate" class="absolute inset-0 w-full h-full object-cover" />
-            <span class="absolute top-4 left-4 bg-white/95 backdrop-blur text-stone-900 font-mono text-[11px] font-semibold px-3 py-1 rounded-full shadow-xs">
-              Glossy Acetate · Mirror Shine
+    <!-- 5. Interactive Split Comparison Slider (Material Flask #insulation Paradigm) -->
+    <section id="finish-compare" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Split Canvas -->
+        <div class="lg:col-span-7">
+          <div id="comp-container" class="no-select surface-card relative rounded-3xl overflow-hidden aspect-[16/10] cursor-ew-resize">
+            <!-- Right / Base Layer: Velvet Matte -->
+            <img src="https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Velvet Matte" class="absolute inset-0 w-full h-full object-cover" />
+            <span class="absolute top-4 right-4 bg-black/65 backdrop-blur-md text-white font-mono text-[11px] px-3 py-1 rounded-full border border-white/15">
+              Velvet Matte · Fine Hair Grip
             </span>
+
+            <!-- Left / Clipped Layer: Mirror Gloss -->
+            <div id="comp-overlay" class="absolute inset-0 overflow-hidden" style="clip-path: inset(0 50% 0 0);">
+              <img src="https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Mirror Gloss Acetate" class="absolute inset-0 w-full h-full object-cover" />
+              <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-stone-950 font-mono text-[11px] font-medium px-3 py-1 rounded-full">
+                Mirror Gloss · Italian Acetate
+              </span>
+            </div>
+
+            <!-- Center Handle -->
+            <div id="comp-handle" class="absolute top-0 bottom-0 w-px bg-white/90 pointer-events-none" style="left: 50%;">
+              <div class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/75 backdrop-blur-md text-white border border-white/30 flex items-center justify-center shadow-lg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l-3 3 3 3m8-6l3 3-3 3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Controls & Tabular Readouts -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="text-xs font-mono uppercase tracking-widest" style="color: var(--text-muted);">Surface Engineering</div>
+          <h2 class="font-bold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.85rem, 3.5vw, 2.75rem);">
+            Mirror gloss or cloud-matte grip.
+          </h2>
+          <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
+            Drag the divider or toggle below. Our hand-buffed <strong>Glossy Acetate</strong> delivers deep marble luminosity, while <strong>Velvet Matte</strong> adds micro-friction so silky hair never slips.
+          </p>
+
+          <div class="inline-flex p-1 rounded-full surface-card gap-1">
+            <button type="button" id="btn-glossy" onclick="setComparePct(92)" class="pill-option active px-4 py-2 rounded-full text-xs font-medium">
+              Mirror Gloss
+            </button>
+            <button type="button" id="btn-split" onclick="setComparePct(50)" class="pill-option px-4 py-2 rounded-full text-xs font-medium">
+              50 / 50 Split
+            </button>
+            <button type="button" id="btn-matte" onclick="setComparePct(8)" class="pill-option px-4 py-2 rounded-full text-xs font-medium">
+              Velvet Matte
+            </button>
           </div>
 
-          <!-- 中间拖拽分割线与圆钮 -->
-          <div id="comp-handle" class="absolute top-0 bottom-0 w-0.5 bg-white shadow-md pointer-events-none" style="left: 50%;">
-            <div class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white text-stone-900 shadow-lg border border-stone-200 flex items-center justify-center">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l-3 3 3 3m8-6l3 3-3 3" />
-              </svg>
+          <div class="pt-6 hairline-t grid grid-cols-2 gap-6 tabular-nums">
+            <div>
+              <div class="text-3xl font-bold tracking-tight">6 hrs</div>
+              <div class="text-xs mt-1" style="color: var(--text-muted);">Wood-barrel edge tumbling</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold tracking-tight">9.5 g</div>
+              <div class="text-xs mt-1" style="color: var(--text-muted);">Featherlight zero-pull balance</div>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- 右侧纹理说明与一键切换胶囊按钮 -->
-      <div class="lg:col-span-5 space-y-5">
-        <span class="text-xs font-bold uppercase tracking-widest text-rose-500">Texture &amp; Grip Guide</span>
-        <h2 class="text-3xl sm:text-4xl font-serif font-bold text-stone-950 leading-tight">
-          Mirror-gloss shine or cloud-soft grip.
-        </h2>
-        <p class="text-sm text-stone-600 leading-relaxed">
-          Drag the slider to compare our two signature finishes. Choose hand-buffed <strong>Glossy Cellulose Acetate</strong> for luminous marble depth, or <strong>Velvet Matte</strong> for extra friction on fine, silky hair.
-        </p>
-
-        <!-- 胶囊切换控制器 -->
-        <div class="inline-flex p-1 bg-stone-100 rounded-full border border-stone-200/80">
-          <button type="button" id="btn-glossy" onclick="setComparePct(95)" class="px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-950 shadow-2xs">
-            Glossy Acetate
-          </button>
-          <button type="button" id="btn-split" onclick="setComparePct(50)" class="px-4 py-2 rounded-full text-xs font-semibold transition text-stone-600 hover:text-stone-950">
-            50 / 50 Split
-          </button>
-          <button type="button" id="btn-matte" onclick="setComparePct(5)" class="px-4 py-2 rounded-full text-xs font-semibold transition text-stone-600 hover:text-stone-950">
-            Velvet Matte
-          </button>
-        </div>
-
-        <div class="pt-4 border-t border-stone-100 grid grid-cols-2 gap-6">
-          <div>
-            <div class="text-2xl font-mono font-bold text-stone-950">6 hrs</div>
-            <div class="text-xs text-stone-500 mt-0.5">Hand-tumbled edge polish</div>
-          </div>
-          <div>
-            <div class="text-2xl font-mono font-bold text-stone-950">9.5 g</div>
-            <div class="text-xs text-stone-500 mt-0.5">Featherlight zero-pull weight</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. 不对称三格杂志风 Bento 工艺区（借鉴 Material Flask Section 4） -->
-  <section id="bento-craft" class="bg-[#F4EFEA] border-t border-stone-200/80 py-16 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="mb-10">
-        <span class="text-xs font-bold uppercase tracking-widest text-rose-500">Material Engineering</span>
-        <h2 class="text-3xl font-serif font-bold text-stone-950 mt-1">Engineered to hold all day.</h2>
+    <!-- 6. Asymmetric 3-Card Bento Specs (Material Flask #craft Paradigm) -->
+    <section id="craft" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
+      <div class="mb-12">
+        <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">Architecture &amp; Specs</div>
+        <h2 class="font-bold tracking-[-0.03em]" style="font-size: clamp(2rem, 4vw, 3rem);">Engineered to endure.</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <!-- 左侧高卡片 -->
-        <article class="md:col-span-6 relative rounded-3xl overflow-hidden bg-white border border-stone-200/80 shadow-xs min-h-[380px] flex flex-col justify-end group">
-          <img src="https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Double Coil Tension Spring" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
-          <div class="relative z-10 bg-gradient-to-t from-stone-950/85 via-stone-950/40 to-transparent p-7 text-white">
-            <span class="font-mono text-[11px] uppercase tracking-wider text-rose-300">01 · Core Mechanics</span>
-            <h3 class="text-xl font-serif font-bold mt-1">High-Tension Double Coil Spring</h3>
-            <p class="text-xs text-stone-200 mt-1.5 leading-relaxed max-w-md">
-              Calibrated stainless steel coils lock thick, long, or curly hair in a French twist without slipping or scalp tension.
+        <!-- Left Tall Macro Card -->
+        <article class="md:col-span-6 surface-card relative rounded-3xl overflow-hidden min-h-[400px] flex flex-col justify-end group">
+          <img src="https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Double Coil Tension" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+          <div class="relative z-10 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-8 text-white">
+            <div class="font-mono text-[11px] uppercase tracking-widest opacity-70">01 · Core Tension</div>
+            <h3 class="text-xl font-bold mt-1">Calibrated Double-Coil Spring</h3>
+            <p class="text-xs text-white/75 mt-2 leading-relaxed max-w-md">
+              304 stainless steel coils tested across 50,000+ open-close cycles—locking thick, long, or curly hair without scalp pull.
             </p>
           </div>
         </article>
 
-        <!-- 右侧上下两格 -->
+        <!-- Right Stacked Cards -->
         <div class="md:col-span-6 flex flex-col gap-6">
-          <!-- 右上宽图卡片 -->
-          <article class="relative rounded-3xl overflow-hidden bg-white border border-stone-200/80 shadow-xs min-h-[210px] flex flex-col justify-end group">
-            <img src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Plant Cellulose Acetate" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
-            <div class="relative z-10 bg-gradient-to-t from-stone-950/80 via-stone-950/30 to-transparent p-6 text-white">
-              <span class="font-mono text-[11px] uppercase tracking-wider text-emerald-300">02 · Botanical Resin</span>
-              <h3 class="text-lg font-serif font-bold mt-0.5">Plant-Based Cellulose Acetate</h3>
-              <p class="text-xs text-stone-200 mt-1">Flexible, glossy, and shatter-resistant—never snaps like cheap brittle plastic.</p>
+          <article class="surface-card relative rounded-3xl overflow-hidden min-h-[230px] flex flex-col justify-end group">
+            <img src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Plant Cellulose Acetate" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+            <div class="relative z-10 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-7 text-white">
+              <div class="font-mono text-[11px] uppercase tracking-widest opacity-70">02 · Botanical Shell</div>
+              <h3 class="text-lg font-bold mt-1">Plant-Based Cellulose Acetate</h3>
+              <p class="text-xs text-white/75 mt-1">Warm, flexible, and shatter-resistant—never brittle like injection-molded plastic.</p>
             </div>
           </article>
 
-          <!-- 右下等宽数据卡片 -->
-          <article class="rounded-3xl bg-white border border-stone-200/90 p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs flex-1">
+          <article class="surface-card rounded-3xl p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-1">
             <div>
-              <div class="text-3xl font-mono font-bold text-stone-950">50,000+</div>
-              <div class="text-xs text-stone-500 mt-1">Tested open-close spring cycles · Rounded snag-free teeth</div>
+              <div class="text-3xl font-bold tracking-tight tabular-nums">50,000+ Cycles</div>
+              <div class="text-xs mt-1.5" style="color: var(--text-secondary);">Rounded snag-free inner teeth · 30-Day Hold Guarantee</div>
             </div>
-            <span class="self-start sm:self-center font-mono text-xs font-semibold bg-stone-900 text-white px-3.5 py-1.5 rounded-full shrink-0">
-              Eco Acetate
+            <span class="self-start sm:self-center font-mono text-xs px-4 py-2 rounded-full hairline-border" style="background: var(--bg-pill);">
+              CA &amp; NYC Design
             </span>
           </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 5.5 新增：买家佩戴口碑墙 (Community Lookbook & Verified Reviews) -->
-  <section id="community-reviews" class="bg-white border-t border-stone-200/80 py-16 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-rose-500">Real Hold · Zero Headache</span>
-          <h2 class="text-3xl font-serif font-bold text-stone-950 mt-1">Loved by 15,000+ hair clip collectors.</h2>
-        </div>
-        <div class="inline-flex items-center gap-2 bg-[#FAF8F5] border border-stone-200 px-4 py-2 rounded-full text-xs">
-          <span class="text-amber-500 font-bold">★★★★★</span>
-          <span class="font-mono font-bold text-stone-900">4.94 AVG</span>
-          <span class="text-stone-400">|</span>
-          <span class="text-stone-600">98% Say "Holds All Day"</span>
-        </div>
+  </main>
+
+  <!-- 7. Ultra-Clean Single-Row Footer (Material Flask Style) -->
+  <footer class="relative z-10 hairline-t py-10 px-6 text-xs" style="color: var(--text-muted);">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="font-semibold" style="color: var(--text-primary);">BestClips</span>
+        <span>·</span>
+        <span>Sculpted for effortless hold.</span>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Review 1 -->
-        <article class="bg-[#FAF8F5] rounded-3xl p-6 border border-stone-200/80 flex flex-col justify-between space-y-5">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-amber-500 text-xs font-mono font-bold">★★★★★ 5.0</span>
-              <span class="text-[11px] font-mono bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full">Thick &amp; Curly 3B Hair</span>
-            </div>
-            <h3 class="text-base font-bold text-stone-950">“Finally a claw clip that swallows all my waist-length curls.”</h3>
-            <p class="text-xs text-stone-600 leading-relaxed">
-              Every plastic store clip snaps on my hair within a week. The South Beach Tiger-Stripe Claw has a double-coil spring that locks my French twist through an 8-hour shift without pulling my scalp.
-            </p>
-          </div>
-          <div class="pt-4 border-t border-stone-200/70 flex items-center justify-between">
-            <div>
-              <div class="text-xs font-bold text-stone-900">Maya Lin · Miami, FL</div>
-              <div class="text-[11px] text-emerald-600 font-medium">✓ Verified Buyer · Hot Miami Drop</div>
-            </div>
-            <button onclick="addToCart('miami-1')" class="text-xs font-semibold text-stone-900 bg-white border border-stone-300 hover:border-stone-900 px-3 py-1.5 rounded-full transition">
-              Shop Tiger Claw +
-            </button>
-          </div>
-        </article>
-
-        <!-- Review 2 -->
-        <article class="bg-[#FAF8F5] rounded-3xl p-6 border border-stone-200/80 flex flex-col justify-between space-y-5">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-amber-500 text-xs font-mono font-bold">★★★★★ 5.0</span>
-              <span class="text-[11px] font-mono bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full">Fine &amp; Silky Hair</span>
-            </div>
-            <h3 class="text-base font-bold text-stone-950">“Zero sliding down on my super straight, slippery hair!”</h3>
-            <p class="text-xs text-stone-600 leading-relaxed">
-              The Oat Milk Cloud Matte Claw has an inner micro-grip teeth pattern that actually stays put. Plus the matte cream color looks so expensive with linen shirts and trench coats.
-            </p>
-          </div>
-          <div class="pt-4 border-t border-stone-200/70 flex items-center justify-between">
-            <div>
-              <div class="text-xs font-bold text-stone-900">Claire V. · Santa Monica, CA</div>
-              <div class="text-[11px] text-emerald-600 font-medium">✓ Verified Buyer · Spring in Cali</div>
-            </div>
-            <button onclick="addToCart('cali-2')" class="text-xs font-semibold text-stone-900 bg-white border border-stone-300 hover:border-stone-900 px-3 py-1.5 rounded-full transition">
-              Shop Oat Cloud +
-            </button>
-          </div>
-        </article>
-
-        <!-- Review 3 -->
-        <article class="bg-[#FAF8F5] rounded-3xl p-6 border border-stone-200/80 flex flex-col justify-between space-y-5">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-amber-500 text-xs font-mono font-bold">★★★★★ 5.0</span>
-              <span class="text-[11px] font-mono bg-rose-50 text-rose-800 border border-rose-200 px-2.5 py-0.5 rounded-full">Office &amp; Evening</span>
-            </div>
-            <h3 class="text-base font-bold text-stone-950">“Looks like fine jewelry—wore it to three client meetings.”</h3>
-            <p class="text-xs text-stone-600 leading-relaxed">
-              I grabbed the SoHo Brushed Gold Arch Claw and Harajuku Silk Ribbon Bow. The hollow alloy is shockingly lightweight—no heavy dragging at the back of my head at all.
-            </p>
-          </div>
-          <div class="pt-4 border-t border-stone-200/70 flex items-center justify-between">
-            <div>
-              <div class="text-xs font-bold text-stone-900">Elena R. · Manhattan, NY</div>
-              <div class="text-[11px] text-emerald-600 font-medium">✓ Verified Buyer · NYC Office OOTD</div>
-            </div>
-            <button onclick="addToCart('nyc-1')" class="text-xs font-semibold text-stone-900 bg-white border border-stone-300 hover:border-stone-900 px-3 py-1.5 rounded-full transition">
-              Shop Gold Arch +
-            </button>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.8 新增：常见问题折叠面板 (FAQ Accordion) -->
-  <section id="faq-section" class="bg-[#FAF8F5] border-t border-stone-200/80 py-16 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-10">
-        <span class="text-xs font-bold uppercase tracking-widest text-rose-500">Everything You Need to Know</span>
-        <h2 class="text-3xl font-serif font-bold text-stone-950 mt-1">Frequently Asked Questions</h2>
-      </div>
-
-      <div class="space-y-3" id="faq-list">
-        <div class="bg-white border border-stone-200/90 rounded-2xl overflow-hidden">
-          <button onclick="toggleFaq(0)" class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-semibold text-sm text-stone-950 hover:text-rose-500 transition">
-            <span>Will BestClips hold very thick, heavy, or curly hair without slipping?</span>
-            <span id="faq-icon-0" class="font-mono text-lg text-stone-400 transition-transform duration-200">+</span>
-          </button>
-          <div id="faq-body-0" class="hidden px-6 pb-5 text-xs text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
-            Yes! Our 11cm+ full-size claws (especially in the <strong>Hot Miami</strong> and <strong>Spring in Cali</strong> collections) feature calibrated double-coil stainless steel springs and deep rounded inner teeth. Use the <strong>"Thick, Long &amp; Curly"</strong> filter above to view all jumbo-capacity designs.
-          </div>
-        </div>
-
-        <div class="bg-white border border-stone-200/90 rounded-2xl overflow-hidden">
-          <button onclick="toggleFaq(1)" class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-semibold text-sm text-stone-950 hover:text-rose-500 transition">
-            <span>What is the difference between Plant Cellulose Acetate and standard acrylic/plastic?</span>
-            <span id="faq-icon-1" class="font-mono text-lg text-stone-400 transition-transform duration-200">+</span>
-          </button>
-          <div id="faq-body-1" class="hidden px-6 pb-5 text-xs text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
-            Standard drugstore clips are injection-molded from brittle petroleum plastic that snaps easily and has sharp mold seams. BestClips are carved from renewable wood-pulp &amp; cotton cellulose sheets, then hand-tumbled for 6 hours in wooden barrels for a warm, flexible, snag-free finish.
-          </div>
-        </div>
-
-        <div class="bg-white border border-stone-200/90 rounded-2xl overflow-hidden">
-          <button onclick="toggleFaq(2)" class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-semibold text-sm text-stone-950 hover:text-rose-500 transition">
-            <span>Which clip finish is best for fine, straight, or slippery hair?</span>
-            <span id="faq-icon-2" class="font-mono text-lg text-stone-400 transition-transform duration-200">+</span>
-          </button>
-          <div id="faq-body-2" class="hidden px-6 pb-5 text-xs text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
-            For fine or silky hair, we recommend our <strong>Velvet Matte</strong> finishes (such as the <em>Oat Milk Cloud Matte Claw</em> or <em>Tribeca Matte Noir Barrette</em>) which provide extra surface friction so your updo stays locked from morning coffee to dinner.
-          </div>
-        </div>
-
-        <div class="bg-white border border-stone-200/90 rounded-2xl overflow-hidden">
-          <button onclick="toggleFaq(3)" class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-semibold text-sm text-stone-950 hover:text-rose-500 transition">
-            <span>How fast is shipping, and how does the 30-Day Hold Guarantee work?</span>
-            <span id="faq-icon-3" class="font-mono text-lg text-stone-400 transition-transform duration-200">+</span>
-          </button>
-          <div id="faq-body-3" class="hidden px-6 pb-5 text-xs text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
-            Orders ship within 24 hours from our California and New York fulfillment studios with tracked USPS/UPS delivery (3–5 business days across the US). Orders over $35 ship free, and every clip is backed by our 30-Day No-Slip &amp; No-Break replacement guarantee.
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. 邮件订阅区 -->
-  <section id="newsletter" class="bg-stone-900 text-white py-14 px-6">
-    <div class="max-w-3xl mx-auto text-center space-y-4">
-      <span class="inline-block bg-rose-500/20 text-rose-300 text-xs font-semibold px-3.5 py-1 rounded-full">
-        VIP Drop List · 15% Off
-      </span>
-      <h2 class="text-2xl sm:text-3xl font-serif font-bold tracking-tight">Get Early Access to New City Drops</h2>
-      <p class="text-sm text-stone-400 max-w-lg mx-auto">
-        Join 15,000+ hair clip lovers for limited seasonal releases and 15% off your first order.
-      </p>
-      <form onsubmit="subscribeNewsletter(event)" class="pt-2 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-        <input type="email" required placeholder="Enter your email address" class="flex-1 bg-stone-800 border border-stone-700 text-white placeholder-stone-400 text-sm rounded-full px-5 py-3 focus:outline-none focus:border-rose-400" />
-        <button type="submit" class="bg-rose-500 hover:bg-rose-400 text-white text-sm font-semibold px-6 py-3 rounded-full transition shrink-0">
-          Unlock 15% Off
-        </button>
-      </form>
-      <p id="newsletter-msg" class="text-xs text-emerald-400 hidden pt-1">
-        Welcome! Code <span class="font-mono font-bold underline cursor-pointer" onclick="applyQuickPromo('PRETTY15')">PRETTY15</span> unlocked &amp; applied to your bag!
-      </p>
-    </div>
-  </section>
-
-  <!-- 7. 页脚 -->
-  <footer class="bg-stone-950 border-t border-stone-800 text-stone-400 py-10 px-6 text-xs">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-2 text-white font-serif font-bold text-base">
-        <span class="w-2 h-2 rounded-full bg-rose-400 inline-block"></span>
-        BestClips.app
-      </div>
-      <div>&copy; 2026 BestClips. Designed in CA &amp; NYC · Powered by Sanity Headless Studio.</div>
-      <div class="flex gap-2 font-mono font-semibold text-stone-300">
-        <span class="bg-stone-900 border border-stone-700 px-2 py-0.5 rounded">Apple Pay</span>
-        <span class="bg-stone-900 border border-stone-700 px-2 py-0.5 rounded">VISA</span>
-        <span class="bg-stone-900 border border-stone-700 px-2 py-0.5 rounded">Mastercard</span>
+      <div class="flex items-center gap-4">
+        <button onclick="applyQuickPromo('PRETTY15')" class="underline hover:opacity-100 transition">Apply 15% VIP Code (PRETTY15)</button>
+        <span>·</span>
+        <span>&copy; 2026 BestClips.app</span>
       </div>
     </div>
   </footer>
 
-  <!-- 8. 升级版：商品多角度画廊快速预览弹窗 (Multi-Angle Studio Modal) -->
-  <div id="product-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-    <div onclick="closeProductModal()" class="fixed inset-0 bg-stone-950/60 backdrop-blur-xs"></div>
-    <div class="relative bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl z-10 grid grid-cols-1 md:grid-cols-12">
-      <button onclick="closeProductModal()" class="absolute top-3 right-3 bg-white/90 hover:bg-stone-100 text-stone-700 p-1.5 rounded-full shadow-xs z-20">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      <!-- 左侧：多角度大图与缩略图切换器 -->
-      <div class="md:col-span-6 bg-stone-100 flex flex-col justify-between p-4 gap-3">
-        <div class="relative rounded-2xl overflow-hidden aspect-square bg-white border border-stone-200/80">
-          <img id="modal-img" src="" alt="" class="w-full h-full object-cover transition duration-300" />
-          <span id="modal-angle-badge" class="absolute bottom-3 left-3 bg-stone-900/80 backdrop-blur text-white font-mono text-[11px] px-3 py-1 rounded-full">
-            01 / 04 · Studio Front
-          </span>
-        </div>
-        <!-- 4 角度画廊缩略图 -->
-        <div id="modal-thumbs" class="grid grid-cols-4 gap-2"></div>
-      </div>
-
-      <!-- 右侧：商品参数与加购 -->
-      <div class="md:col-span-6 p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between">
-            <span id="modal-series" class="text-xs font-bold text-rose-500 uppercase tracking-wider"></span>
-            <span id="modal-rating" class="text-xs font-mono font-bold text-amber-500"></span>
-          </div>
-          <h3 id="modal-title" class="text-2xl font-serif font-bold text-stone-950 mt-1"></h3>
-          <div id="modal-price" class="text-2xl font-mono font-bold text-stone-900 mt-1"></div>
-          <p id="modal-desc" class="text-xs text-stone-600 mt-3 leading-relaxed"></p>
-          
-          <div class="mt-4 pt-4 border-t border-stone-100 space-y-2 text-xs">
-            <div class="flex justify-between"><span class="text-stone-400">Shade / Finish:</span><span id="modal-shade" class="font-semibold text-stone-800"></span></div>
-            <div class="flex justify-between"><span class="text-stone-400">Material:</span><span id="modal-material" class="font-medium text-stone-800"></span></div>
-            <div class="flex justify-between"><span class="text-stone-400">Dimensions:</span><span id="modal-dim" class="font-mono font-medium text-stone-800"></span></div>
-            <div class="flex justify-between"><span class="text-stone-400">Best For:</span><span id="modal-hairtype" class="font-medium text-rose-600"></span></div>
-          </div>
-
-          <div class="mt-4 bg-[#FAF8F5] rounded-2xl p-3 border border-stone-200/70 text-[11px] text-stone-600 flex items-center gap-2">
-            <span class="text-emerald-600 font-bold">✓</span>
-            <span>In Stock · Ships in 24h · 30-Day No-Slip Guarantee</span>
-          </div>
-        </div>
-
-        <button id="modal-add-btn" class="mt-6 w-full bg-stone-900 hover:bg-rose-500 text-white font-semibold text-sm py-3.5 rounded-full transition shadow-sm">
-          Add to Bag
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 8.5 新增：15 秒发量与风格匹配测验弹窗 (Hair Fit Quiz Modal) -->
-  <div id="quiz-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-    <div onclick="closeQuizModal()" class="fixed inset-0 bg-stone-950/60 backdrop-blur-xs"></div>
-    <div class="relative bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl z-10 space-y-6">
-      <button onclick="closeQuizModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 p-1.5 rounded-full hover:bg-stone-100">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      <div>
-        <span class="text-xs font-bold uppercase tracking-widest text-rose-500">15-Second Fit Matcher</span>
-        <h3 class="text-2xl font-serif font-bold text-stone-950 mt-1">Find your perfect hold.</h3>
-        <p class="text-xs text-stone-500 mt-1">Tell us your hair volume and vibe—we’ll match the ideal spring tension &amp; size.</p>
-      </div>
-
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">1. Your Hair Volume &amp; Texture</label>
-          <div class="grid grid-cols-2 gap-2" id="quiz-vol-options">
-            <button type="button" onclick="selectQuizOption('vol', 'thick')" data-val="thick" class="quiz-vol-btn text-left p-3 rounded-2xl border border-stone-900 bg-stone-900 text-white text-xs">
-              <div class="font-bold">Thick / Long / Curly</div>
-              <div class="text-[11px] opacity-80 mt-0.5">Needs max tension</div>
-            </button>
-            <button type="button" onclick="selectQuizOption('vol', 'fine')" data-val="fine" class="quiz-vol-btn text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs">
-              <div class="font-bold">Fine / Straight / Silky</div>
-              <div class="text-[11px] text-stone-500 mt-0.5">Needs non-slip matte</div>
-            </button>
-            <button type="button" onclick="selectQuizOption('vol', 'medium')" data-val="medium" class="quiz-vol-btn text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs">
-              <div class="font-bold">Medium / Everyday</div>
-              <div class="text-[11px] text-stone-500 mt-0.5">Balanced 10.5cm hold</div>
-            </button>
-            <button type="button" onclick="selectQuizOption('vol', 'halfup')" data-val="halfup" class="quiz-vol-btn text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs">
-              <div class="font-bold">Half-Up / Layers</div>
-              <div class="text-[11px] text-stone-500 mt-0.5">Mini clips &amp; bows</div>
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">2. Your City Aesthetic</label>
-          <div class="grid grid-cols-2 gap-2" id="quiz-vibe-options">
-            <button type="button" onclick="selectQuizOption('vibe', 'cali')" data-val="cali" class="quiz-vibe-btn text-left p-3 rounded-2xl border border-stone-900 bg-stone-900 text-white text-xs">
-              <div class="font-bold">Spring in Cali</div>
-              <div class="text-[11px] opacity-80 mt-0.5">Pastels &amp; Oat Matte</div>
-            </button>
-            <button type="button" onclick="selectQuizOption('vibe', 'miami')" data-val="miami" class="quiz-vibe-btn text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs">
-              <div class="font-bold">Hot Miami</div>
-              <div class="text-[11px] text-stone-500 mt-0.5">Tortoise &amp; Gold Leaf</div>
-            </button>
-            <button type="button" onclick="selectQuizOption('vibe', 'nyc')" data-val="nyc" class="quiz-vibe-btn text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs">
-              <div class="font-bold">NYC Office OOTD</div>
-              <div class="text-[11px] text-stone-500 mt-0.5">Sculpted Gold &amp; Noir</div>
-            </button>
-            <button type="button" onclick="selectQuizOption('vibe', 'tokyo')" data-val="tokyo" class="quiz-vibe-btn text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs">
-              <div class="font-bold">Tokyo Trade</div>
-              <div class="text-[11px] text-stone-500 mt-0.5">Silk Bows &amp; Pearls</div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 实时推荐结果卡 -->
-      <div id="quiz-result-box" class="bg-rose-50/70 border border-rose-200/80 rounded-2xl p-4 flex items-center gap-4">
-        <img id="quiz-rec-img" src="" alt="" class="w-16 h-16 rounded-xl object-cover bg-white border border-stone-200 shrink-0" />
-        <div class="flex-1 min-w-0">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-rose-600">Top Match For You</div>
-          <div id="quiz-rec-name" class="text-sm font-bold text-stone-950 truncate"></div>
-          <div id="quiz-rec-meta" class="text-xs text-stone-600 mt-0.5"></div>
-        </div>
-        <button id="quiz-rec-add" class="bg-stone-900 hover:bg-rose-500 text-white text-xs font-semibold px-3.5 py-2 rounded-full transition shrink-0">
-          Add +
-        </button>
-      </div>
-
-      <button onclick="applyQuizFilterAndClose()" class="w-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold py-3 rounded-full transition">
-        Filter Full Catalog by My Hair Volume &rarr;
-      </button>
-    </div>
-  </div>
-
-  <!-- 9. 侧滑购物袋与结账抽屉（含免邮+赠品进度条 & PRETTY15 折扣码核销） -->
+  <!-- 8. Slide-Out Glassmorphic Bag Drawer -->
   <div id="cart-modal" class="fixed inset-0 z-50 hidden">
-    <div onclick="closeCart()" class="fixed inset-0 bg-stone-950/50 backdrop-blur-xs transition-opacity"></div>
-    <div class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between z-10">
-      <div class="px-6 py-5 border-b border-stone-200 flex items-center justify-between">
+    <div onclick="closeCart()" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-y-0 right-0 max-w-md w-full hairline-border flex flex-col justify-between z-10 shadow-2xl" style="background-color: var(--bg-elevated); color: var(--text-primary);">
+      <!-- Drawer Header -->
+      <div class="px-6 py-5 hairline-b flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <button id="back-to-cart-btn" onclick="switchDrawerStep('cart')" class="hidden text-stone-500 hover:text-stone-900 p-1 rounded-lg hover:bg-stone-100">
+          <button id="back-to-cart-btn" onclick="switchDrawerStep('cart')" class="hidden p-1 rounded-full hover:opacity-75">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h2 id="drawer-title" class="text-lg font-bold text-stone-950">Your Bag</h2>
+          <h2 id="drawer-title" class="text-base font-semibold tracking-tight">Bag</h2>
         </div>
-        <button onclick="closeCart()" class="text-stone-400 hover:text-stone-700 p-1 rounded-lg hover:bg-stone-100 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button onclick="closeCart()" class="p-1.5 rounded-full hairline-border hover:opacity-75 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <!-- 顶部免邮与满赠进度条 -->
-      <div class="bg-[#FAF8F5] px-6 py-3 border-b border-stone-200/80">
-        <p id="shipping-hint" class="text-xs font-medium text-stone-700 mb-1.5">Free US shipping at $35 · Free Mini Clip Gift at $50</p>
-        <div class="w-full h-2 bg-stone-200 rounded-full overflow-hidden">
-          <div id="shipping-progress" class="h-full bg-gradient-to-r from-rose-400 to-emerald-500 transition-all duration-500 rounded-full" style="width: 0%;"></div>
+      <!-- Free Shipping & Gift Progress Bar -->
+      <div class="px-6 py-3 hairline-b" style="background: var(--bg-pill);">
+        <p id="shipping-hint" class="text-xs mb-1.5" style="color: var(--text-secondary);">Free US shipping at $35 · Free Mini Clip at $50</p>
+        <div class="w-full h-1.5 rounded-full overflow-hidden" style="background: var(--border-hairline);">
+          <div id="shipping-progress" class="h-full transition-all duration-500 rounded-full" style="width: 0%; background-color: var(--accent-cta);"></div>
         </div>
       </div>
 
-      <!-- 视图 A：购物袋 -->
+      <!-- Step A: Cart List -->
       <div id="step-cart" class="flex-1 flex flex-col justify-between overflow-hidden">
-        <div id="cart-items-container" class="flex-1 overflow-y-auto px-6 py-4 space-y-4"></div>
+        <div id="cart-items-container" class="flex-1 overflow-y-auto px-6 py-4 space-y-3"></div>
 
-        <div class="border-t border-stone-200 px-6 py-5 bg-[#FAF8F5] space-y-3">
-          <!-- 折扣码输入框 -->
-          <div>
-            <div class="flex gap-2">
-              <input id="promo-input" type="text" placeholder="Promo code (try PRETTY15)" class="flex-1 bg-white border border-stone-300 rounded-full px-3.5 py-2 text-xs uppercase font-mono focus:outline-none focus:border-stone-900" />
-              <button type="button" onclick="handleApplyPromoInput()" class="bg-stone-200 hover:bg-stone-300 text-stone-900 text-xs font-semibold px-4 py-2 rounded-full transition">
-                Apply
-              </button>
-            </div>
-            <div id="promo-feedback" class="text-[11px] mt-1.5 hidden"></div>
+        <div class="hairline-t px-6 py-5 space-y-3" style="background: var(--bg-primary);">
+          <div class="flex gap-2">
+            <input id="promo-input" type="text" placeholder="Promo code (PRETTY15)" class="flex-1 bg-transparent hairline-border rounded-full px-4 py-2 text-xs uppercase font-mono focus:outline-none" />
+            <button type="button" onclick="handleApplyPromoInput()" class="pill-option text-xs font-medium px-4 py-2 rounded-full">
+              Apply
+            </button>
           </div>
+          <div id="promo-feedback" class="text-[11px] hidden"></div>
 
-          <div class="space-y-1 text-xs pt-1 border-t border-stone-200/70">
-            <div class="flex justify-between text-stone-500">
+          <div class="space-y-1.5 text-xs pt-2 hairline-t tabular-nums">
+            <div class="flex justify-between" style="color: var(--text-secondary);">
               <span>Subtotal</span>
               <span id="cart-subtotal" class="font-mono">$0.00</span>
             </div>
-            <div id="cart-discount-row" class="flex justify-between text-emerald-600 font-semibold hidden">
+            <div id="cart-discount-row" class="flex justify-between text-emerald-400 font-medium hidden">
               <span id="cart-discount-label">Promo (PRETTY15 · 15% Off)</span>
               <span id="cart-discount-val" class="font-mono">-$0.00</span>
             </div>
-            <div class="flex justify-between text-stone-500">
-              <span>Estimated Shipping</span>
-              <span id="cart-shipping-val" class="font-mono">Calculated at checkout</span>
+            <div class="flex justify-between" style="color: var(--text-secondary);">
+              <span>Shipping</span>
+              <span id="cart-shipping-val" class="font-mono">$0.00</span>
             </div>
-            <div class="flex justify-between text-base font-bold text-stone-950 pt-1">
-              <span>Estimated Total</span>
+            <div class="flex justify-between text-base font-bold pt-1">
+              <span>Total</span>
               <span id="cart-total" class="font-mono">$0.00</span>
             </div>
           </div>
 
-          <button onclick="switchDrawerStep('checkout')" class="w-full bg-stone-900 text-white py-3.5 px-4 rounded-full font-semibold hover:bg-rose-500 transition shadow-sm">
-            Proceed to Checkout
+          <button onclick="switchDrawerStep('checkout')" class="cta-btn w-full py-3.5 px-4 rounded-full text-sm font-semibold">
+            Continue to Checkout
           </button>
         </div>
       </div>
 
-      <!-- 视图 B：收货信息表单 -->
+      <!-- Step B: Checkout Form -->
       <form id="step-checkout" onsubmit="submitOrder(event)" class="hidden flex-1 flex flex-col justify-between overflow-y-auto">
         <div class="px-6 py-5 space-y-4">
-          <div class="bg-rose-50/80 border border-rose-100 rounded-2xl p-3.5 space-y-1 text-xs">
-            <div class="flex justify-between items-center text-sm">
-              <span class="text-stone-900 font-medium">Order Summary (<span id="checkout-item-count" class="font-mono">0</span> items)</span>
-              <span id="checkout-total" class="text-lg font-mono font-bold text-rose-600">$0.00</span>
-            </div>
-            <div id="checkout-promo-note" class="text-[11px] text-emerald-700 font-medium hidden"></div>
+          <div class="rounded-2xl p-4 hairline-border flex justify-between items-center text-sm" style="background: var(--bg-pill);">
+            <span>Order Total (<span id="checkout-item-count" class="font-mono">0</span> items)</span>
+            <span id="checkout-total" class="text-lg font-mono font-bold">$0.00</span>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1">Full Name *</label>
-            <input type="text" id="cust-name" required placeholder="Chloe Miller" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400" />
+            <label class="block text-xs font-medium mb-1.5" style="color: var(--text-secondary);">Full Name *</label>
+            <input type="text" id="cust-name" required placeholder="Chloe Miller" class="w-full bg-transparent hairline-border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1">Email for Tracking *</label>
-            <input type="email" id="cust-email" required placeholder="chloe@example.com" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400" />
+            <label class="block text-xs font-medium mb-1.5" style="color: var(--text-secondary);">Email for Tracking *</label>
+            <input type="email" id="cust-email" required placeholder="chloe@example.com" class="w-full bg-transparent hairline-border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1">Shipping Address *</label>
-            <input type="text" id="cust-address" required placeholder="450 Sutter St, Apt 302" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 mb-2" />
+            <label class="block text-xs font-medium mb-1.5" style="color: var(--text-secondary);">Shipping Address *</label>
+            <input type="text" id="cust-address" required placeholder="450 Sutter St, Apt 302" class="w-full bg-transparent hairline-border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none mb-2" />
             <div class="grid grid-cols-2 gap-2">
-              <input type="text" id="cust-city" required placeholder="San Francisco, CA" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400" />
-              <input type="text" id="cust-zip" required placeholder="94108" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400" />
+              <input type="text" id="cust-city" required placeholder="San Francisco, CA" class="w-full bg-transparent hairline-border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none" />
+              <input type="text" id="cust-zip" required placeholder="94108" class="w-full bg-transparent hairline-border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none" />
             </div>
           </div>
         </div>
-        <div class="border-t border-stone-200 px-6 py-5 bg-[#FAF8F5]">
-          <button type="submit" class="w-full bg-stone-900 text-white py-3.5 px-4 rounded-full font-semibold hover:bg-rose-500 transition shadow-sm">
+        <div class="hairline-t px-6 py-5" style="background: var(--bg-primary);">
+          <button type="submit" class="cta-btn w-full py-3.5 px-4 rounded-full text-sm font-semibold">
             Place Order
           </button>
         </div>
       </form>
 
-      <!-- 视图 C：订单确认回执 -->
+      <!-- Step C: Order Confirmation -->
       <div id="step-confirmation" class="hidden flex-1 flex flex-col justify-between px-6 py-8 text-center overflow-y-auto">
         <div class="my-auto space-y-4">
-          <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          <div class="w-12 h-12 rounded-full hairline-border flex items-center justify-center mx-auto text-emerald-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-rose-500">Order Confirmed</span>
-            <h3 class="text-2xl font-serif font-bold text-stone-950 mt-1">Thank you, <span id="receipt-name">Gorgeous</span>!</h3>
-            <p class="text-sm text-stone-500 mt-1">Order <span id="receipt-id" class="font-mono font-semibold text-stone-800">#BC-000000</span> is being prepared.</p>
+            <div class="text-xs font-mono uppercase tracking-widest text-emerald-400">Order Confirmed</div>
+            <h3 class="text-2xl font-bold mt-1">Thank you, <span id="receipt-name">Gorgeous</span></h3>
+            <p class="text-xs mt-1" style="color: var(--text-secondary);">Order <span id="receipt-id" class="font-mono">#BC-000000</span> is queued for studio dispatch.</p>
           </div>
-          <div class="bg-[#FAF8F5] border border-stone-200 rounded-2xl p-4 text-left text-xs space-y-2 mt-4">
+          <div class="rounded-2xl p-4 hairline-border text-left text-xs space-y-2 mt-4" style="background: var(--bg-pill);">
             <div class="flex justify-between">
-              <span class="text-stone-500">Confirmation sent to:</span>
-              <span id="receipt-email" class="font-medium text-stone-900"></span>
+              <span style="color: var(--text-muted);">Tracking Email</span>
+              <span id="receipt-email" class="font-medium"></span>
             </div>
             <div class="flex justify-between">
-              <span class="text-stone-500">Shipping to:</span>
-              <span id="receipt-address" class="font-medium text-stone-900 text-right max-w-[200px]"></span>
+              <span style="color: var(--text-muted);">Destination</span>
+              <span id="receipt-address" class="font-medium text-right max-w-[200px]"></span>
             </div>
-            <div class="flex justify-between pt-2 border-t border-stone-200 text-sm">
-              <span class="font-semibold text-stone-700">Amount Paid:</span>
-              <span id="receipt-total" class="font-mono font-bold text-rose-600"></span>
+            <div class="flex justify-between pt-2 hairline-t text-sm font-bold">
+              <span>Total Paid</span>
+              <span id="receipt-total" class="font-mono"></span>
             </div>
           </div>
         </div>
-        <button onclick="closeCart()" class="w-full bg-stone-900 text-white py-3.5 px-4 rounded-full font-semibold hover:bg-rose-500 transition mt-6">
-          Continue Shopping
+        <button onclick="closeCart()" class="cta-btn w-full py-3.5 px-4 rounded-full text-sm font-semibold mt-6">
+          Continue Exploring
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 10. 底部悬浮通知 -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-stone-900 text-white text-sm px-5 py-3 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    Added to bag!
+  <!-- Minimal Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 surface-card text-xs font-medium px-5 py-3 rounded-full shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    Added to bag
   </div>
 
   <script>
     // ==========================================
-    // 1. SANITY.IO 云端配置 (Project ID: ycnr19bp)
+    // 1. SANITY.IO HEADLESS CONFIG (ycnr19bp)
     // ==========================================
     const SANITY_PROJECT_ID = 'ycnr19bp';
     const SANITY_DATASET = 'production';
     const SANITY_API_VERSION = '2024-03-01';
 
-    // 多角度补充画廊池（正面 / 弹簧夹齿细节 / 醋酸纹理特写 / 佩戴造型）
-    const DETAIL_ANGLES = [
-      { label: "Studio Front", url: null }, // 动态使用商品主图
-      { label: "Double-Coil Grip", url: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=800" },
-      { label: "Acetate Polish", url: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=800" },
-      { label: "Styled Updo", url: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=800" }
-    ];
-
     const fallbackItems = {
       cali: [
-        { id: "cali-1", name: "Malibu Sunset Pastel Claw", shade: "Peach & Lavender", swatch: "#F5B7B1", price: 16.00, rating: "4.9 ★", material: "Cellulose Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "Thick & Long Hair", hairTags: ["thick", "medium"], desc: "Hand-marbled pastel sunset acetate claw clip designed for effortless beachy updos.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "cali-2", name: "Oat Milk Cloud Matte Claw", shade: "Warm Cream", swatch: "#EDE0D4", price: 14.00, rating: "4.9 ★", material: "Soft-Touch Matte Acetate", dimensions: "10.5 cm × 4.8 cm", hairType: "Fine & Silky Hair", hairTags: ["fine", "medium"], desc: "Velvety cloud-contour claw clip with non-slip inner teeth for silky hair.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "cali-3", name: "Big Sur Seafoam Acrylic Clip", shade: "Matcha Mint", swatch: "#A3B18A", price: 15.00, rating: "4.8 ★", material: "Eco Glossy Resin", dimensions: "10.2 cm × 4.5 cm", hairType: "Medium to Thick", hairTags: ["medium", "thick"], desc: "Translucent coastal sage green claw with high-tension stainless spring.", image: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "cali-4", name: "Santa Barbara Daisy Mini Set", shade: "Buttercream & White", swatch: "#FEF08A", price: 13.00, rating: "5.0 ★", material: "Plant Acetate", dimensions: "3.2 cm Mini Claws", hairType: "Half-Up & Braids", hairTags: ["halfup", "fine"], desc: "Set of four daisy-cut mini clips to pin back face-framing layers.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "cali-5", name: "Venice Beach Jelly Rectangle Claw", shade: "Translucent Rose", swatch: "#F4ACB7", price: 15.00, rating: "4.8 ★", material: "Crystal Jelly Acetate", dimensions: "9.8 cm × 4.2 cm", hairType: "Fine to Medium", hairTags: ["fine", "medium"], desc: "90s-inspired rectangular jelly claw clip with crystal-clear shine.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700" }
+        { id: "cali-1", name: "Malibu Sunset Claw", shade: "Peach & Lavender", swatch: "#F5B7B1", price: 16, material: "Hand-Marbled Cellulose Acetate", dimensions: "11.0 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Sun-washed pastel cellulose acetate carved for effortless coastal updos with zero scalp pull.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "cali-2", name: "Oat Milk Cloud Matte", shade: "Warm Oat Cream", swatch: "#EDE0D4", price: 14, material: "Velvet Matte Plant Acetate", dimensions: "10.5 cm · Micro-Grip Teeth", hairType: "Fine & Silky Hair", desc: "Cloud-soft matte finish engineered with extra inner tooth friction so silky hair stays locked.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "cali-3", name: "Big Sur Seafoam Claw", shade: "Matcha Coastal Mint", swatch: "#A3B18A", price: 15, material: "Translucent Botanical Resin", dimensions: "10.2 cm · Stainless Coil", hairType: "Medium to Thick Hair", desc: "Translucent sage-green resin inspired by Pacific cove glass, tumbled for 6 hours.", image: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "cali-4", name: "Santa Barbara Daisy Set", shade: "Buttercream & Ivory", swatch: "#FEF08A", price: 13, material: "Carved Plant Acetate", dimensions: "3.2 cm · 4-Piece Mini Set", hairType: "Half-Up & Bangs", desc: "Four miniature floral claws for pinning back sun-kissed layers and braids.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "cali-5", name: "Venice Jelly Rectangle", shade: "Translucent Rose", swatch: "#F4ACB7", price: 15, material: "Crystal Jelly Acetate", dimensions: "9.8 cm · Architectural Frame", hairType: "Fine to Medium Hair", desc: "90s-inspired open rectangle profile with high-gloss translucent depth.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" }
       ],
       miami: [
-        { id: "miami-1", name: "South Beach Tiger-Stripe Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18.00, rating: "5.0 ★", material: "Italian Pattern Acetate", dimensions: "11.8 cm × 5.5 cm", hairType: "Thick & Curly Hair", hairTags: ["thick"], desc: "High-contrast tiger stripe pattern cut from thick Italian cellulose acetate.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "miami-2", name: "Wynwood Leopard Tortoise Jaw", shade: "Espresso Spotted", swatch: "#78350F", price: 17.00, rating: "4.9 ★", material: "Hand-Polished Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "Medium to Thick", hairTags: ["thick", "medium"], desc: "Fierce wildcat spot pattern with ultra-glossy resort finish.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "miami-3", name: "Ocean Drive Flame Coral Claw", shade: "Hibiscus Red-Orange", swatch: "#EA580C", price: 16.00, rating: "4.8 ★", material: "Glossy Resin Acetate", dimensions: "10.5 cm × 4.8 cm", hairType: "Medium to Thick", hairTags: ["medium", "thick"], desc: "Vibrant tropical sunset hue designed to pop against sun-kissed skin.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "miami-4", name: "Brickell Gold-Flecked Havana Claw", shade: "24K Amber Flake", swatch: "#D97706", price: 19.00, rating: "4.9 ★", material: "Gold-Leaf Acetate", dimensions: "11.2 cm × 5.0 cm", hairType: "Thick & Long Hair", hairTags: ["thick"], desc: "Rich Havana brown acetate infused with shimmering metallic gold flakes.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "miami-5", name: "Star Island Molten Bronze Claw", shade: "Sunlit Bronze", swatch: "#A16207", price: 21.00, rating: "4.9 ★", material: "Electroplated Alloy", dimensions: "11.0 cm × 4.5 cm", hairType: "Medium to Thick", hairTags: ["medium", "thick"], desc: "Liquid-metal bronze finish that catches golden-hour sunlight.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700" }
+        { id: "miami-1", name: "South Beach Tiger Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18, material: "Italian Patterned Acetate", dimensions: "11.8 cm · High-Tension Jumbo", hairType: "Thick & Curly Hair", desc: "Bold tiger-stripe Italian cellulose acetate built with our highest-torque double spring.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "miami-2", name: "Wynwood Leopard Jaw", shade: "Espresso Tortoise", swatch: "#78350F", price: 17, material: "Hand-Buffed Tortoiseshell", dimensions: "11.0 cm · Deep Rounded Teeth", hairType: "All Hair Volumes", desc: "High-contrast wildcat tortoiseshell polished to a liquid mirror shine.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "miami-3", name: "Ocean Drive Flame Coral", shade: "Hibiscus Sunset", swatch: "#EA580C", price: 16, material: "Luminous Bio-Acetate", dimensions: "10.5 cm · Resort Profile", hairType: "Medium to Thick Hair", desc: "Saturated tropical coral acetate designed to stand out against golden-hour skin.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "miami-4", name: "Brickell 24K Havana Claw", shade: "Amber & Gold Leaf", swatch: "#D97706", price: 19, material: "Gold-Flecked Acetate", dimensions: "11.2 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Deep Havana brown resin suspended with genuine shimmering metallic flakes.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "miami-5", name: "Star Island Molten Bronze", shade: "Sunlit Metallic Bronze", swatch: "#A16207", price: 21, material: "Sculpted Hollow Alloy", dimensions: "11.0 cm · Featherlight 14g", hairType: "All Hair Types", desc: "Electroplated liquid-bronze silhouette with water-resistant resort durability.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000" }
       ],
       nyc: [
-        { id: "nyc-1", name: "SoHo Brushed Gold Arch Claw", shade: "Champagne Gold", swatch: "#D4AF37", price: 20.00, rating: "4.9 ★", material: "Lightweight Hollow Alloy", dimensions: "11.2 cm × 4.6 cm", hairType: "Medium to Thick Hair", hairTags: ["medium", "thick"], desc: "Architectural open-arch metal claw that elevates blazers and crisp button-downs.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "nyc-2", name: "Tribeca Matte Noir Slim Barrette", shade: "Obsidian Matte", swatch: "#1C1917", price: 15.00, rating: "4.9 ★", material: "Matte Acetate + Steel", dimensions: "9.0 cm × 1.6 cm", hairType: "Fine & Silky Hair", hairTags: ["fine", "halfup"], desc: "Ultra-clean minimalist bar clip for polished low ponytails and side parts.", image: "https://images.pexels.com/photos/8142035/pexels-photo-8142035.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "nyc-3", name: "Fifth Ave Tortoise French Pin", shade: "Classic Dark Havana", swatch: "#451A03", price: 16.00, rating: "4.8 ★", material: "Curved Acetate", dimensions: "12.5 cm Length", hairType: "Medium to Long Hair", hairTags: ["medium", "thick"], desc: "Ergonomic U-shaped hairpin for a secure, pin-free Parisian office bun.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "nyc-4", name: "Madison Silver Twisted Loop Claw", shade: "Polished Sterling Tone", swatch: "#D6D3D1", price: 20.00, rating: "4.8 ★", material: "Hollow Zinc Alloy", dimensions: "10.8 cm × 4.4 cm", hairType: "Medium & Everyday", hairTags: ["medium", "fine"], desc: "Modern sculptural infinity-loop metal jaw clip with featherlight balance.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "nyc-5", name: "Upper East Side Pearl & Gold Duo", shade: "Cream Pearl / Gold", swatch: "#F5F5F4", price: 18.00, rating: "5.0 ★", material: "Faux Pearl + Brass", dimensions: "7.8 cm Length", hairType: "Half-Up & Fine Hair", hairTags: ["halfup", "fine"], desc: "Pair of tailored pearl snap clips for boardroom-ready sophistication.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=700" }
+        { id: "nyc-1", name: "SoHo Brushed Gold Arch", shade: "Champagne Brushed Gold", swatch: "#D4AF37", price: 20, material: "Hollow Architectural Alloy", dimensions: "11.2 cm · Featherlight 12g", hairType: "Medium to Thick Hair", desc: "Minimalist open-arch metal claw engineered to pair with tailored blazers and silk shirts.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "nyc-2", name: "Tribeca Matte Noir Bar", shade: "Obsidian Velvet Matte", swatch: "#27272A", price: 15, material: "Matte Acetate & Steel Clasp", dimensions: "9.0 cm · Low-Profile Barrette", hairType: "Fine & Straight Hair", desc: "Ultra-clean architectural bar clip for sleek low ponytails and sharp center parts.", image: "https://images.pexels.com/photos/8142035/pexels-photo-8142035.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "nyc-3", name: "Fifth Ave French U-Pin", shade: "Classic Dark Havana", swatch: "#451A03", price: 16, material: "Curved Cellulose Acetate", dimensions: "12.5 cm · Ergonomic Curve", hairType: "Medium to Long Hair", desc: "One-motion French chignon pin that secures a boardroom bun without bobby pins.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "nyc-4", name: "Madison Sterling Loop", shade: "Polished Silver Tone", swatch: "#D6D3D1", price: 20, material: "Hollow Zinc Alloy", dimensions: "10.8 cm · Infinity Contour", hairType: "All Hair Volumes", desc: "Sculptural silver infinity-loop claw balanced for zero rear-head pressure.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "nyc-5", name: "Upper East Pearl Duo", shade: "Lustrous Pearl & Brass", swatch: "#F5F5F4", price: 18, material: "Hand-Set Pearl & Brass", dimensions: "7.8 cm · 2-Piece Snap Set", hairType: "Half-Up & Fine Hair", desc: "Tailored pearl snap barrettes that transition seamlessly from desk to dinner.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=1000" }
       ],
       tokyo: [
-        { id: "tokyo-1", name: "Harajuku Mulberry Silk Ribbon Bow", shade: "Sakura Blush", swatch: "#F4C2C2", price: 16.00, rating: "5.0 ★", material: "100% Mulberry Silk", dimensions: "15.5 cm Bow Width", hairType: "Half-Up & Ponytails", hairTags: ["halfup", "fine", "medium"], desc: "Delicate Japanese-inspired silk ribbon bow mounted on a snag-free French clasp.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "tokyo-2", name: "Ginza Akoya-Style Pearl Set", shade: "Lustrous White Pearl", swatch: "#FFFBEB", price: 19.00, rating: "4.9 ★", material: "Resin Pearls + Gold", dimensions: "7.5 cm Length", hairType: "Half-Up & Bangs", hairTags: ["halfup", "fine"], desc: "Hand-aligned luminous pearls inspired by Tokyo boutique hair jewelry.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "tokyo-3", name: "Shibuya Pastel Mini Bundle (6-Pack)", shade: "Sakura & Cream Mix", swatch: "#FBCFE8", price: 15.00, rating: "4.9 ★", material: "Cellulose Acetate", dimensions: "2.5 cm Mini Claws", hairType: "Bangs & Braids", hairTags: ["halfup", "fine"], desc: "Six dainty mini clips in sakura pink, milk tea, and pearl finishes.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "tokyo-4", name: "Aoyama Velvet Double-Bow Clip", shade: "Bordeaux Wine", swatch: "#881337", price: 17.00, rating: "4.8 ★", material: "Plush Velvet + Clasp", dimensions: "14.0 cm Width", hairType: "Half-Up & Everyday", hairTags: ["halfup", "medium"], desc: "Structured double-layered velvet ribbon clip for romantic evening styling.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=700" },
-        { id: "tokyo-5", name: "Daikanyama Milk-Tea Jaw Clip", shade: "Hojicha Latte", swatch: "#D6CCC2", price: 16.00, rating: "4.9 ★", material: "Japanese Acetate", dimensions: "10.2 cm × 4.6 cm", hairType: "Medium to Thick", hairTags: ["medium", "thick"], desc: "Warm roasted milk-tea swirl acetate favored by Tokyo salon stylists.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=700" }
+        { id: "tokyo-1", name: "Harajuku Silk Ribbon Bow", shade: "Sakura Blush Pink", swatch: "#F4C2C2", price: 16, material: "100% Mulberry Silk & Clasp", dimensions: "15.5 cm Width · French Clasp", hairType: "Half-Up & Ponytails", desc: "Pure mulberry silk ribbon bow mounted on a snag-free brushed steel clasp.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "tokyo-2", name: "Ginza Akoya Pearl Pin Set", shade: "Warm Akoya Pearl", swatch: "#FFFBEB", price: 19, material: "Organic Resin Pearl & Gold", dimensions: "7.5 cm · Boutique Pair", hairType: "Fine & Half-Up Styles", desc: "Luminous graduated pearls inspired by Ginza jewelry ateliers.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "tokyo-3", name: "Shibuya Pastel Mini Pack", shade: "Sakura & Milk Tea (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Japanese Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Bangs & Face Layers", desc: "Six featherlight micro-claws in sakura blush, cream pearl, and roasted milk tea.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "tokyo-4", name: "Aoyama Velvet Double Bow", shade: "Bordeaux Wine Velvet", swatch: "#881337", price: 17, material: "Plush Japanese Velvet", dimensions: "14.0 cm · Structured Wing", hairType: "All Hair Types", desc: "Structured double-wing velvet bow that holds its architectural shape all evening.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+        { id: "tokyo-5", name: "Daikanyama Hojicha Claw", shade: "Roasted Milk-Tea Swirl", swatch: "#D6CCC2", price: 16, material: "Marbled Cellulose Acetate", dimensions: "10.2 cm · Salon Balance", hairType: "Medium to Thick Hair", desc: "Warm roasted milk-tea swirl acetate favored by Tokyo editorial stylists.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" }
       ]
     };
 
     const collections = [
-      { id: "cali", anchor: "series-cali", badge: "Collection 01 · Fresh & Airy", title: "Spring in Cali", subtitle: "Sun-washed pastels, oat-milk matte claws, and breezy coastal flower clips.", accentColor: "text-emerald-600", expanded: false, items: [...fallbackItems.cali] },
-      { id: "miami", anchor: "series-miami", badge: "Collection 02 · Bold & Fierce", title: "Hot Miami", subtitle: "Statement tiger-stripe acetate, fiery amber tortoiseshell, and sultry resort silhouettes.", accentColor: "text-amber-600", expanded: false, items: [...fallbackItems.miami] },
-      { id: "nyc", anchor: "series-nyc", badge: "Collection 03 · Tailored & Architectural", title: "NYC Office OOTD", subtitle: "Sculpted brushed gold claws, matte black French pins, and sleek 9-to-7 silhouettes.", accentColor: "text-stone-800", expanded: false, items: [...fallbackItems.nyc] },
-      { id: "tokyo", anchor: "series-tokyo", badge: "Collection 04 · Delicate & Kawaii-Chic", title: "Tokyo Trade", subtitle: "Harajuku silk ribbon bows, Ginza freshwater pearl pins, and pastel mini clip sets.", accentColor: "text-rose-500", expanded: false, items: [...fallbackItems.tokyo] }
+      { id: "cali", anchor: "city-cali", code: "01", title: "Spring in Cali", tagline: "Sun-washed pastels & cloud-matte grip.", items: [...fallbackItems.cali] },
+      { id: "miami", anchor: "city-miami", code: "02", title: "Hot Miami", tagline: "High-torque Italian tortoise & molten bronze.", items: [...fallbackItems.miami] },
+      { id: "nyc", anchor: "city-nyc", code: "03", title: "NYC Office OOTD", tagline: "Hollow brushed gold & obsidian matte architecture.", items: [...fallbackItems.nyc] },
+      { id: "tokyo", anchor: "city-tokyo", code: "04", title: "Tokyo Trade", tagline: "Mulberry silk bows, Akoya pearls & milk-tea resin.", items: [...fallbackItems.tokyo] }
     ];
 
-    let activeHairFilter = 'all';
-    let quizState = { vol: 'thick', vibe: 'cali' };
+    // Active variant selection per city configurator stage + active angle (0, 1, 2)
+    const cityState = {
+      cali: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' },
+      miami: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' },
+      nyc: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' },
+      tokyo: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' }
+    };
 
-    // 购物袋与促销码状态（带本地持久化）
+    const SUPPLEMENTAL_ANGLES = [
+      { name: "Angle 1 · Studio Profile", filter: "none" },
+      { name: "Angle 2 · Tension Spring & Teeth", url: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
+      { name: "Angle 3 · Surface Macro", url: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=1000" }
+    ];
+
+    const LOOKBOOK_SLIDES = [
+      { url: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 01 · Malibu Coastal Light", caption: "Hand-marbled pastel cellulose acetate in morning Pacific sun." },
+      { url: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 02 · Miami Golden Hour", caption: "High-torque Italian tiger-stripe acetate built for thick, curly hair." },
+      { url: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 03 · SoHo Architectural Studio", caption: "Featherlight hollow brushed gold alloy for 9-to-7 tailoring." },
+      { url: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 04 · Ginza Atelier Detail", caption: "Lustrous Akoya-style pearls and mulberry silk ribbons." }
+    ];
+
+    // ==========================================
+    // 2. THEME SWITCHER (DARK / LIGHT)
+    // ==========================================
+    function toggleTheme() {
+      const root = document.documentElement;
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('bestclips_theme', next); } catch (e) {}
+    }
+
+    (function initSavedTheme() {
+      try {
+        const saved = localStorage.getItem('bestclips_theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+
+    // ==========================================
+    // 3. HERO MOOD SWITCHER (Smooth Crossfade)
+    // ==========================================
+    function switchHeroCity(cityId) {
+      const col = collections.find(c => c.id === cityId);
+      if (!col || !col.items.length) return;
+      const featured = col.items[0];
+
+      document.querySelectorAll('.hero-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-hero') === cityId);
+      });
+
+      const img = document.getElementById('hero-stage-img');
+      img.classList.add('morphing');
+      setTimeout(() => {
+        img.src = featured.image;
+        document.getElementById('hero-stage-city').innerText = `${col.code} · ${col.title}`;
+        document.getElementById('hero-stage-name').innerText = featured.name;
+        const cta = document.getElementById('hero-stage-cta');
+        cta.innerText = `Quick Add — $${featured.price}`;
+        cta.onclick = () => addToCart(featured.id);
+        img.classList.remove('morphing');
+      }, 220);
+    }
+
+    // ==========================================
+    // 4. MATERIAL FLASK-STYLE 4 CITY CONFIGURATORS
+    // ==========================================
+    function renderCityStages() {
+      const container = document.getElementById('city-stages-container');
+      if (!container) return;
+
+      container.innerHTML = collections.map((col, idx) => {
+        const state = cityState[col.id];
+        const activeItem = col.items[state.itemIndex] || col.items[0];
+        const isReversed = idx % 2 === 1;
+
+        return `
+          <section id="${col.anchor}" class="max-w-6xl mx-auto px-6 scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              
+              <!-- Studio Visual Stage -->
+              <div class="lg:col-span-6 ${isReversed ? 'lg:order-2' : ''}">
+                <div class="surface-card relative rounded-3xl overflow-hidden aspect-square flex items-center justify-center p-4">
+                  <div class="relative w-full h-full rounded-2xl overflow-hidden">
+                    <img id="stage-img-${col.id}" src="${activeItem.image}" alt="${activeItem.name}" class="stage-img w-full h-full object-cover" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+                    <!-- Top Left Capsule Tag -->
+                    <div class="absolute top-4 left-4 bg-black/55 backdrop-blur-md text-white font-mono text-[11px] px-3 py-1 rounded-full border border-white/15">
+                      ${col.code} · ${col.title}
+                    </div>
+
+                    <!-- Bottom Left Angle Label -->
+                    <div id="stage-angle-label-${col.id}" class="absolute bottom-4 left-4 text-white/80 font-mono text-[11px]">
+                      Angle 1 · Studio Profile
+                    </div>
+
+                    <!-- Bottom Right Minimalist Angle Switcher Pills -->
+                    <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1 bg-black/55 backdrop-blur-md p-1 rounded-full border border-white/15">
+                      <button type="button" onclick="switchCityAngle('${col.id}', 0)" id="angle-btn-${col.id}-0" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white bg-white/25 transition">01</button>
+                      <button type="button" onclick="switchCityAngle('${col.id}', 1)" id="angle-btn-${col.id}-1" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition">02</button>
+                      <button type="button" onclick="switchCityAngle('${col.id}', 2)" id="angle-btn-${col.id}-2" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition">03</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interactive Customization Dashboard (Material Flask #order style) -->
+              <div class="lg:col-span-6 ${isReversed ? 'lg:order-1' : ''} space-y-6">
+                <div>
+                  <div class="text-xs font-mono uppercase tracking-widest mb-1.5" style="color: var(--text-muted);">
+                    Capsule ${col.code} · ${col.tagline}
+                  </div>
+                  <h2 id="stage-title-${col.id}" class="font-bold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.75rem);">
+                    ${activeItem.name}
+                  </h2>
+                  <div id="stage-price-${col.id}" class="text-2xl font-mono mt-2 tabular-nums" style="color: var(--text-secondary);">
+                    $${activeItem.price.toFixed(2)}
+                  </div>
+                  <p id="stage-desc-${col.id}" class="text-sm mt-3 leading-relaxed" style="color: var(--text-secondary);">
+                    ${activeItem.desc}
+                  </p>
+                </div>
+
+                <!-- Finish / Design Selector Pills -->
+                <div>
+                  <div class="text-xs font-medium mb-2.5" style="color: var(--text-secondary);">
+                    Select Design &amp; Finish
+                  </div>
+                  <div class="flex flex-wrap gap-2" id="pills-${col.id}">
+                    ${col.items.map((item, i) => `
+                      <button type="button" onclick="selectCityVariant('${col.id}', ${i})" id="variant-pill-${col.id}-${i}" class="pill-option ${i === state.itemIndex ? 'active' : ''} px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full shrink-0 border border-white/20" style="background-color: ${item.swatch};"></span>
+                        <span>${item.name.replace(/ Claw| Clip| Set| Jaw| Bow| Bar/g, '')}</span>
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+
+                <!-- Spec Hairlines (Exact Material Flask Layout) -->
+                <div class="pt-2 text-xs">
+                  <div class="py-3 hairline-t flex justify-between items-center">
+                    <span style="color: var(--text-muted);">Shade / Finish</span>
+                    <span id="spec-shade-${col.id}" class="font-medium">${activeItem.shade}</span>
+                  </div>
+                  <div class="py-3 hairline-t flex justify-between items-center">
+                    <span style="color: var(--text-muted);">Architecture</span>
+                    <span id="spec-mat-${col.id}" class="font-medium">${activeItem.material}</span>
+                  </div>
+                  <div class="py-3 hairline-t hairline-b flex justify-between items-center">
+                    <span style="color: var(--text-muted);">Hold &amp; Spec</span>
+                    <span id="spec-dim-${col.id}" class="font-mono">${activeItem.dimensions} · ${activeItem.hairType}</span>
+                  </div>
+                </div>
+
+                <!-- Dynamic Full-Width Pill CTA -->
+                <div class="pt-1">
+                  <button type="button" id="stage-cta-${col.id}" onclick="addToCart('${activeItem.id}')" class="cta-btn w-full py-4 px-6 rounded-full text-sm font-semibold tabular-nums">
+                    Add to Bag – $${activeItem.price.toFixed(2)}
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function selectCityVariant(cityId, itemIndex) {
+      const col = collections.find(c => c.id === cityId);
+      if (!col || !col.items[itemIndex]) return;
+
+      cityState[cityId].itemIndex = itemIndex;
+      cityState[cityId].angleIndex = 0;
+      const item = col.items[itemIndex];
+
+      // Update active pill styling
+      col.items.forEach((_, idx) => {
+        const pill = document.getElementById(`variant-pill-${cityId}-${idx}`);
+        if (pill) pill.classList.toggle('active', idx === itemIndex);
+      });
+
+      // Reset angle tab highlight
+      [0, 1, 2].forEach(a => {
+        const abtn = document.getElementById(`angle-btn-${cityId}-${a}`);
+        if (abtn) {
+          abtn.className = a === 0
+            ? "px-2.5 py-1 rounded-full text-[10px] font-mono text-white bg-white/25 transition"
+            : "px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition";
+        }
+      });
+
+      // Smooth hardware-accelerated image & spec transition
+      const img = document.getElementById(`stage-img-${cityId}`);
+      if (img) {
+        img.classList.add('morphing');
+        setTimeout(() => {
+          img.src = item.image;
+          img.classList.remove('morphing');
+        }, 200);
+      }
+
+      document.getElementById(`stage-angle-label-${cityId}`).innerText = "Angle 1 · Studio Profile";
+      document.getElementById(`stage-title-${cityId}`).innerText = item.name;
+      document.getElementById(`stage-price-${cityId}`).innerText = `$${item.price.toFixed(2)}`;
+      document.getElementById(`stage-desc-${cityId}`).innerText = item.desc;
+      document.getElementById(`spec-shade-${cityId}`).innerText = item.shade;
+      document.getElementById(`spec-mat-${cityId}`).innerText = item.material;
+      document.getElementById(`spec-dim-${cityId}`).innerText = `${item.dimensions} · ${item.hairType}`;
+
+      const cta = document.getElementById(`stage-cta-${cityId}`);
+      if (cta) {
+        cta.innerText = `Add to Bag – $${item.price.toFixed(2)}`;
+        cta.onclick = () => addToCart(item.id);
+      }
+    }
+
+    function switchCityAngle(cityId, angleIndex) {
+      const col = collections.find(c => c.id === cityId);
+      if (!col) return;
+      const item = col.items[cityState[cityId].itemIndex] || col.items[0];
+      cityState[cityId].angleIndex = angleIndex;
+
+      [0, 1, 2].forEach(a => {
+        const abtn = document.getElementById(`angle-btn-${cityId}-${a}`);
+        if (abtn) {
+          abtn.className = a === angleIndex
+            ? "px-2.5 py-1 rounded-full text-[10px] font-mono text-white bg-white/25 transition"
+            : "px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition";
+        }
+      });
+
+      const targetUrl = angleIndex === 0 ? item.image : SUPPLEMENTAL_ANGLES[angleIndex].url;
+      const img = document.getElementById(`stage-img-${cityId}`);
+      if (img) {
+        img.classList.add('morphing');
+        setTimeout(() => {
+          img.src = targetUrl;
+          img.classList.remove('morphing');
+        }, 180);
+      }
+      document.getElementById(`stage-angle-label-${cityId}`).innerText = SUPPLEMENTAL_ANGLES[angleIndex].name;
+    }
+
+    // ==========================================
+    // 5. LOOKBOOK CROSSFADE GALLERY
+    // ==========================================
+    function setLookbookAngle(idx) {
+      const slide = LOOKBOOK_SLIDES[idx];
+      if (!slide) return;
+
+      document.querySelectorAll('.lookbook-tab').forEach((btn, i) => {
+        btn.className = i === idx
+          ? "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/20 transition"
+          : "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition";
+      });
+
+      const img = document.getElementById('lookbook-img');
+      img.classList.add('morphing');
+      setTimeout(() => {
+        img.src = slide.url;
+        document.getElementById('lookbook-tag').innerText = slide.tag;
+        document.getElementById('lookbook-caption').innerText = slide.caption;
+        img.classList.remove('morphing');
+      }, 220);
+    }
+
+    // ==========================================
+    // 6. SANITY.IO LIVE CLOUD SYNC
+    // ==========================================
+    async function loadProductsFromSanity() {
+      const query = encodeURIComponent(`*[_type == "clipProduct"] | order(_createdAt desc) {
+        _id, name, series, price, shade, swatch, material, dimensions, hairType, desc,
+        "imageUrl": image.asset->url
+      }`);
+      const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const studioItems = data.result || [];
+
+        if (studioItems.length > 0) {
+          const grouped = { cali: [], miami: [], nyc: [], tokyo: [] };
+          studioItems.forEach(doc => {
+            const target = grouped[doc.series] ? doc.series : 'cali';
+            grouped[target].push({
+              id: doc._id,
+              name: doc.name || "Studio Clip",
+              shade: doc.shade || "Signature Finish",
+              swatch: doc.swatch || "#D4AF37",
+              price: Number(doc.price) || 16,
+              material: doc.material || "Cellulose Acetate",
+              dimensions: doc.dimensions || "11.0 cm · Double-Coil",
+              hairType: doc.hairType || "All Hair Types",
+              desc: doc.desc || "Curated studio release from BestClips.",
+              image: doc.imageUrl ? `${doc.imageUrl}?w=1000&auto=format` : fallbackItems[target][0].image
+            });
+          });
+
+          collections.forEach(col => {
+            const live = grouped[col.id] || [];
+            col.items = live.length >= 5 ? live : [...live, ...fallbackItems[col.id].slice(0, 5 - live.length)];
+          });
+
+          document.getElementById('sync-text').innerText = `${studioItems.length} Live SKU${studioItems.length > 1 ? 's' : ''}`;
+          renderCityStages();
+        }
+      } catch (err) {
+        console.warn("Using local studio catalog:", err);
+      }
+    }
+
+    // ==========================================
+    // 7. SPLIT COMPARISON SLIDER
+    // ==========================================
+    function setComparePct(pct) {
+      const clamped = Math.max(0, Math.min(100, pct));
+      const overlay = document.getElementById('comp-overlay');
+      const handle = document.getElementById('comp-handle');
+      if (overlay) overlay.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
+      if (handle) handle.style.left = `${clamped}%`;
+
+      const bGloss = document.getElementById('btn-glossy');
+      const bSplit = document.getElementById('btn-split');
+      const bMatte = document.getElementById('btn-matte');
+      [bGloss, bSplit, bMatte].forEach(b => b && b.classList.remove('active'));
+      if (clamped >= 80 && bGloss) bGloss.classList.add('active');
+      else if (clamped <= 20 && bMatte) bMatte.classList.add('active');
+      else if (bSplit) bSplit.classList.add('active');
+    }
+
+    function initComparisonSlider() {
+      const container = document.getElementById('comp-container');
+      if (!container) return;
+      let dragging = false;
+      const move = (clientX) => {
+        const rect = container.getBoundingClientRect();
+        setComparePct(((clientX - rect.left) / rect.width) * 100);
+      };
+      container.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        container.setPointerCapture(e.pointerId);
+        move(e.clientX);
+      });
+      container.addEventListener('pointermove', (e) => { if (dragging) move(e.clientX); });
+      container.addEventListener('pointerup', () => { dragging = false; });
+      container.addEventListener('pointercancel', () => { dragging = false; });
+    }
+
+    // ==========================================
+    // 8. SLIDE-OUT BAG & PROMO ENGINE
+    // ==========================================
     let cart = [];
-    let appliedPromo = null; // { code: 'PRETTY15', pct: 0.15 }
+    let appliedPromo = null;
     const PROMO_CODES = {
-      'PRETTY15': { code: 'PRETTY15', pct: 0.15, desc: '15% Off VIP Drop Discount' },
-      'WELCOME10': { code: 'WELCOME10', pct: 0.10, desc: '10% Off Welcome Offer' }
+      'PRETTY15': { code: 'PRETTY15', pct: 0.15, desc: '15% Off VIP Code' },
+      'WELCOME10': { code: 'WELCOME10', pct: 0.10, desc: '10% Off Welcome' }
     };
 
     function loadPersistedCart() {
       try {
-        const savedCart = localStorage.getItem('bestclips_cart');
-        const savedPromo = localStorage.getItem('bestclips_promo');
-        if (savedCart) cart = JSON.parse(savedCart);
-        if (savedPromo && PROMO_CODES[savedPromo]) appliedPromo = PROMO_CODES[savedPromo];
-      } catch (e) {
-        console.warn('Storage load skipped', e);
-      }
+        const c = localStorage.getItem('bestclips_cart');
+        const p = localStorage.getItem('bestclips_promo');
+        if (c) cart = JSON.parse(c);
+        if (p && PROMO_CODES[p]) appliedPromo = PROMO_CODES[p];
+      } catch (e) {}
     }
 
     function savePersistedCart() {
@@ -828,423 +972,37 @@
       } catch (e) {}
     }
 
-    function inferHairTags(hairTypeStr = "") {
-      const s = hairTypeStr.toLowerCase();
-      const tags = [];
-      if (s.includes('thick') || s.includes('curly') || s.includes('long')) tags.push('thick');
-      if (s.includes('fine') || s.includes('silky')) tags.push('fine');
-      if (s.includes('medium') || s.includes('all')) tags.push('medium');
-      if (s.includes('half') || s.includes('bang') || s.includes('braid') || s.includes('mini')) tags.push('halfup');
-      return tags.length > 0 ? tags : ['medium', 'thick', 'fine'];
-    }
-
-    // ==========================================
-    // 2. 从 SANITY.IO 实时拉取你在后台发布的发卡
-    // ==========================================
-    async function loadProductsFromSanity() {
-      const query = encodeURIComponent(`*[_type == "clipProduct"] | order(_createdAt desc) {
-        _id,
-        name,
-        series,
-        price,
-        shade,
-        swatch,
-        material,
-        dimensions,
-        hairType,
-        desc,
-        "imageUrl": image.asset->url
-      }`);
-
-      const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
-
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const studioItems = data.result || [];
-
-        if (studioItems.length > 0) {
-          const grouped = { cali: [], miami: [], nyc: [], tokyo: [] };
-
-          studioItems.forEach(doc => {
-            const targetSeries = grouped[doc.series] ? doc.series : 'cali';
-            const hairTypeText = doc.hairType || "All Hair Types";
-            grouped[targetSeries].push({
-              id: doc._id,
-              isLiveStudio: true,
-              name: doc.name || "Untitled Clip",
-              shade: doc.shade || "Signature Finish",
-              swatch: doc.swatch || "#78350F",
-              price: Number(doc.price) || 16.00,
-              rating: "5.0 ★",
-              material: doc.material || "Cellulose Acetate",
-              dimensions: doc.dimensions || "11.0 cm × 5.0 cm",
-              hairType: hairTypeText,
-              hairTags: inferHairTags(hairTypeText),
-              desc: doc.desc || "Curated studio release from BestClips collection.",
-              image: doc.imageUrl ? `${doc.imageUrl}?w=800&auto=format` : "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700"
-            });
-          });
-
-          collections.forEach(col => {
-            const liveList = grouped[col.id] || [];
-            if (liveList.length >= 5) {
-              col.items = liveList;
-            } else {
-              const needed = 5 - liveList.length;
-              col.items = [...liveList, ...fallbackItems[col.id].slice(0, needed)];
-            }
-          });
-
-          const latestReal = studioItems[0];
-          if (latestReal && latestReal.imageUrl) {
-            const seriesNameMap = { cali: "Spring in Cali", miami: "Hot Miami", nyc: "NYC Office OOTD", tokyo: "Tokyo Trade" };
-            document.getElementById('hero-featured-img').src = `${latestReal.imageUrl}?w=1000&auto=format`;
-            document.getElementById('hero-featured-badge').innerText = `New Studio Drop · ${seriesNameMap[latestReal.series] || 'Spring in Cali'}`;
-            document.getElementById('hero-featured-title').innerText = `${latestReal.name} — $${Number(latestReal.price || 16).toFixed(2)}`;
-            document.getElementById('hero-featured-btn').onclick = () => addToCart(latestReal._id);
-          }
-
-          updateSyncStatus(true, `${studioItems.length} Live Studio SKU${studioItems.length > 1 ? 's' : ''}`);
-        } else {
-          updateSyncStatus(true, "Studio Connected");
-        }
-      } catch (err) {
-        console.warn("Sanity fetch fallback:", err);
-        updateSyncStatus(false, "Catalog Ready");
-      }
-
-      renderCollections();
-    }
-
-    function updateSyncStatus(isOk, label) {
-      const dot = document.getElementById('sync-dot');
-      const text = document.getElementById('sync-text');
-      if (!dot || !text) return;
-      dot.className = isOk ? "w-1.5 h-1.5 rounded-full bg-emerald-500" : "w-1.5 h-1.5 rounded-full bg-stone-400";
-      text.innerText = label;
-    }
-
-    // ==========================================
-    // 3. 首屏 3D 鼠标悬停磁吸倾斜动效
-    // ==========================================
-    function initHeroTilt() {
-      const stage = document.getElementById('hero-stage');
-      const card = document.getElementById('hero-tilt-card');
-      if (!stage || !card) return;
-
-      stage.addEventListener('mousemove', (e) => {
-        const rect = stage.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `rotateY(${(x * 10).toFixed(2)}deg) rotateX(${(-y * 8).toFixed(2)}deg)`;
-      });
-
-      stage.addEventListener('mouseleave', () => {
-        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-      });
-    }
-
-    // ==========================================
-    // 4. 交互式左右对比滑块 (借鉴 Material Flask)
-    // ==========================================
-    function setComparePct(pct) {
-      const clamped = Math.max(0, Math.min(100, pct));
-      const overlay = document.getElementById('comp-overlay');
-      const handle = document.getElementById('comp-handle');
-      if (overlay) overlay.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
-      if (handle) handle.style.left = `${clamped}%`;
-
-      const btns = { glossy: document.getElementById('btn-glossy'), split: document.getElementById('btn-split'), matte: document.getElementById('btn-matte') };
-      Object.values(btns).forEach(b => {
-        if (b) b.className = "px-4 py-2 rounded-full text-xs font-semibold transition text-stone-600 hover:text-stone-950";
-      });
-      if (clamped >= 80 && btns.glossy) btns.glossy.className = "px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-950 shadow-2xs";
-      else if (clamped <= 20 && btns.matte) btns.matte.className = "px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-950 shadow-2xs";
-      else if (btns.split) btns.split.className = "px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-950 shadow-2xs";
-    }
-
-    function initComparisonSlider() {
-      const container = document.getElementById('comp-container');
-      if (!container) return;
-      let dragging = false;
-
-      const handleMove = (clientX) => {
-        const rect = container.getBoundingClientRect();
-        const pct = ((clientX - rect.left) / rect.width) * 100;
-        setComparePct(pct);
-      };
-
-      container.addEventListener('pointerdown', (e) => {
-        dragging = true;
-        container.setPointerCapture(e.pointerId);
-        handleMove(e.clientX);
-      });
-      container.addEventListener('pointermove', (e) => {
-        if (dragging) handleMove(e.clientX);
-      });
-      container.addEventListener('pointerup', () => { dragging = false; });
-      container.addEventListener('pointercancel', () => { dragging = false; });
-    }
-
-    // ==========================================
-    // 5. 按发量筛选器 & 15秒匹配测验 (Hair Fit Quiz)
-    // ==========================================
-    function setHairFilter(filterKey) {
-      activeHairFilter = filterKey;
-      const pills = document.querySelectorAll('.hair-pill');
-      pills.forEach(btn => {
-        const isMatch = btn.getAttribute('data-filter') === filterKey;
-        btn.className = isMatch
-          ? "hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-stone-900 text-white shadow-2xs"
-          : "hair-pill px-4 py-2 rounded-full text-xs font-semibold transition bg-white text-stone-700 border border-stone-200 hover:border-stone-400";
-      });
-
-      const hintMap = {
-        all: "Showing all 20 signature clips",
-        thick: "Filtered: High-tension clips for Thick, Long & Curly hair",
-        fine: "Filtered: Non-slip matte & secure clips for Fine & Silky hair",
-        medium: "Filtered: Everyday balanced clips for Medium volume hair",
-        halfup: "Filtered: Dainty minis, French pins & bows for Half-Up styles"
-      };
-      const hintEl = document.getElementById('active-filter-hint');
-      if (hintEl) hintEl.innerText = hintMap[filterKey] || hintMap.all;
-
-      renderCollections();
-    }
-
-    function openQuizModal() {
-      updateQuizRecommendation();
-      document.getElementById('quiz-modal').classList.remove('hidden');
-    }
-
-    function closeQuizModal() {
-      document.getElementById('quiz-modal').classList.add('hidden');
-    }
-
-    function selectQuizOption(type, val) {
-      quizState[type] = val;
-      const selector = type === 'vol' ? '.quiz-vol-btn' : '.quiz-vibe-btn';
-      document.querySelectorAll(selector).forEach(btn => {
-        const active = btn.getAttribute('data-val') === val;
-        btn.className = active
-          ? `${type === 'vol' ? 'quiz-vol-btn' : 'quiz-vibe-btn'} text-left p-3 rounded-2xl border border-stone-900 bg-stone-900 text-white text-xs`
-          : `${type === 'vol' ? 'quiz-vol-btn' : 'quiz-vibe-btn'} text-left p-3 rounded-2xl border border-stone-200 bg-[#FAF8F5] text-stone-800 text-xs`;
-      });
-      updateQuizRecommendation();
-    }
-
-    function updateQuizRecommendation() {
-      const targetCol = collections.find(c => c.id === quizState.vibe) || collections[0];
-      const matchItem = targetCol.items.find(item => (item.hairTags || []).includes(quizState.vol)) || targetCol.items[0];
-      if (!matchItem) return;
-
-      document.getElementById('quiz-rec-img').src = matchItem.image;
-      document.getElementById('quiz-rec-name').innerText = matchItem.name;
-      document.getElementById('quiz-rec-meta').innerText = `$${matchItem.price.toFixed(2)} · ${matchItem.hairType} · ${matchItem.dimensions}`;
-      document.getElementById('quiz-rec-add').onclick = () => {
-        addToCart(matchItem.id);
-        closeQuizModal();
-      };
-    }
-
-    function applyQuizFilterAndClose() {
-      setHairFilter(quizState.vol);
-      closeQuizModal();
-      const targetCol = collections.find(c => c.id === quizState.vibe);
-      if (targetCol) {
-        const el = document.getElementById(targetCol.anchor);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // ==========================================
-    // 6. 四大城市系列渲染与多角度详情弹窗
-    // ==========================================
     function findProductById(productId) {
       for (const col of collections) {
         const found = col.items.find(item => item.id === productId);
-        if (found) return { product: found, collectionTitle: col.title };
+        if (found) return found;
       }
       return null;
     }
 
-    function buildProductGallery(product) {
-      return DETAIL_ANGLES.map((angle, idx) => ({
-        label: `0${idx + 1} / 04 · ${angle.label}`,
-        shortLabel: angle.label,
-        url: idx === 0 ? product.image : angle.url
-      }));
+    function addToCart(productId) {
+      const product = findProductById(productId);
+      if (!product) return;
+
+      const existing = cart.find(item => item.product.id === productId);
+      if (existing) existing.quantity += 1;
+      else cart.push({ product, quantity: 1 });
+
+      savePersistedCart();
+      updateCartUI();
+      openCart();
     }
 
-    function renderCollections() {
-      const container = document.getElementById('collections-container');
-      if (!container) return;
-
-      container.innerHTML = collections.map(col => {
-        const filteredItems = activeHairFilter === 'all'
-          ? col.items
-          : col.items.filter(item => (item.hairTags || inferHairTags(item.hairType)).includes(activeHairFilter));
-
-        const visibleItems = col.expanded ? filteredItems : filteredItems.slice(0, 5);
-        const hiddenCount = Math.max(0, filteredItems.length - 5);
-
-        return `
-          <section id="${col.anchor}" class="scroll-mt-36">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 pb-4 border-b border-stone-200/80">
-              <div>
-                <span class="text-xs font-bold uppercase tracking-widest ${col.accentColor}">${col.badge}</span>
-                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-stone-950 mt-1">${col.title}</h2>
-                <p class="text-xs sm:text-sm text-stone-500 mt-1">${col.subtitle}</p>
-              </div>
-              <div class="flex items-center gap-2">
-                ${activeHairFilter !== 'all' ? `
-                  <button onclick="setHairFilter('all')" class="text-xs text-rose-600 font-semibold hover:underline">
-                    Reset Filter (${filteredItems.length} matched)
-                  </button>
-                ` : ''}
-                ${hiddenCount > 0 ? `
-                  <button onclick="toggleSeries('${col.id}')" class="self-start sm:self-end inline-flex items-center gap-1.5 bg-white border border-stone-300 hover:border-stone-900 text-stone-900 text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-2xs">
-                    <span>${col.expanded ? 'Show Less' : `View More (+${hiddenCount})`}</span>
-                    <svg class="w-3.5 h-3.5 transition-transform duration-200 ${col.expanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                ` : ''}
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-              ${visibleItems.map(item => `
-                <div class="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
-                  <div>
-                    <div onclick="openProductModal('${item.id}')" class="relative aspect-square bg-stone-100 overflow-hidden cursor-pointer">
-                      <img src="${item.image}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                      ${item.isLiveStudio ? `
-                        <span class="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
-                          New Drop
-                        </span>
-                      ` : `
-                        <span class="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur text-stone-800 text-[10px] font-medium px-2.5 py-0.5 rounded-full border border-stone-200/70">
-                          ${item.hairType}
-                        </span>
-                      `}
-                      <span class="absolute bottom-2.5 right-2.5 bg-stone-900/80 backdrop-blur text-white text-[10px] font-medium px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition">
-                        4 Angles · Quick View
-                      </span>
-                    </div>
-                    <div class="p-4">
-                      <div class="flex items-center justify-between text-[11px] mb-1.5">
-                        <div class="flex items-center gap-1.5 text-stone-500 truncate">
-                          <span class="w-2.5 h-2.5 rounded-full border border-stone-300 shrink-0" style="background-color: ${item.swatch}"></span>
-                          <span class="truncate">${item.shade}</span>
-                        </div>
-                        <span class="text-amber-500 font-mono font-semibold shrink-0 ml-1">${item.rating}</span>
-                      </div>
-                      <h3 onclick="openProductModal('${item.id}')" class="text-sm font-bold text-stone-950 hover:text-rose-500 cursor-pointer transition line-clamp-2 leading-snug min-h-[2.5rem]">
-                        ${item.name}
-                      </h3>
-                    </div>
-                  </div>
-
-                  <div class="px-4 pb-4 pt-2.5 flex items-center justify-between border-t border-stone-100">
-                    <span class="text-base font-mono font-bold text-stone-950">$${item.price.toFixed(2)}</span>
-                    <button onclick="addToCart('${item.id}')" class="bg-stone-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full hover:bg-rose-500 transition active:scale-95">
-                      Add +
-                    </button>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </section>
-        `;
-      }).join('');
+    function updateQuantity(productId, delta) {
+      const idx = cart.findIndex(item => item.product.id === productId);
+      if (idx === -1) return;
+      cart[idx].quantity += delta;
+      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+      savePersistedCart();
+      updateCartUI();
     }
 
-    function toggleSeries(seriesId) {
-      const target = collections.find(c => c.id === seriesId);
-      if (target) {
-        target.expanded = !target.expanded;
-        renderCollections();
-      }
-    }
-
-    let currentModalGallery = [];
-
-    function selectModalAngle(idx) {
-      const entry = currentModalGallery[idx];
-      if (!entry) return;
-      document.getElementById('modal-img').src = entry.url;
-      document.getElementById('modal-angle-badge').innerText = entry.label;
-      document.querySelectorAll('.modal-thumb-btn').forEach((btn, i) => {
-        btn.className = i === idx
-          ? "modal-thumb-btn relative rounded-xl overflow-hidden border-2 border-stone-950 aspect-square bg-white shadow-xs"
-          : "modal-thumb-btn relative rounded-xl overflow-hidden border border-stone-200 opacity-70 hover:opacity-100 aspect-square bg-white transition";
-      });
-    }
-
-    function openProductModal(productId) {
-      const found = findProductById(productId);
-      if (!found) return;
-      const { product: p, collectionTitle } = found;
-
-      currentModalGallery = buildProductGallery(p);
-
-      document.getElementById('modal-series').innerText = collectionTitle;
-      document.getElementById('modal-rating').innerText = p.rating;
-      document.getElementById('modal-title').innerText = p.name;
-      document.getElementById('modal-price').innerText = `$${p.price.toFixed(2)}`;
-      document.getElementById('modal-desc').innerText = p.desc;
-      document.getElementById('modal-shade').innerText = p.shade;
-      document.getElementById('modal-material').innerText = p.material;
-      document.getElementById('modal-dim').innerText = p.dimensions;
-      document.getElementById('modal-hairtype').innerText = p.hairType;
-
-      const thumbsContainer = document.getElementById('modal-thumbs');
-      thumbsContainer.innerHTML = currentModalGallery.map((g, idx) => `
-        <button type="button" onclick="selectModalAngle(${idx})" class="modal-thumb-btn relative rounded-xl overflow-hidden border border-stone-200 aspect-square bg-white">
-          <img src="${g.url}" alt="${g.shortLabel}" class="w-full h-full object-cover" />
-          <span class="absolute inset-x-0 bottom-0 bg-stone-950/75 text-white text-[9px] font-mono py-0.5 text-center truncate px-1">
-            ${g.shortLabel}
-          </span>
-        </button>
-      `).join('');
-
-      selectModalAngle(0);
-
-      const addBtn = document.getElementById('modal-add-btn');
-      addBtn.onclick = () => {
-        addToCart(p.id);
-        closeProductModal();
-      };
-
-      document.getElementById('product-modal').classList.remove('hidden');
-    }
-
-    function closeProductModal() {
-      document.getElementById('product-modal').classList.add('hidden');
-    }
-
-    // ==========================================
-    // 7. FAQ 折叠面板与订阅自动领券
-    // ==========================================
-    function toggleFaq(index) {
-      const body = document.getElementById(`faq-body-${index}`);
-      const icon = document.getElementById(`faq-icon-${index}`);
-      if (!body || !icon) return;
-      const isHidden = body.classList.contains('hidden');
-      body.classList.toggle('hidden', !isHidden);
-      icon.innerText = isHidden ? '−' : '+';
-    }
-
-    function subscribeNewsletter(e) {
-      e.preventDefault();
-      document.getElementById('newsletter-msg').classList.remove('hidden');
-      applyQuickPromo('PRETTY15', false);
-      e.target.reset();
-    }
-
-    function applyQuickPromo(code, openBagAfter = true) {
+    function applyQuickPromo(code) {
       const upper = (code || '').trim().toUpperCase();
       if (PROMO_CODES[upper]) {
         appliedPromo = PROMO_CODES[upper];
@@ -1252,8 +1010,8 @@
         if (input) input.value = upper;
         savePersistedCart();
         updateCartUI();
-        showToast(`Code ${upper} (15% Off) applied!`);
-        if (openBagAfter) openCart();
+        openCart();
+        showToast(`Code ${upper} (15% Off) applied`);
       }
     }
 
@@ -1261,70 +1019,35 @@
       const input = document.getElementById('promo-input');
       const feedback = document.getElementById('promo-feedback');
       const raw = (input ? input.value : '').trim().toUpperCase();
-
       if (!raw) return;
+
       if (PROMO_CODES[raw]) {
         appliedPromo = PROMO_CODES[raw];
         savePersistedCart();
         updateCartUI();
         if (feedback) {
-          feedback.className = "text-[11px] mt-1.5 text-emerald-600 font-semibold";
-          feedback.innerText = `✓ ${appliedPromo.code} applied: ${appliedPromo.desc}`;
+          feedback.className = "text-[11px] text-emerald-400";
+          feedback.innerText = `✓ ${appliedPromo.code} applied (${appliedPromo.desc})`;
         }
-        showToast(`Promo ${raw} applied!`);
-      } else {
-        if (feedback) {
-          feedback.className = "text-[11px] mt-1.5 text-rose-600 font-medium";
-          feedback.innerText = `Invalid code. Try PRETTY15 for 15% off!`;
-        }
+      } else if (feedback) {
+        feedback.className = "text-[11px] text-rose-400";
+        feedback.innerText = `Try code PRETTY15 for 15% off`;
       }
-    }
-
-    // ==========================================
-    // 8. 购物袋、满赠进度条与结账计算
-    // ==========================================
-    function addToCart(productId) {
-      const found = findProductById(productId);
-      if (!found) return;
-      const { product } = found;
-
-      const existingItem = cart.find(item => item.product.id === productId);
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push({ product, quantity: 1 });
-      }
-
-      savePersistedCart();
-      updateCartUI();
-      showToast(`Added "${product.name}" to bag`);
-    }
-
-    function updateQuantity(productId, delta) {
-      const index = cart.findIndex(item => item.product.id === productId);
-      if (index === -1) return;
-
-      cart[index].quantity += delta;
-      if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-      }
-      savePersistedCart();
-      updateCartUI();
     }
 
     function calculateBagTotals() {
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+      const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
+      const subtotal = cart.reduce((s, i) => s + (i.product.price * i.quantity), 0);
       const discountAmount = appliedPromo ? subtotal * appliedPromo.pct : 0;
       const discountedSubtotal = Math.max(0, subtotal - discountAmount);
       const shippingCost = (discountedSubtotal >= 35 || discountedSubtotal === 0) ? 0 : 4.95;
       const finalTotal = discountedSubtotal + shippingCost;
       const unlockedFreeGift = subtotal >= 50;
-      return { totalItems, subtotal, discountAmount, discountedSubtotal, shippingCost, finalTotal, unlockedFreeGift };
+      return { totalItems, subtotal, discountAmount, shippingCost, finalTotal, unlockedFreeGift };
     }
 
     function updateCartUI() {
-      const { totalItems, subtotal, discountAmount, discountedSubtotal, shippingCost, finalTotal, unlockedFreeGift } = calculateBagTotals();
+      const { totalItems, subtotal, discountAmount, shippingCost, finalTotal, unlockedFreeGift } = calculateBagTotals();
 
       document.getElementById('cart-count').innerText = totalItems;
       document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)}`;
@@ -1332,135 +1055,81 @@
       document.getElementById('checkout-item-count').innerText = totalItems + (unlockedFreeGift ? 1 : 0);
       document.getElementById('checkout-total').innerText = `$${finalTotal.toFixed(2)}`;
 
-      // 折扣行展示
       const discountRow = document.getElementById('cart-discount-row');
-      const checkoutPromoNote = document.getElementById('checkout-promo-note');
       if (appliedPromo && subtotal > 0) {
         discountRow.classList.remove('hidden');
-        document.getElementById('cart-discount-label').innerText = `Promo (${appliedPromo.code} · ${Math.round(appliedPromo.pct * 100)}% Off)`;
+        document.getElementById('cart-discount-label').innerText = `Promo (${appliedPromo.code})`;
         document.getElementById('cart-discount-val').innerText = `-$${discountAmount.toFixed(2)}`;
-        if (checkoutPromoNote) {
-          checkoutPromoNote.classList.remove('hidden');
-          checkoutPromoNote.innerText = `✓ Includes ${appliedPromo.code} (-$${discountAmount.toFixed(2)}) ${unlockedFreeGift ? '+ Free Sakura Mini Clip Gift' : ''}`;
-        }
       } else {
         discountRow.classList.add('hidden');
-        if (checkoutPromoNote) checkoutPromoNote.classList.add('hidden');
       }
 
-      // 运费展示
-      const shippingVal = document.getElementById('cart-shipping-val');
-      if (subtotal === 0) {
-        shippingVal.innerText = "$0.00";
-      } else if (shippingCost === 0) {
-        shippingVal.innerHTML = `<span class="text-emerald-600 font-semibold">FREE</span>`;
-      } else {
-        shippingVal.innerText = `$${shippingCost.toFixed(2)}`;
-      }
+      document.getElementById('cart-shipping-val').innerText = subtotal === 0 ? "$0.00" : (shippingCost === 0 ? "FREE" : `$${shippingCost.toFixed(2)}`);
 
-      // 顶部双阶梯进度条 ($35 免邮 / $50 送樱花迷你抓夹礼盒)
-      const shippingHint = document.getElementById('shipping-hint');
       const progressEl = document.getElementById('shipping-progress');
-      const pct = Math.min(100, Math.round((subtotal / 50) * 100));
-      if (progressEl) progressEl.style.width = `${pct}%`;
+      if (progressEl) progressEl.style.width = `${Math.min(100, Math.round((subtotal / 50) * 100))}%`;
 
-      if (subtotal >= 50) {
-        shippingHint.innerHTML = `<span class="text-emerald-700 font-semibold">🎉 Unlocked FREE Shipping + FREE Sakura Mini Clip Gift!</span>`;
-      } else if (subtotal >= 35) {
-        shippingHint.innerHTML = `<span class="text-emerald-700 font-semibold">✓ Free US Shipping unlocked!</span> Add <span class="font-mono font-bold">$${(50 - subtotal).toFixed(2)}</span> for a FREE Mini Clip Gift.`;
-      } else if (subtotal > 0) {
-        shippingHint.innerHTML = `Add <span class="font-mono font-bold text-rose-600">$${(35 - subtotal).toFixed(2)}</span> more for <strong>FREE US shipping</strong> ($50 for Free Gift).`;
-      } else {
-        shippingHint.innerText = `Free US shipping at $35 · Free Mini Clip Gift at $50`;
-      }
+      const hint = document.getElementById('shipping-hint');
+      if (subtotal >= 50) hint.innerText = "✓ Free US Shipping + Free Mini Clip Gift unlocked";
+      else if (subtotal >= 35) hint.innerText = `✓ Free Shipping unlocked · Add $${(50 - subtotal).toFixed(2)} for Free Mini Clip`;
+      else if (subtotal > 0) hint.innerText = `Add $${(35 - subtotal).toFixed(2)} for Free US Shipping`;
+      else hint.innerText = "Free US shipping at $35 · Free Mini Clip at $50";
 
       const container = document.getElementById('cart-items-container');
       if (cart.length === 0) {
-        container.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-center py-12">
-            <p class="text-stone-400 text-sm">Your bag is empty.</p>
-            <button onclick="closeCart()" class="mt-4 text-rose-500 text-sm font-medium hover:underline">
-              Browse Collections &rarr;
-            </button>
-          </div>
-        `;
+        container.innerHTML = `<div class="h-full flex items-center justify-center text-xs" style="color: var(--text-muted);">Your bag is empty.</div>`;
         return;
       }
 
-      const giftBanner = unlockedFreeGift ? `
-        <div class="flex gap-3 p-3 rounded-2xl bg-rose-50/90 border border-rose-200 items-center">
-          <img src="https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Free Gift" class="w-12 h-12 rounded-xl object-cover border border-rose-200" />
+      const giftRow = unlockedFreeGift ? `
+        <div class="flex items-center gap-3 p-3 rounded-2xl hairline-border" style="background: var(--bg-pill);">
+          <img src="https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Gift" class="w-12 h-12 rounded-xl object-cover" />
           <div class="flex-1 min-w-0">
-            <div class="text-[10px] font-bold uppercase tracking-wider text-rose-600">Unlocked Bonus Tier ($50+)</div>
-            <h4 class="text-xs font-bold text-stone-900 truncate">Complimentary Sakura Mini Clip</h4>
+            <div class="text-[10px] font-mono uppercase text-emerald-400">Complimentary Gift ($50+)</div>
+            <div class="text-xs font-semibold truncate">Sakura Mini Clip</div>
           </div>
-          <span class="text-xs font-mono font-bold text-emerald-600">FREE</span>
+          <span class="text-xs font-mono text-emerald-400">FREE</span>
         </div>
       ` : '';
 
       container.innerHTML = cart.map(({ product, quantity }) => `
-        <div class="flex gap-4 py-3 border-b border-stone-100 items-center">
-          <img src="${product.image}" alt="${product.name}" class="w-16 h-16 rounded-xl object-cover bg-stone-100 border border-stone-200" />
+        <div class="flex items-center gap-4 py-3 hairline-b">
+          <img src="${product.image}" alt="${product.name}" class="w-14 h-14 rounded-xl object-cover" />
           <div class="flex-1 min-w-0">
-            <h4 class="text-sm font-semibold text-stone-900 truncate">${product.name}</h4>
-            <p class="text-xs text-stone-500 mt-0.5">${product.shade} · <span class="font-mono">$${product.price.toFixed(2)}</span></p>
+            <h4 class="text-xs font-semibold truncate">${product.name}</h4>
+            <p class="text-[11px] mt-0.5" style="color: var(--text-muted);">${product.shade} · $${product.price.toFixed(2)}</p>
             <div class="flex items-center gap-2 mt-2">
-              <button onclick="updateQuantity('${product.id}', -1)" class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center text-stone-600 hover:bg-stone-100">-</button>
-              <span class="text-xs font-mono font-semibold w-5 text-center">${quantity}</span>
-              <button onclick="updateQuantity('${product.id}', 1)" class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center text-stone-600 hover:bg-stone-100">+</button>
+              <button onclick="updateQuantity('${product.id}', -1)" class="w-6 h-6 rounded-full hairline-border flex items-center justify-center text-xs">-</button>
+              <span class="text-xs font-mono w-4 text-center">${quantity}</span>
+              <button onclick="updateQuantity('${product.id}', 1)" class="w-6 h-6 rounded-full hairline-border flex items-center justify-center text-xs">+</button>
             </div>
           </div>
-          <div class="text-sm font-mono font-bold text-stone-950">
-            $${(product.price * quantity).toFixed(2)}
-          </div>
+          <div class="text-xs font-mono font-semibold tabular-nums">$${(product.price * quantity).toFixed(2)}</div>
         </div>
-      `).join('') + giftBanner;
+      `).join('') + giftRow;
     }
 
     function switchDrawerStep(step) {
-      if (step === 'checkout' && cart.length === 0) {
-        showToast("Your bag is empty!");
-        return;
-      }
-
-      document.getElementById('step-cart').classList.add('hidden');
-      document.getElementById('step-checkout').classList.add('hidden');
-      document.getElementById('step-confirmation').classList.add('hidden');
-      document.getElementById('back-to-cart-btn').classList.add('hidden');
-
-      if (step === 'cart') {
-        document.getElementById('drawer-title').innerText = "Your Bag";
-        document.getElementById('step-cart').classList.remove('hidden');
-      } else if (step === 'checkout') {
-        document.getElementById('drawer-title').innerText = "Checkout";
-        document.getElementById('back-to-cart-btn').classList.remove('hidden');
-        document.getElementById('step-checkout').classList.remove('hidden');
-      } else if (step === 'confirmation') {
-        document.getElementById('drawer-title').innerText = "Receipt";
-        document.getElementById('step-confirmation').classList.remove('hidden');
-      }
+      if (step === 'checkout' && cart.length === 0) return;
+      document.getElementById('step-cart').classList.toggle('hidden', step !== 'cart');
+      document.getElementById('step-checkout').classList.toggle('hidden', step !== 'checkout');
+      document.getElementById('step-confirmation').classList.toggle('hidden', step !== 'confirmation');
+      document.getElementById('back-to-cart-btn').classList.toggle('hidden', step !== 'checkout');
+      document.getElementById('drawer-title').innerText = step === 'cart' ? 'Bag' : (step === 'checkout' ? 'Checkout' : 'Confirmed');
     }
 
-    function submitOrder(event) {
-      event.preventDefault();
-      const name = document.getElementById('cust-name').value;
-      const email = document.getElementById('cust-email').value;
-      const address = document.getElementById('cust-address').value;
-      const city = document.getElementById('cust-city').value;
-      const zip = document.getElementById('cust-zip').value;
+    function submitOrder(e) {
+      e.preventDefault();
       const { finalTotal } = calculateBagTotals();
-      const orderId = `#BC-${Math.floor(100000 + Math.random() * 900000)}`;
-
-      document.getElementById('receipt-name').innerText = name;
-      document.getElementById('receipt-id').innerText = orderId;
-      document.getElementById('receipt-email').innerText = email;
-      document.getElementById('receipt-address').innerText = `${address}, ${city} ${zip}`;
+      document.getElementById('receipt-name').innerText = document.getElementById('cust-name').value;
+      document.getElementById('receipt-id').innerText = `#BC-${Math.floor(100000 + Math.random() * 900000)}`;
+      document.getElementById('receipt-email').innerText = document.getElementById('cust-email').value;
+      document.getElementById('receipt-address').innerText = `${document.getElementById('cust-address').value}, ${document.getElementById('cust-city').value}`;
       document.getElementById('receipt-total').innerText = `$${finalTotal.toFixed(2)}`;
-
       cart = [];
       savePersistedCart();
       updateCartUI();
-      event.target.reset();
+      e.target.reset();
       switchDrawerStep('confirmation');
     }
 
@@ -1474,19 +1143,16 @@
       document.getElementById('cart-modal').classList.add('hidden');
     }
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.innerText = message;
-      toast.classList.remove('translate-y-20', 'opacity-0');
-      setTimeout(() => {
-        toast.classList.add('translate-y-20', 'opacity-0');
-      }, 2400);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 2200);
     }
 
-    // 启动全部模块
+    // Boot
     loadPersistedCart();
-    renderCollections();
-    initHeroTilt();
+    renderCityStages();
     initComparisonSlider();
     loadProductsFromSanity();
     updateCartUI();
