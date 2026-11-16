@@ -42,14 +42,21 @@
     </div>
   </section>
 
-  <!-- 3. 商品展示网格区 -->
+  <!-- 3. 商品展示网格区（新增分类筛选栏） -->
   <section id="catalog" class="max-w-6xl mx-auto px-6 py-12 w-full">
-    <div class="flex justify-between items-end mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
       <div>
         <h2 class="text-2xl font-bold text-gray-900">Featured Collection</h2>
         <p class="text-sm text-gray-500 mt-1">Limited batch drops ready to ship.</p>
       </div>
-      <span class="text-xs text-gray-400">3 Items Available</span>
+      
+      <!-- 分类切换按钮组 -->
+      <div id="category-filters" class="flex flex-wrap gap-2">
+        <button onclick="filterCategory('All')" data-cat="All" class="cat-btn bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-full transition">All</button>
+        <button onclick="filterCategory('EDC')" data-cat="EDC" class="cat-btn bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 text-xs font-semibold px-4 py-2 rounded-full transition">EDC</button>
+        <button onclick="filterCategory('Desk')" data-cat="Desk" class="cat-btn bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 text-xs font-semibold px-4 py-2 rounded-full transition">Desk</button>
+        <button onclick="filterCategory('Wallet')" data-cat="Wallet" class="cat-btn bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 text-xs font-semibold px-4 py-2 rounded-full transition">Wallet</button>
+      </div>
     </div>
 
     <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
@@ -70,16 +77,21 @@
     &copy; 2026 BestClips.app. All rights reserved.
   </footer>
 
-  <!-- 6. 侧滑购物车抽屉 (Slide-over Cart Drawer) -->
+  <!-- 6. 侧滑购物车 & 结账抽屉 (多视图状态切换) -->
   <div id="cart-modal" class="fixed inset-0 z-50 hidden">
-    <!-- 半透明背景遮罩（点击空白处可关闭） -->
     <div onclick="closeCart()" class="fixed inset-0 bg-gray-900/50 backdrop-blur-xs transition-opacity"></div>
     
-    <!-- 右侧滑出面板 -->
     <div class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between z-10">
-      <!-- 抽屉顶部标题 -->
+      <!-- 抽屉顶部栏 -->
       <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
-        <h2 class="text-lg font-bold text-gray-900">Shopping Cart</h2>
+        <div class="flex items-center gap-2">
+          <button id="back-to-cart-btn" onclick="switchDrawerStep('cart')" class="hidden text-gray-500 hover:text-gray-900 p-1 rounded-lg hover:bg-gray-100">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h2 id="drawer-title" class="text-lg font-bold text-gray-900">Shopping Cart</h2>
+        </div>
         <button onclick="closeCart()" class="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -87,20 +99,99 @@
         </button>
       </div>
 
-      <!-- 购物车商品列表区 -->
-      <div id="cart-items-container" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-        <!-- 由 JS 动态渲染 -->
+      <!-- 视图 A：购物车商品列表 -->
+      <div id="step-cart" class="flex-1 flex flex-col justify-between overflow-hidden">
+        <div id="cart-items-container" class="flex-1 overflow-y-auto px-6 py-4 space-y-4"></div>
+        <div class="border-t border-gray-200 px-6 py-5 bg-gray-50">
+          <div class="flex justify-between text-base font-bold text-gray-900 mb-1">
+            <span>Subtotal</span>
+            <span id="cart-total">$0.00</span>
+          </div>
+          <p id="shipping-hint" class="text-xs text-gray-500 mb-4">Free standard shipping on US orders over $35.</p>
+          <button onclick="switchDrawerStep('checkout')" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-indigo-700 transition shadow-sm active:scale-[0.99]">
+            Proceed to Checkout
+          </button>
+        </div>
       </div>
 
-      <!-- 抽屉底部结算栏 -->
-      <div class="border-t border-gray-200 px-6 py-5 bg-gray-50">
-        <div class="flex justify-between text-base font-bold text-gray-900 mb-1">
-          <span>Subtotal</span>
-          <span id="cart-total">$0.00</span>
+      <!-- 视图 B：结账与收货信息表单 -->
+      <form id="step-checkout" onsubmit="submitOrder(event)" class="hidden flex-1 flex flex-col justify-between overflow-y-auto">
+        <div class="px-6 py-5 space-y-4">
+          <div class="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3.5 flex justify-between items-center text-sm">
+            <span class="text-indigo-900 font-medium">Order Total (<span id="checkout-item-count">0</span> items)</span>
+            <span id="checkout-total" class="text-lg font-extrabold text-indigo-700">$0.00</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">Full Name *</label>
+            <input type="text" id="cust-name" required placeholder="Alex Morgan" class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">Email for Receipt *</label>
+            <input type="email" id="cust-email" required placeholder="alex@example.com" class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">Shipping Address *</label>
+            <input type="text" id="cust-address" required placeholder="123 Market St, Apt 4B" class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2" />
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="cust-city" required placeholder="San Francisco, CA" class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <input type="text" id="cust-zip" required placeholder="94105" class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">Payment Method</label>
+            <div class="border border-indigo-200 bg-indigo-50/40 rounded-lg p-3 flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                <span class="font-medium text-gray-800">Express Demo Checkout</span>
+              </div>
+              <span class="text-xs text-gray-500">No charge</span>
+            </div>
+          </div>
         </div>
-        <p class="text-xs text-gray-500 mb-4">Free standard shipping on US orders over $35.</p>
-        <button onclick="checkout()" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-indigo-700 transition shadow-sm active:scale-[0.99]">
-          Proceed to Checkout
+
+        <div class="border-t border-gray-200 px-6 py-5 bg-gray-50">
+          <button type="submit" class="w-full bg-gray-900 text-white py-3 px-4 rounded-xl font-semibold hover:bg-indigo-600 transition shadow-sm">
+            Place Order
+          </button>
+        </div>
+      </form>
+
+      <!-- 视图 C：订单确认成功回执 -->
+      <div id="step-confirmation" class="hidden flex-1 flex flex-col justify-between px-6 py-8 text-center overflow-y-auto">
+        <div class="my-auto space-y-4">
+          <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-green-600">Order Confirmed</span>
+            <h3 class="text-2xl font-extrabold text-gray-900 mt-1">Thank you, <span id="receipt-name">Customer</span>!</h3>
+            <p class="text-sm text-gray-500 mt-1">Order <span id="receipt-id" class="font-mono font-semibold text-gray-800">#BC-000000</span> has been received.</p>
+          </div>
+
+          <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-left text-xs space-y-2 mt-4">
+            <div class="flex justify-between">
+              <span class="text-gray-500">Confirmation sent to:</span>
+              <span id="receipt-email" class="font-medium text-gray-900"></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Shipping to:</span>
+              <span id="receipt-address" class="font-medium text-gray-900 text-right max-w-[200px]"></span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-gray-200 text-sm">
+              <span class="font-semibold text-gray-700">Amount Paid:</span>
+              <span id="receipt-total" class="font-extrabold text-indigo-600"></span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="closeCart()" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-indigo-700 transition mt-6">
+          Continue Shopping
         </button>
       </div>
     </div>
@@ -113,9 +204,11 @@
 
   <!-- 8. 前端数据与交互逻辑 -->
   <script>
+    // 扩展至 6 款商品 SKU（包含 category 字段用于分类筛选）
     const products = [
       {
         id: 1,
+        category: "EDC",
         name: "Titanium EDC Pocket Clip",
         tag: "Bestseller",
         origin: "Designed in CA · Made in Japan",
@@ -125,6 +218,7 @@
       },
       {
         id: 2,
+        category: "Desk",
         name: "Magnetic Cable & Desk Clip (3-Pack)",
         tag: "New Arrival",
         origin: "Designed in NYC · Made in China",
@@ -134,27 +228,81 @@
       },
       {
         id: 3,
+        category: "Wallet",
         name: "Carbon Fiber Money & Card Clip",
         tag: "Limited",
         origin: "Designed in CA · Made in Japan",
         price: 35.00,
         description: "3K twill weave carbon fiber engineered for high tension retention without losing shape.",
         image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 4,
+        category: "EDC",
+        name: "Brass Quick-Release Key Clip",
+        tag: "Craft Series",
+        origin: "Designed in NYC · Made in Japan",
+        price: 24.00,
+        description: "Solid C36000 machined brass that develops a rich natural patina over daily belt or bag carry.",
+        image: "https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 5,
+        category: "Desk",
+        name: "Japanese Spring Steel Binder Clips (6-Pack)",
+        tag: "Studio Essential",
+        origin: "Designed in CA · Made in Japan",
+        price: 16.00,
+        description: "Matte black powder-coated high-carbon steel clips built for architects, writers, and heavy paper stacks.",
+        image: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 6,
+        category: "Wallet",
+        name: "Minimalist Titanium Money Band Clip",
+        tag: "Ultra-Slim",
+        origin: "Designed in CA · Made in China",
+        price: 32.00,
+        description: "CNC-milled unibody titanium frame holding up to 8 cards and folded bills at just 14 grams.",
+        image: "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=600&q=80"
       }
     ];
 
-    // 购物车数据结构：[{ product, quantity }]
+    let activeCategory = 'All';
     let cart = [];
+
+    // 切换分类并重新渲染商品
+    function filterCategory(category) {
+      activeCategory = category;
+      
+      // 更新按钮高亮样式
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.dataset.cat === category) {
+          btn.className = "cat-btn bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-full transition";
+        } else {
+          btn.className = "cat-btn bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 text-xs font-semibold px-4 py-2 rounded-full transition";
+        }
+      });
+
+      renderProducts();
+    }
 
     function renderProducts() {
       const grid = document.getElementById('product-grid');
-      grid.innerHTML = products.map(product => `
+      const filtered = activeCategory === 'All' 
+        ? products 
+        : products.filter(p => p.category === activeCategory);
+
+      grid.innerHTML = filtered.map(product => `
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
             <div class="relative h-56 bg-gray-100 overflow-hidden">
               <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
               <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-gray-800 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">
                 ${product.tag}
+              </span>
+              <span class="absolute top-3 right-3 bg-gray-900/75 backdrop-blur text-white text-[11px] font-medium px-2 py-0.5 rounded">
+                ${product.category}
               </span>
             </div>
             <div class="p-5">
@@ -173,7 +321,6 @@
       `).join('');
     }
 
-    // 加入购物车（自动合并同款商品数量）
     function addToCart(productId) {
       const product = products.find(p => p.id === productId);
       if (!product) return;
@@ -189,7 +336,6 @@
       showToast(`Added "${product.name}" to cart`);
     }
 
-    // 修改单品数量 (+1 或 -1)
     function updateQuantity(productId, delta) {
       const index = cart.findIndex(item => item.product.id === productId);
       if (index === -1) return;
@@ -201,13 +347,24 @@
       updateCartUI();
     }
 
-    // 刷新购物车抽屉与顶部角标
     function updateCartUI() {
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
       document.getElementById('cart-count').innerText = totalItems;
       document.getElementById('cart-total').innerText = `$${totalPrice.toFixed(2)}`;
+      document.getElementById('checkout-item-count').innerText = totalItems;
+      document.getElementById('checkout-total').innerText = `$${totalPrice.toFixed(2)}`;
+
+      // 免运费进度提示
+      const shippingHint = document.getElementById('shipping-hint');
+      if (totalPrice >= 35) {
+        shippingHint.innerHTML = `<span class="text-green-600 font-semibold">✓ You unlocked FREE standard shipping!</span>`;
+      } else if (totalPrice > 0) {
+        shippingHint.innerText = `Add $${(35 - totalPrice).toFixed(2)} more for FREE standard shipping.`;
+      } else {
+        shippingHint.innerText = `Free standard shipping on US orders over $35.`;
+      }
 
       const container = document.getElementById('cart-items-container');
       if (cart.length === 0) {
@@ -241,18 +398,67 @@
       `).join('');
     }
 
+    // 控制抽屉内部的三个步骤切换：'cart' | 'checkout' | 'confirmation'
+    function switchDrawerStep(step) {
+      if (step === 'checkout' && cart.length === 0) {
+        showToast("Your cart is empty!");
+        return;
+      }
+
+      document.getElementById('step-cart').classList.add('hidden');
+      document.getElementById('step-checkout').classList.add('hidden');
+      document.getElementById('step-confirmation').classList.add('hidden');
+      document.getElementById('back-to-cart-btn').classList.add('hidden');
+
+      if (step === 'cart') {
+        document.getElementById('drawer-title').innerText = "Shopping Cart";
+        document.getElementById('step-cart').classList.remove('hidden');
+      } else if (step === 'checkout') {
+        document.getElementById('drawer-title').innerText = "Checkout";
+        document.getElementById('back-to-cart-btn').classList.remove('hidden');
+        document.getElementById('step-checkout').classList.remove('hidden');
+      } else if (step === 'confirmation') {
+        document.getElementById('drawer-title').innerText = "Receipt";
+        document.getElementById('step-confirmation').classList.remove('hidden');
+      }
+    }
+
+    // 提交订单并生成回执
+    function submitOrder(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('cust-name').value;
+      const email = document.getElementById('cust-email').value;
+      const address = document.getElementById('cust-address').value;
+      const city = document.getElementById('cust-city').value;
+      const zip = document.getElementById('cust-zip').value;
+      const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+      // 生成模拟订单号
+      const orderId = `#BC-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      // 填充回执信息
+      document.getElementById('receipt-name').innerText = name;
+      document.getElementById('receipt-id').innerText = orderId;
+      document.getElementById('receipt-email').innerText = email;
+      document.getElementById('receipt-address').innerText = `${address}, ${city} ${zip}`;
+      document.getElementById('receipt-total').innerText = `$${totalPrice.toFixed(2)}`;
+
+      // 清空购物车并更新状态
+      cart = [];
+      updateCartUI();
+      event.target.reset();
+      switchDrawerStep('confirmation');
+    }
+
     function openCart() {
       updateCartUI();
+      switchDrawerStep('cart');
       document.getElementById('cart-modal').classList.remove('hidden');
     }
 
     function closeCart() {
       document.getElementById('cart-modal').classList.add('hidden');
-    }
-
-    function checkout() {
-      if (cart.length === 0) return;
-      showToast("Stripe checkout integration coming in Day 3!");
     }
 
     function showToast(message) {
