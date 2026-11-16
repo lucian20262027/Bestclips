@@ -4,9 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BestClips — Curated Hair Clips by City & Mood</title>
+  <!-- 引入 Google AI Studio 同款 DM Sans 与 DM Mono 字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"DM Sans"', 'sans-serif'],
+            mono: ['"DM Mono"', 'monospace'],
+            serif: ['"Playfair Display"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* 3D 磁吸倾斜舞台透视 */
+    .hero-perspective { perspective: 1000px; }
+    .tilt-card { transition: transform 0.15s ease-out; transform-style: preserve-3d; }
+  </style>
 </head>
-<body class="bg-[#FAF8F5] text-stone-900 min-h-screen flex flex-col justify-between antialiased">
+<body class="bg-[#FAF8F5] text-stone-900 min-h-screen flex flex-col justify-between antialiased font-sans">
 
   <!-- 0. 顶部公告栏 -->
   <div class="bg-stone-900 text-[#FAF8F5] text-xs py-2.5 px-4 text-center tracking-wide font-medium">
@@ -30,25 +52,31 @@
         </nav>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <!-- 实时云端同步状态指示器 -->
+        <div id="sync-badge" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono text-stone-500 bg-white border border-stone-200 px-3 py-1.5 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" id="sync-dot"></span>
+          <span id="sync-text">Syncing Studio...</span>
+        </div>
+
         <button onclick="openCart()" class="bg-stone-900 text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-rose-500 transition flex items-center gap-2 shadow-xs">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
           <span>Bag</span>
-          <span id="cart-count" class="bg-white text-stone-950 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          <span id="cart-count" class="bg-white text-stone-950 font-mono text-xs font-bold px-2 py-0.5 rounded-full">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 2. 主视觉 Hero 首屏（真实抓夹主图） -->
+  <!-- 2. 主视觉 Hero 首屏（带 3D 磁吸悬停倾斜交互） -->
   <section class="bg-white border-b border-stone-200/80">
     <div class="max-w-7xl mx-auto px-6 py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
       <div class="lg:col-span-6 space-y-5">
         <div class="inline-flex items-center gap-2 bg-rose-50 border border-rose-200/80 text-rose-700 text-xs px-3.5 py-1.5 rounded-full font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-          4 City Capsule Drops · 32 Curated Hair Clips
+          4 City Capsule Drops · Live Studio Sync
         </div>
         <h1 class="text-4xl sm:text-5xl font-serif font-bold text-stone-950 tracking-tight leading-[1.12]">
           One clip for every city, outfit & mood.
@@ -66,15 +94,16 @@
         </div>
       </div>
 
-      <div class="lg:col-span-6">
-        <div class="relative rounded-3xl overflow-hidden bg-stone-100 border border-stone-200 shadow-lg aspect-[16/10]">
-          <img src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Assorted Hair Claw Clips" class="w-full h-full object-cover" />
+      <!-- 右侧 3D 磁吸倾斜主图卡片（自动同步后台最新上传商品） -->
+      <div class="lg:col-span-6 hero-perspective" id="hero-stage">
+        <div id="hero-tilt-card" class="tilt-card relative rounded-3xl overflow-hidden bg-stone-100 border border-stone-200 shadow-xl aspect-[16/10]">
+          <img id="hero-featured-img" src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Featured Hair Clip" class="w-full h-full object-cover" />
           <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-stone-200/80 shadow-sm flex items-center justify-between">
             <div>
-              <div class="text-[11px] font-bold uppercase tracking-wider text-rose-500">Spring in Cali Flagship</div>
-              <div class="text-sm font-bold text-stone-900">Pastel Gradient Acetate Claw — $16.00</div>
+              <div id="hero-featured-badge" class="text-[11px] font-bold uppercase tracking-wider text-rose-500">Spring in Cali Flagship</div>
+              <div id="hero-featured-title" class="text-sm font-bold text-stone-900">Malibu Sunset Pastel Claw — $16.00</div>
             </div>
-            <button onclick="addToCart('cali-1')" class="bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-rose-500 transition">
+            <button id="hero-featured-btn" onclick="addToCart('cali-1')" class="bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-rose-500 transition shrink-0">
               Quick Add +
             </button>
           </div>
@@ -83,30 +112,30 @@
     </div>
   </section>
 
-  <!-- 3. 四大城市主题系列展示区（每排5个 + View More 展开按钮） -->
+  <!-- 3. 四大城市主题系列展示区 -->
   <main id="collections-container" class="max-w-7xl mx-auto px-6 py-14 w-full space-y-20">
-    <!-- 由 JavaScript 动态渲染 4 大系列 -->
+    <!-- 由 JS 自动合并 Sanity 后台商品与默认系列商品渲染 -->
   </main>
 
   <!-- 4. 工艺背书栏 -->
   <section id="craftsmanship" class="bg-[#F4EFEA] border-t border-stone-200/80 py-12">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
       <div class="flex items-start gap-4">
-        <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center shrink-0 text-rose-500 font-bold text-sm">01</div>
+        <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center shrink-0 text-rose-500 font-mono font-bold text-sm">01</div>
         <div>
           <h3 class="text-sm font-bold text-stone-950">Plant-Based Cellulose Acetate</h3>
           <p class="text-xs text-stone-600 mt-1 leading-relaxed">Flexible, glossy, and impact-resistant—never snaps like cheap brittle acrylic clips.</p>
         </div>
       </div>
       <div class="flex items-start gap-4">
-        <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center shrink-0 text-rose-500 font-bold text-sm">02</div>
+        <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center shrink-0 text-rose-500 font-mono font-bold text-sm">02</div>
         <div>
           <h3 class="text-sm font-bold text-stone-950">High-Tension Double Coil Spring</h3>
           <p class="text-xs text-stone-600 mt-1 leading-relaxed">Locks thick, curly, or fine hair securely in place without pulling or leaving dents.</p>
         </div>
       </div>
       <div class="flex items-start gap-4">
-        <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center shrink-0 text-rose-500 font-bold text-sm">03</div>
+        <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center shrink-0 text-rose-500 font-mono font-bold text-sm">03</div>
         <div>
           <h3 class="text-sm font-bold text-stone-950">Hand-Polished Rounded Teeth</h3>
           <p class="text-xs text-stone-600 mt-1 leading-relaxed">Tumbled and buffed smooth for zero snagging, breakage, or static frizz.</p>
@@ -142,8 +171,8 @@
         <span class="w-2 h-2 rounded-full bg-rose-400 inline-block"></span>
         BestClips.app
       </div>
-      <div>&copy; 2026 BestClips. Designed in CA & NYC · Curated Worldwide.</div>
-      <div class="flex gap-2 font-semibold text-stone-300">
+      <div>&copy; 2026 BestClips. Powered by Sanity Headless Studio.</div>
+      <div class="flex gap-2 font-mono font-semibold text-stone-300">
         <span class="bg-stone-900 border border-stone-700 px-2 py-0.5 rounded">Apple Pay</span>
         <span class="bg-stone-900 border border-stone-700 px-2 py-0.5 rounded">VISA</span>
         <span class="bg-stone-900 border border-stone-700 px-2 py-0.5 rounded">Mastercard</span>
@@ -167,16 +196,16 @@
         <div>
           <div class="flex items-center justify-between">
             <span id="modal-series" class="text-xs font-bold text-rose-500 uppercase tracking-wider"></span>
-            <span id="modal-rating" class="text-xs font-bold text-amber-500"></span>
+            <span id="modal-rating" class="text-xs font-mono font-bold text-amber-500"></span>
           </div>
           <h3 id="modal-title" class="text-xl font-serif font-bold text-stone-950 mt-1"></h3>
-          <div id="modal-price" class="text-2xl font-extrabold text-stone-900 mt-1"></div>
+          <div id="modal-price" class="text-2xl font-mono font-bold text-stone-900 mt-1"></div>
           <p id="modal-desc" class="text-xs text-stone-600 mt-3 leading-relaxed"></p>
           
           <div class="mt-4 pt-4 border-t border-stone-100 space-y-1.5 text-xs">
             <div class="flex justify-between"><span class="text-stone-400">Shade / Finish:</span><span id="modal-shade" class="font-semibold text-stone-800"></span></div>
             <div class="flex justify-between"><span class="text-stone-400">Material:</span><span id="modal-material" class="font-medium text-stone-800"></span></div>
-            <div class="flex justify-between"><span class="text-stone-400">Dimensions:</span><span id="modal-dim" class="font-medium text-stone-800"></span></div>
+            <div class="flex justify-between"><span class="text-stone-400">Dimensions:</span><span id="modal-dim" class="font-mono font-medium text-stone-800"></span></div>
             <div class="flex justify-between"><span class="text-stone-400">Best For:</span><span id="modal-hairtype" class="font-medium text-rose-600"></span></div>
           </div>
         </div>
@@ -214,7 +243,7 @@
         <div class="border-t border-stone-200 px-6 py-5 bg-[#FAF8F5]">
           <div class="flex justify-between text-base font-bold text-stone-950 mb-1">
             <span>Subtotal</span>
-            <span id="cart-total">$0.00</span>
+            <span id="cart-total" class="font-mono">$0.00</span>
           </div>
           <p id="shipping-hint" class="text-xs text-stone-500 mb-4">Free standard shipping on US orders over $35.</p>
           <button onclick="switchDrawerStep('checkout')" class="w-full bg-stone-900 text-white py-3.5 px-4 rounded-full font-semibold hover:bg-rose-500 transition shadow-sm">
@@ -227,8 +256,8 @@
       <form id="step-checkout" onsubmit="submitOrder(event)" class="hidden flex-1 flex flex-col justify-between overflow-y-auto">
         <div class="px-6 py-5 space-y-4">
           <div class="bg-rose-50/80 border border-rose-100 rounded-2xl p-3.5 flex justify-between items-center text-sm">
-            <span class="text-stone-900 font-medium">Order Total (<span id="checkout-item-count">0</span> items)</span>
-            <span id="checkout-total" class="text-lg font-extrabold text-rose-600">$0.00</span>
+            <span class="text-stone-900 font-medium">Order Total (<span id="checkout-item-count" class="font-mono">0</span> items)</span>
+            <span id="checkout-total" class="text-lg font-mono font-bold text-rose-600">$0.00</span>
           </div>
           <div>
             <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1">Full Name *</label>
@@ -278,7 +307,7 @@
             </div>
             <div class="flex justify-between pt-2 border-t border-stone-200 text-sm">
               <span class="font-semibold text-stone-700">Amount Paid:</span>
-              <span id="receipt-total" class="font-extrabold text-rose-600"></span>
+              <span id="receipt-total" class="font-mono font-bold text-rose-600"></span>
             </div>
           </div>
         </div>
@@ -295,103 +324,165 @@
   </div>
 
   <script>
-    // 真实实拍发卡图片池（100% 发抓夹、一字夹、鳄鱼夹、鲨鱼夹与发饰实拍）
-    const clipPhotos = {
-      pastelClaw1: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700",
-      pastelClaw2: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=700",
-      creamClaw:   "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=700",
-      tortoise1:   "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=700",
-      tortoise2:   "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700",
-      goldMetal:   "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700",
-      pearlClip:   "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=700",
-      bowClip:     "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=700",
-      miniSet:     "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=700",
-      sleekBar:    "https://images.pexels.com/photos/8142035/pexels-photo-8142035.jpeg?auto=compress&cs=tinysrgb&w=700"
+    // ==========================================
+    // 1. SANITY.IO 云端配置 (Project ID: ycnr19bp)
+    // ==========================================
+    const SANITY_PROJECT_ID = 'ycnr19bp';
+    const SANITY_DATASET = 'production';
+    const SANITY_API_VERSION = '2024-03-01';
+
+    // 默认预置兜底商品（当你后台只上传了几个商品时，自动补齐每排5个的陈列效果）
+    const fallbackItems = {
+      cali: [
+        { id: "cali-1", name: "Malibu Sunset Pastel Claw", shade: "Peach & Lavender", swatch: "#F5B7B1", price: 16.00, rating: "4.9 ★", material: "Cellulose Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "Thick & Long Hair", desc: "Hand-marbled pastel sunset acetate claw clip designed for effortless beachy updos.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "cali-2", name: "Oat Milk Cloud Matte Claw", shade: "Warm Cream", swatch: "#EDE0D4", price: 14.00, rating: "4.9 ★", material: "Soft-Touch Matte Acetate", dimensions: "10.5 cm × 4.8 cm", hairType: "All Hair Types", desc: "Velvety cloud-contour claw clip with non-slip inner teeth for silky hair.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "cali-3", name: "Big Sur Seafoam Acrylic Clip", shade: "Matcha Mint", swatch: "#A3B18A", price: 15.00, rating: "4.8 ★", material: "Eco Glossy Resin", dimensions: "10.2 cm × 4.5 cm", hairType: "Medium to Thick", desc: "Translucent coastal sage green claw with high-tension stainless spring.", image: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "cali-4", name: "Santa Barbara Daisy Mini Set", shade: "Buttercream & White", swatch: "#FEF08A", price: 13.00, rating: "5.0 ★", material: "Plant Acetate", dimensions: "3.2 cm Mini Claws", hairType: "Half-Up & Braids", desc: "Set of four daisy-cut mini clips to pin back face-framing layers.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "cali-5", name: "Venice Beach Jelly Rectangle Claw", shade: "Translucent Rose", swatch: "#F4ACB7", price: 15.00, rating: "4.8 ★", material: "Crystal Jelly Acetate", dimensions: "9.8 cm × 4.2 cm", hairType: "Fine to Medium", desc: "90s-inspired rectangular jelly claw clip with crystal-clear shine.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700" }
+      ],
+      miami: [
+        { id: "miami-1", name: "South Beach Tiger-Stripe Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18.00, rating: "5.0 ★", material: "Italian Pattern Acetate", dimensions: "11.8 cm × 5.5 cm", hairType: "Thick & Curly Hair", desc: "High-contrast tiger stripe pattern cut from thick Italian cellulose acetate.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "miami-2", name: "Wynwood Leopard Tortoise Jaw", shade: "Espresso Spotted", swatch: "#78350F", price: 17.00, rating: "4.9 ★", material: "Hand-Polished Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "All Hair Types", desc: "Fierce wildcat spot pattern with ultra-glossy resort finish.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "miami-3", name: "Ocean Drive Flame Coral Claw", shade: "Hibiscus Red-Orange", swatch: "#EA580C", price: 16.00, rating: "4.8 ★", material: "Glossy Resin Acetate", dimensions: "10.5 cm × 4.8 cm", hairType: "Medium to Thick", desc: "Vibrant tropical sunset hue designed to pop against sun-kissed skin.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "miami-4", name: "Brickell Gold-Flecked Havana Claw", shade: "24K Amber Flake", swatch: "#D97706", price: 19.00, rating: "4.9 ★", material: "Gold-Leaf Acetate", dimensions: "11.2 cm × 5.0 cm", hairType: "Thick & Long Hair", desc: "Rich Havana brown acetate infused with shimmering metallic gold flakes.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "miami-5", name: "Star Island Molten Bronze Claw", shade: "Sunlit Bronze", swatch: "#A16207", price: 21.00, rating: "4.9 ★", material: "Electroplated Alloy", dimensions: "11.0 cm × 4.5 cm", hairType: "All Hair Types", desc: "Liquid-metal bronze finish that catches golden-hour sunlight.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700" }
+      ],
+      nyc: [
+        { id: "nyc-1", name: "SoHo Brushed Gold Arch Claw", shade: "Champagne Gold", swatch: "#D4AF37", price: 20.00, rating: "4.9 ★", material: "Lightweight Hollow Alloy", dimensions: "11.2 cm × 4.6 cm", hairType: "Fine to Thick Hair", desc: "Architectural open-arch metal claw that elevates blazers and crisp button-downs.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "nyc-2", name: "Tribeca Matte Noir Slim Barrette", shade: "Obsidian Matte", swatch: "#1C1917", price: 15.00, rating: "4.9 ★", material: "Matte Acetate + Steel", dimensions: "9.0 cm × 1.6 cm", hairType: "All Hair Types", desc: "Ultra-clean minimalist bar clip for polished low ponytails and side parts.", image: "https://images.pexels.com/photos/8142035/pexels-photo-8142035.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "nyc-3", name: "Fifth Ave Tortoise French Pin", shade: "Classic Dark Havana", swatch: "#451A03", price: 16.00, rating: "4.8 ★", material: "Curved Acetate", dimensions: "12.5 cm Length", hairType: "Medium to Long Hair", desc: "Ergonomic U-shaped hairpin for a secure, pin-free Parisian office bun.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "nyc-4", name: "Madison Silver Twisted Loop Claw", shade: "Polished Sterling Tone", swatch: "#D6D3D1", price: 20.00, rating: "4.8 ★", material: "Hollow Zinc Alloy", dimensions: "10.8 cm × 4.4 cm", hairType: "All Hair Types", desc: "Modern sculptural infinity-loop metal jaw clip with featherlight balance.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "nyc-5", name: "Upper East Side Pearl & Gold Duo", shade: "Cream Pearl / Gold", swatch: "#F5F5F4", price: 18.00, rating: "5.0 ★", material: "Faux Pearl + Brass", dimensions: "7.8 cm Length", hairType: "All Hair Types", desc: "Pair of tailored pearl snap clips for boardroom-ready sophistication.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=700" }
+      ],
+      tokyo: [
+        { id: "tokyo-1", name: "Harajuku Mulberry Silk Ribbon Bow", shade: "Sakura Blush", swatch: "#F4C2C2", price: 16.00, rating: "5.0 ★", material: "100% Mulberry Silk", dimensions: "15.5 cm Bow Width", hairType: "Half-Up & Ponytails", desc: "Delicate Japanese-inspired silk ribbon bow mounted on a snag-free French clasp.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "tokyo-2", name: "Ginza Akoya-Style Pearl Set", shade: "Lustrous White Pearl", swatch: "#FFFBEB", price: 19.00, rating: "4.9 ★", material: "Resin Pearls + Gold", dimensions: "7.5 cm Length", hairType: "All Hair Types", desc: "Hand-aligned luminous pearls inspired by Tokyo boutique hair jewelry.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "tokyo-3", name: "Shibuya Pastel Mini Bundle (6-Pack)", shade: "Sakura & Cream Mix", swatch: "#FBCFE8", price: 15.00, rating: "4.9 ★", material: "Cellulose Acetate", dimensions: "2.5 cm Mini Claws", hairType: "Bangs & Braids", desc: "Six dainty mini clips in sakura pink, milk tea, and pearl finishes.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "tokyo-4", name: "Aoyama Velvet Double-Bow Clip", shade: "Bordeaux Wine", swatch: "#881337", price: 17.00, rating: "4.8 ★", material: "Plush Velvet + Clasp", dimensions: "14.0 cm Width", hairType: "All Hair Types", desc: "Structured double-layered velvet ribbon clip for romantic evening styling.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=700" },
+        { id: "tokyo-5", name: "Daikanyama Milk-Tea Jaw Clip", shade: "Hojicha Latte", swatch: "#D6CCC2", price: 16.00, rating: "4.9 ★", material: "Japanese Acetate", dimensions: "10.2 cm × 4.6 cm", hairType: "Medium to Thick", desc: "Warm roasted milk-tea swirl acetate favored by Tokyo salon stylists.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=700" }
+      ]
     };
 
-    // 四大城市系列（每个系列8款发卡，默认展示前5款，点击 View More 展开后3款）
     const collections = [
-      {
-        id: "cali",
-        anchor: "series-cali",
-        badge: "Collection 01 · Fresh & Airy",
-        title: "Spring in Cali",
-        subtitle: "Sun-washed pastels, oat-milk matte claws, and breezy coastal flower clips.",
-        accentColor: "text-emerald-600",
-        expanded: false,
-        items: [
-          { id: "cali-1", name: "Malibu Sunset Pastel Claw", shade: "Peach & Lavender", swatch: "#F5B7B1", price: 16.00, rating: "4.9 ★", material: "Cellulose Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "Thick & Long Hair", desc: "Hand-marbled pastel sunset acetate claw clip designed for effortless beachy updos.", image: clipPhotos.pastelClaw1 },
-          { id: "cali-2", name: "Oat Milk Cloud Matte Claw", shade: "Warm Cream", swatch: "#EDE0D4", price: 14.00, rating: "4.9 ★", material: "Soft-Touch Matte Acetate", dimensions: "10.5 cm × 4.8 cm", hairType: "All Hair Types", desc: "Velvety cloud-contour claw clip with non-slip inner teeth for silky hair.", image: clipPhotos.creamClaw },
-          { id: "cali-3", name: "Big Sur Seafoam Acrylic Clip", shade: "Matcha Mint", swatch: "#A3B18A", price: 15.00, rating: "4.8 ★", material: "Eco Glossy Resin", dimensions: "10.2 cm × 4.5 cm", hairType: "Medium to Thick", desc: "Translucent coastal sage green claw with high-tension stainless spring.", image: clipPhotos.pastelClaw2 },
-          { id: "cali-4", name: "Santa Barbara Daisy Mini Set (4-Pack)", shade: "Buttercream & White", swatch: "#FEF08A", price: 13.00, rating: "5.0 ★", material: "Plant Acetate", dimensions: "3.2 cm Mini Claws", hairType: "Half-Up & Braids", desc: "Set of four daisy-cut mini clips to pin back face-framing layers.", image: clipPhotos.miniSet },
-          { id: "cali-5", name: "Venice Beach Jelly Rectangle Claw", shade: "Translucent Rose", swatch: "#F4ACB7", price: 15.00, rating: "4.8 ★", material: "Crystal Jelly Acetate", dimensions: "9.8 cm × 4.2 cm", hairType: "Fine to Medium", desc: "90s-inspired rectangular jelly claw clip with crystal-clear shine.", image: clipPhotos.pastelClaw1 },
-          { id: "cali-6", name: "Laguna Pearl Crescent Barrette", shade: "Ivory Shell", swatch: "#FAF3DD", price: 16.00, rating: "4.9 ★", material: "Acetate + Resin Pearl", dimensions: "8.0 cm Length", hairType: "Side Sweep", desc: "Iridescent shell-effect crescent snap clip for effortless coastal styling.", image: clipPhotos.pearlClip },
-          { id: "cali-7", name: "Napa Valley Olive Open-Arch Claw", shade: "Sage Olive", swatch: "#6B705C", price: 17.00, rating: "4.8 ★", material: "Cellulose Acetate", dimensions: "11.2 cm × 5.0 cm", hairType: "Thick Hair", desc: "Cutout arch frame reduces weight while holding full twists securely.", image: clipPhotos.pastelClaw2 },
-          { id: "cali-8", name: "Carmel Vanilla No-Crease Clips (4-Pack)", shade: "Vanilla Cream", swatch: "#F8EDEB", price: 12.00, rating: "4.9 ★", material: "Smooth Resin + Steel", dimensions: "6.0 cm × 1.8 cm", hairType: "Bangs & Styling", desc: "Zero-dent makeup and skincare setting clips in warm vanilla finish.", image: clipPhotos.creamClaw }
-        ]
-      },
-      {
-        id: "miami",
-        anchor: "series-miami",
-        badge: "Collection 02 · Bold & Fierce",
-        title: "Hot Miami",
-        subtitle: "Statement tiger-stripe acetate, fiery amber tortoiseshell, and sultry resort silhouettes.",
-        accentColor: "text-amber-600",
-        expanded: false,
-        items: [
-          { id: "miami-1", name: "South Beach Tiger-Stripe Jumbo Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18.00, rating: "5.0 ★", material: "Italian Pattern Acetate", dimensions: "11.8 cm × 5.5 cm", hairType: "Thick & Curly Hair", desc: "High-contrast tiger stripe pattern cut from thick Italian cellulose acetate.", image: clipPhotos.tortoise1 },
-          { id: "miami-2", name: "Wynwood Leopard Tortoise Jaw Clip", shade: "Espresso Spotted", swatch: "#78350F", price: 17.00, rating: "4.9 ★", material: "Hand-Polished Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "All Hair Types", desc: "Fierce wildcat spot pattern with ultra-glossy resort finish.", image: clipPhotos.tortoise2 },
-          { id: "miami-3", name: "Ocean Drive Flame Coral Claw", shade: "Hibiscus Red-Orange", swatch: "#EA580C", price: 16.00, rating: "4.8 ★", material: "Glossy Resin Acetate", dimensions: "10.5 cm × 4.8 cm", hairType: "Medium to Thick", desc: "Vibrant tropical sunset hue designed to pop against sun-kissed skin.", image: clipPhotos.tortoise1 },
-          { id: "miami-4", name: "Brickell Gold-Flecked Havana Claw", shade: "24K Amber Flake", swatch: "#D97706", price: 19.00, rating: "4.9 ★", material: "Gold-Leaf Infused Acetate", dimensions: "11.2 cm × 5.0 cm", hairType: "Thick & Long Hair", desc: "Rich Havana brown acetate infused with shimmering metallic gold flakes.", image: clipPhotos.tortoise2 },
-          { id: "miami-5", name: "Key Biscayne Hibiscus Statement Clip", shade: "Sunset Terracotta", swatch: "#C2410C", price: 16.00, rating: "4.8 ★", material: "Sculpted Acrylic", dimensions: "9.0 cm × 8.5 cm", hairType: "All Hair Types", desc: "Bold tropical blossom jaw clip built for poolside cocktails and vacation nights.", image: clipPhotos.pastelClaw1 },
-          { id: "miami-6", name: "Coral Gables Safari Print Barrette", shade: "Tiger Honey", swatch: "#92400E", price: 15.00, rating: "4.7 ★", material: "Acetate + French Clasp", dimensions: "8.5 cm Length", hairType: "Half-Up Styles", desc: "Sleek tiger-patterned French barrette for effortless half-up volume.", image: clipPhotos.tortoise1 },
-          { id: "miami-7", name: "Star Island Molten Bronze Metal Claw", shade: "Sunlit Bronze", swatch: "#A16207", price: 21.00, rating: "4.9 ★", material: "Electroplated Zinc Alloy", dimensions: "11.0 cm × 4.5 cm", hairType: "All Hair Types", desc: "Liquid-metal bronze finish that catches golden-hour sunlight.", image: clipPhotos.goldMetal },
-          { id: "miami-8", name: "Design District Cheetah Mini Trio", shade: "Wild Amber Mix", swatch: "#713F12", price: 14.00, rating: "4.8 ★", material: "Cellulose Acetate", dimensions: "4.0 cm Medium-Mini", hairType: "Braids & Twists", desc: "Three fierce animal-print mini claws for bold everyday accents.", image: clipPhotos.miniSet }
-        ]
-      },
-      {
-        id: "nyc",
-        anchor: "series-nyc",
-        badge: "Collection 03 · Tailored & Architectural",
-        title: "NYC Office OOTD",
-        subtitle: "Sculpted brushed gold claws, matte black French pins, and sleek 9-to-7 silhouettes.",
-        accentColor: "text-stone-800",
-        expanded: false,
-        items: [
-          { id: "nyc-1", name: "SoHo Brushed Gold Arch Claw", shade: "Champagne Gold", swatch: "#D4AF37", price: 20.00, rating: "4.9 ★", material: "Lightweight Hollow Alloy", dimensions: "11.2 cm × 4.6 cm", hairType: "Fine to Thick Hair", desc: "Architectural open-arch metal claw that elevates blazers and crisp button-downs.", image: clipPhotos.goldMetal },
-          { id: "nyc-2", name: "Tribeca Matte Noir Slim Barrette", shade: "Obsidian Matte", swatch: "#1C1917", price: 15.00, rating: "4.9 ★", material: "Matte Acetate + Steel", dimensions: "9.0 cm × 1.6 cm", hairType: "All Hair Types", desc: "Ultra-clean minimalist bar clip for polished low ponytails and side parts.", image: clipPhotos.sleekBar },
-          { id: "nyc-3", name: "Fifth Ave Tortoise French Chignon Pin", shade: "Classic Dark Havana", swatch: "#451A03", price: 16.00, rating: "4.8 ★", material: "Curved Cellulose Acetate", dimensions: "12.5 cm Length", hairType: "Medium to Long Hair", desc: "Ergonomic U-shaped hairpin for a secure, pin-free Parisian office bun.", image: clipPhotos.tortoise2 },
-          { id: "nyc-4", name: "Madison Silver Twisted Loop Claw", shade: "Polished Sterling Tone", swatch: "#D6D3D1", price: 20.00, rating: "4.8 ★", material: "Hollow Zinc Alloy", dimensions: "10.8 cm × 4.4 cm", hairType: "All Hair Types", desc: "Modern sculptural infinity-loop metal jaw clip with featherlight balance.", image: clipPhotos.goldMetal },
-          { id: "nyc-5", name: "Upper East Side Pearl & Gold Duo", shade: "Cream Pearl / Gold", swatch: "#F5F5F4", price: 18.00, rating: "5.0 ★", material: "Faux Pearl + Brass", dimensions: "7.8 cm Length", hairType: "All Hair Types", desc: "Pair of tailored pearl snap clips for boardroom-ready sophistication.", image: clipPhotos.pearlClip },
-          { id: "nyc-6", name: "Wall Street Espresso Geometric Claw", shade: "Deep Roast Brown", swatch: "#292524", price: 17.00, rating: "4.9 ★", material: "Heavyweight Acetate", dimensions: "11.0 cm × 5.0 cm", hairType: "Thick Hair", desc: "Sharp architectural cut-out rectangle claw in deep espresso acetate.", image: clipPhotos.sleekBar },
-          { id: "nyc-7", name: "Chelsea Minimalist Wire Alligator Clips (2-Pack)", shade: "18K Gold Plated", swatch: "#EAB308", price: 14.00, rating: "4.7 ★", material: "Plated Stainless Steel", dimensions: "7.5 cm Length", hairType: "Fine to Medium", desc: "Geometric hollow-frame duckbill clips that slide cleanly without bulk.", image: clipPhotos.goldMetal },
-          { id: "nyc-8", name: "Brooklyn Studio Charcoal Loop Claw", shade: "Slate Charcoal", swatch: "#44403C", price: 16.00, rating: "4.8 ★", material: "Soft-Matte Acetate", dimensions: "10.5 cm × 4.5 cm", hairType: "All Hair Types", desc: "Understated slate-grey matte finish built for monochrome workwear.", image: clipPhotos.sleekBar }
-        ]
-      },
-      {
-        id: "tokyo",
-        anchor: "series-tokyo",
-        badge: "Collection 04 · Delicate & Kawaii-Chic",
-        title: "Tokyo Trade",
-        subtitle: "Harajuku silk ribbon bows, Ginza freshwater pearl pins, and pastel mini clip sets.",
-        accentColor: "text-rose-500",
-        expanded: false,
-        items: [
-          { id: "tokyo-1", name: "Harajuku Mulberry Silk Ribbon Bow", shade: "Sakura Blush", swatch: "#F4C2C2", price: 16.00, rating: "5.0 ★", material: "100% Mulberry Silk + Clasp", dimensions: "15.5 cm Bow Width", hairType: "Half-Up & Ponytails", desc: "Delicate Japanese-inspired silk ribbon bow mounted on a snag-free French clasp.", image: clipPhotos.bowClip },
-          { id: "tokyo-2", name: "Ginza Akoya-Style Pearl Barrette Set", shade: "Lustrous White Pearl", swatch: "#FFFBEB", price: 19.00, rating: "4.9 ★", material: "Resin Pearls + Gold Alloy", dimensions: "7.5 cm Length", hairType: "All Hair Types", desc: "Hand-aligned luminous pearls inspired by Tokyo boutique hair jewelry.", image: clipPhotos.pearlClip },
-          { id: "tokyo-3", name: "Shibuya Pastel Mini Claw Bundle (6-Pack)", shade: "Sakura & Cream Mix", swatch: "#FBCFE8", price: 15.00, rating: "4.9 ★", material: "Cellulose Acetate", dimensions: "2.5 cm Mini Claws", hairType: "Bangs, Braids & Twists", desc: "Six dainty mini clips in sakura pink, milk tea, and pearl finishes.", image: clipPhotos.miniSet },
-          { id: "tokyo-4", name: "Aoyama Velvet Double-Bow Clip", shade: "Bordeaux Wine", swatch: "#881337", price: 17.00, rating: "4.8 ★", material: "Plush Velvet + Alligator Clip", dimensions: "14.0 cm Width", hairType: "All Hair Types", desc: "Structured double-layered velvet ribbon clip for romantic evening styling.", image: clipPhotos.bowClip },
-          { id: "tokyo-5", name: "Daikanyama Milk-Tea Acetate Jaw Clip", shade: "Hojicha Latte", swatch: "#D6CCC2", price: 16.00, rating: "4.9 ★", material: "Japanese Pattern Acetate", dimensions: "10.2 cm × 4.6 cm", hairType: "Medium to Thick", desc: "Warm roasted milk-tea swirl acetate favored by Tokyo salon stylists.", image: clipPhotos.creamClaw },
-          { id: "tokyo-6", name: "Omotesando Crystal & Pearl Hairpins (3-Pack)", shade: "Champagne Crystal", swatch: "#FDE68A", price: 18.00, rating: "4.8 ★", material: "Cubic Zirconia + Brass", dimensions: "6.5 cm Pins", hairType: "Updos & Side Clips", desc: "Delicate micro-pavé crystal and pearl bobby pins for layered stacking.", image: clipPhotos.pearlClip },
-          { id: "tokyo-7", name: "Kyoto Matcha & Cream Checker Mini Clips", shade: "Uji Matcha", swatch: "#84A98C", price: 14.00, rating: "4.9 ★", material: "Plant Cellulose Acetate", dimensions: "3.5 cm Claws", hairType: "Half-Up & Fine Hair", desc: "Artisanal checkerboard pattern mini claws in Uji matcha green and ivory.", image: clipPhotos.miniSet },
-          { id: "tokyo-8", name: "Kichijoji Satin Long-Tail Ribbon Barrette", shade: "Midnight Navy Silk", swatch: "#1E293B", price: 16.00, rating: "4.8 ★", material: "Heavy Satin + French Barrette", dimensions: "17.0 cm Tail Length", hairType: "Low Ponytails", desc: "Flowing long-tail silk satin bow clip that drapes gracefully down loose waves.", image: clipPhotos.bowClip }
-        ]
-      }
+      { id: "cali", anchor: "series-cali", badge: "Collection 01 · Fresh & Airy", title: "Spring in Cali", subtitle: "Sun-washed pastels, oat-milk matte claws, and breezy coastal flower clips.", accentColor: "text-emerald-600", expanded: false, items: [...fallbackItems.cali] },
+      { id: "miami", anchor: "series-miami", badge: "Collection 02 · Bold & Fierce", title: "Hot Miami", subtitle: "Statement tiger-stripe acetate, fiery amber tortoiseshell, and sultry resort silhouettes.", accentColor: "text-amber-600", expanded: false, items: [...fallbackItems.miami] },
+      { id: "nyc", anchor: "series-nyc", badge: "Collection 03 · Tailored & Architectural", title: "NYC Office OOTD", subtitle: "Sculpted brushed gold claws, matte black French pins, and sleek 9-to-7 silhouettes.", accentColor: "text-stone-800", expanded: false, items: [...fallbackItems.nyc] },
+      { id: "tokyo", anchor: "series-tokyo", badge: "Collection 04 · Delicate & Kawaii-Chic", title: "Tokyo Trade", subtitle: "Harajuku silk ribbon bows, Ginza freshwater pearl pins, and pastel mini clip sets.", accentColor: "text-rose-500", expanded: false, items: [...fallbackItems.tokyo] }
     ];
 
     let cart = [];
 
-    // 扁平化查找商品工具函数
+    // ==========================================
+    // 2. 从 SANITY.IO 实时拉取你在后台发布的发卡
+    // ==========================================
+    async function loadProductsFromSanity() {
+      const query = encodeURIComponent(`*[_type == "clipProduct"] | order(_createdAt desc) {
+        _id,
+        name,
+        series,
+        price,
+        shade,
+        swatch,
+        material,
+        dimensions,
+        hairType,
+        desc,
+        "imageUrl": image.asset->url
+      }`);
+
+      const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const studioItems = data.result || [];
+
+        if (studioItems.length > 0) {
+          // 按系列分组 Sanity 后台传的真实商品
+          const grouped = { cali: [], miami: [], nyc: [], tokyo: [] };
+
+          studioItems.forEach(doc => {
+            const targetSeries = grouped[doc.series] ? doc.series : 'cali';
+            grouped[targetSeries].push({
+              id: doc._id,
+              isLiveStudio: true,
+              name: doc.name || "Untitled Clip",
+              shade: doc.shade || "Signature Finish",
+              swatch: doc.swatch || "#78350F",
+              price: Number(doc.price) || 16.00,
+              rating: "5.0 ★",
+              material: doc.material || "Cellulose Acetate",
+              dimensions: doc.dimensions || "11.0 cm × 5.0 cm",
+              hairType: doc.hairType || "All Hair Types",
+              desc: doc.desc || "Curated studio release from BestClips collection.",
+              image: doc.imageUrl ? `${doc.imageUrl}?w=800&auto=format` : "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=700"
+            });
+          });
+
+          // 合并策略：后台上传的真实商品排在最前面，不足5个时由默认款补位
+          collections.forEach(col => {
+            const liveList = grouped[col.id] || [];
+            if (liveList.length >= 5) {
+              col.items = liveList;
+            } else {
+              const needed = 5 - liveList.length;
+              col.items = [...liveList, ...fallbackItems[col.id].slice(0, needed)];
+            }
+          });
+
+          // 把最新上架的第一款真实发卡更新到首屏 Hero 主视觉
+          const latestReal = studioItems[0];
+          if (latestReal && latestReal.imageUrl) {
+            const seriesNameMap = { cali: "Spring in Cali", miami: "Hot Miami", nyc: "NYC Office OOTD", tokyo: "Tokyo Trade" };
+            document.getElementById('hero-featured-img').src = `${latestReal.imageUrl}?w=1000&auto=format`;
+            document.getElementById('hero-featured-badge').innerText = `New Studio Drop · ${seriesNameMap[latestReal.series] || 'Spring in Cali'}`;
+            document.getElementById('hero-featured-title').innerText = `${latestReal.name} — $${Number(latestReal.price || 16).toFixed(2)}`;
+            document.getElementById('hero-featured-btn').onclick = () => addToCart(latestReal._id);
+          }
+
+          updateSyncStatus(true, `${studioItems.length} Live Studio SKU${studioItems.length > 1 ? 's' : ''}`);
+        } else {
+          updateSyncStatus(true, "Studio Connected");
+        }
+      } catch (err) {
+        console.warn("Sanity fetch fallback:", err);
+        updateSyncStatus(false, "Catalog Ready");
+      }
+
+      renderCollections();
+    }
+
+    function updateSyncStatus(isOk, label) {
+      const dot = document.getElementById('sync-dot');
+      const text = document.getElementById('sync-text');
+      if (!dot || !text) return;
+      dot.className = isOk ? "w-1.5 h-1.5 rounded-full bg-emerald-500" : "w-1.5 h-1.5 rounded-full bg-stone-400";
+      text.innerText = label;
+    }
+
+    // ==========================================
+    // 3. 首屏 3D 鼠标悬停磁吸倾斜动效 (借鉴 AI Studio 模板)
+    // ==========================================
+    function initHeroTilt() {
+      const stage = document.getElementById('hero-stage');
+      const card = document.getElementById('hero-tilt-card');
+      if (!stage || !card) return;
+
+      stage.addEventListener('mousemove', (e) => {
+        const rect = stage.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `rotateY(${(x * 10).toFixed(2)}deg) rotateX(${(-y * 8).toFixed(2)}deg)`;
+      });
+
+      stage.addEventListener('mouseleave', () => {
+        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+      });
+    }
+
+    // ==========================================
+    // 4. 渲染四大城市系列与购物车逻辑
+    // ==========================================
     function findProductById(productId) {
       for (const col of collections) {
         const found = col.items.find(item => item.id === productId);
@@ -400,39 +491,43 @@
       return null;
     }
 
-    // 渲染四大系列（每排5个 + View More 展开切换）
     function renderCollections() {
       const container = document.getElementById('collections-container');
       if (!container) return;
 
       container.innerHTML = collections.map(col => {
         const visibleItems = col.expanded ? col.items : col.items.slice(0, 5);
-        const hiddenCount = col.items.length - 5;
+        const hiddenCount = Math.max(0, col.items.length - 5);
 
         return `
           <section id="${col.anchor}" class="scroll-mt-24">
-            <!-- 系列标题行 -->
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 pb-4 border-b border-stone-200/80">
               <div>
                 <span class="text-xs font-bold uppercase tracking-widest ${col.accentColor}">${col.badge}</span>
                 <h2 class="text-2xl sm:text-3xl font-serif font-bold text-stone-950 mt-1">${col.title}</h2>
                 <p class="text-xs sm:text-sm text-stone-500 mt-1">${col.subtitle}</p>
               </div>
-              <button onclick="toggleSeries('${col.id}')" class="self-start sm:self-end inline-flex items-center gap-1.5 bg-white border border-stone-300 hover:border-stone-900 text-stone-900 text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-2xs">
-                <span>${col.expanded ? 'Show Less' : `View More (+${hiddenCount})`}</span>
-                <svg class="w-3.5 h-3.5 transition-transform duration-200 ${col.expanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              ${hiddenCount > 0 ? `
+                <button onclick="toggleSeries('${col.id}')" class="self-start sm:self-end inline-flex items-center gap-1.5 bg-white border border-stone-300 hover:border-stone-900 text-stone-900 text-xs font-semibold px-4 py-2.5 rounded-full transition shadow-2xs">
+                  <span>${col.expanded ? 'Show Less' : `View More (+${hiddenCount})`}</span>
+                  <svg class="w-3.5 h-3.5 transition-transform duration-200 ${col.expanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              ` : ''}
             </div>
 
-            <!-- 5列商品卡片网格 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
               ${visibleItems.map(item => `
                 <div class="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
                   <div>
                     <div onclick="openProductModal('${item.id}')" class="relative aspect-square bg-stone-100 overflow-hidden cursor-pointer">
-                      <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                      <img src="${item.image}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                      ${item.isLiveStudio ? `
+                        <span class="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+                          New Drop
+                        </span>
+                      ` : ''}
                       <span class="absolute bottom-2.5 right-2.5 bg-stone-900/80 backdrop-blur text-white text-[10px] font-medium px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition">
                         Quick View
                       </span>
@@ -443,7 +538,7 @@
                           <span class="w-2.5 h-2.5 rounded-full border border-stone-300 shrink-0" style="background-color: ${item.swatch}"></span>
                           <span class="truncate">${item.shade}</span>
                         </div>
-                        <span class="text-amber-500 font-semibold shrink-0 ml-1">${item.rating}</span>
+                        <span class="text-amber-500 font-mono font-semibold shrink-0 ml-1">${item.rating}</span>
                       </div>
                       <h3 onclick="openProductModal('${item.id}')" class="text-sm font-bold text-stone-950 hover:text-rose-500 cursor-pointer transition line-clamp-2 leading-snug min-h-[2.5rem]">
                         ${item.name}
@@ -452,7 +547,7 @@
                   </div>
 
                   <div class="px-4 pb-4 pt-2.5 flex items-center justify-between border-t border-stone-100">
-                    <span class="text-base font-extrabold text-stone-950">$${item.price.toFixed(2)}</span>
+                    <span class="text-base font-mono font-bold text-stone-950">$${item.price.toFixed(2)}</span>
                     <button onclick="addToCart('${item.id}')" class="bg-stone-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full hover:bg-rose-500 transition active:scale-95">
                       Add +
                     </button>
@@ -465,7 +560,6 @@
       }).join('');
     }
 
-    // 切换某个系列的展开/收起状态
     function toggleSeries(seriesId) {
       const target = collections.find(c => c.id === seriesId);
       if (target) {
@@ -572,14 +666,14 @@
           <img src="${product.image}" alt="${product.name}" class="w-16 h-16 rounded-xl object-cover bg-stone-100 border border-stone-200" />
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-stone-900 truncate">${product.name}</h4>
-            <p class="text-xs text-stone-500 mt-0.5">${product.shade} · $${product.price.toFixed(2)}</p>
+            <p class="text-xs text-stone-500 mt-0.5">${product.shade} · <span class="font-mono">$${product.price.toFixed(2)}</span></p>
             <div class="flex items-center gap-2 mt-2">
               <button onclick="updateQuantity('${product.id}', -1)" class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center text-stone-600 hover:bg-stone-100">-</button>
-              <span class="text-xs font-semibold w-5 text-center">${quantity}</span>
+              <span class="text-xs font-mono font-semibold w-5 text-center">${quantity}</span>
               <button onclick="updateQuantity('${product.id}', 1)" class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center text-stone-600 hover:bg-stone-100">+</button>
             </div>
           </div>
-          <div class="text-sm font-bold text-stone-950">
+          <div class="text-sm font-mono font-bold text-stone-950">
             $${(product.price * quantity).toFixed(2)}
           </div>
         </div>
@@ -651,7 +745,10 @@
       }, 2400);
     }
 
+    // 启动渲染与 Sanity 云端数据同步
     renderCollections();
+    initHeroTilt();
+    loadProductsFromSanity();
   </script>
 </body>
 </html>
