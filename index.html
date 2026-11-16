@@ -654,4 +654,243 @@
                   <svg class="w-3.5 h-3.5 transition-transform duration-200 ${col.expanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
-                </button
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+              ${visibleItems.map(item => `
+                <div class="group bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+                  <div>
+                    <div onclick="openProductModal('${item.id}')" class="relative aspect-square bg-stone-100 overflow-hidden cursor-pointer">
+                      <img src="${item.image}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                      ${item.isLiveStudio ? `
+                        <span class="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+                          New Drop
+                        </span>
+                      ` : ''}
+                      <span class="absolute bottom-2.5 right-2.5 bg-stone-900/80 backdrop-blur text-white text-[10px] font-medium px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition">
+                        Quick View
+                      </span>
+                    </div>
+                    <div class="p-4">
+                      <div class="flex items-center justify-between text-[11px] mb-1.5">
+                        <div class="flex items-center gap-1.5 text-stone-500 truncate">
+                          <span class="w-2.5 h-2.5 rounded-full border border-stone-300 shrink-0" style="background-color: ${item.swatch}"></span>
+                          <span class="truncate">${item.shade}</span>
+                        </div>
+                        <span class="text-amber-500 font-mono font-semibold shrink-0 ml-1">${item.rating}</span>
+                      </div>
+                      <h3 onclick="openProductModal('${item.id}')" class="text-sm font-bold text-stone-950 hover:text-rose-500 cursor-pointer transition line-clamp-2 leading-snug min-h-[2.5rem]">
+                        ${item.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div class="px-4 pb-4 pt-2.5 flex items-center justify-between border-t border-stone-100">
+                    <span class="text-base font-mono font-bold text-stone-950">$${item.price.toFixed(2)}</span>
+                    <button onclick="addToCart('${item.id}')" class="bg-stone-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full hover:bg-rose-500 transition active:scale-95">
+                      Add +
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function toggleSeries(seriesId) {
+      const target = collections.find(c => c.id === seriesId);
+      if (target) {
+        target.expanded = !target.expanded;
+        renderCollections();
+      }
+    }
+
+    function openProductModal(productId) {
+      const found = findProductById(productId);
+      if (!found) return;
+      const { product: p, collectionTitle } = found;
+
+      document.getElementById('modal-img').src = p.image;
+      document.getElementById('modal-series').innerText = collectionTitle;
+      document.getElementById('modal-rating').innerText = p.rating;
+      document.getElementById('modal-title').innerText = p.name;
+      document.getElementById('modal-price').innerText = `$${p.price.toFixed(2)}`;
+      document.getElementById('modal-desc').innerText = p.desc;
+      document.getElementById('modal-shade').innerText = p.shade;
+      document.getElementById('modal-material').innerText = p.material;
+      document.getElementById('modal-dim').innerText = p.dimensions;
+      document.getElementById('modal-hairtype').innerText = p.hairType;
+
+      const addBtn = document.getElementById('modal-add-btn');
+      addBtn.onclick = () => {
+        addToCart(p.id);
+        closeProductModal();
+      };
+
+      document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+    }
+
+    function subscribeNewsletter(e) {
+      e.preventDefault();
+      document.getElementById('newsletter-msg').classList.remove('hidden');
+      e.target.reset();
+    }
+
+    function addToCart(productId) {
+      const found = findProductById(productId);
+      if (!found) return;
+      const { product } = found;
+
+      const existingItem = cart.find(item => item.product.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ product, quantity: 1 });
+      }
+
+      updateCartUI();
+      showToast(`Added "${product.name}" to bag`);
+    }
+
+    function updateQuantity(productId, delta) {
+      const index = cart.findIndex(item => item.product.id === productId);
+      if (index === -1) return;
+
+      cart[index].quantity += delta;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+      document.getElementById('cart-count').innerText = totalItems;
+      document.getElementById('cart-total').innerText = `$${totalPrice.toFixed(2)}`;
+      document.getElementById('checkout-item-count').innerText = totalItems;
+      document.getElementById('checkout-total').innerText = `$${totalPrice.toFixed(2)}`;
+
+      const shippingHint = document.getElementById('shipping-hint');
+      if (totalPrice >= 35) {
+        shippingHint.innerHTML = `<span class="text-emerald-600 font-semibold">✓ You unlocked FREE US standard shipping!</span>`;
+      } else if (totalPrice > 0) {
+        shippingHint.innerText = `Add $${(35 - totalPrice).toFixed(2)} more for FREE standard shipping.`;
+      } else {
+        shippingHint.innerText = `Free standard shipping on US orders over $35.`;
+      }
+
+      const container = document.getElementById('cart-items-container');
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center py-12">
+            <p class="text-stone-400 text-sm">Your bag is empty.</p>
+            <button onclick="closeCart()" class="mt-4 text-rose-500 text-sm font-medium hover:underline">
+              Browse Collections &rarr;
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = cart.map(({ product, quantity }) => `
+        <div class="flex gap-4 py-3 border-b border-stone-100 items-center">
+          <img src="${product.image}" alt="${product.name}" class="w-16 h-16 rounded-xl object-cover bg-stone-100 border border-stone-200" />
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-semibold text-stone-900 truncate">${product.name}</h4>
+            <p class="text-xs text-stone-500 mt-0.5">${product.shade} · <span class="font-mono">$${product.price.toFixed(2)}</span></p>
+            <div class="flex items-center gap-2 mt-2">
+              <button onclick="updateQuantity('${product.id}', -1)" class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center text-stone-600 hover:bg-stone-100">-</button>
+              <span class="text-xs font-mono font-semibold w-5 text-center">${quantity}</span>
+              <button onclick="updateQuantity('${product.id}', 1)" class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center text-stone-600 hover:bg-stone-100">+</button>
+            </div>
+          </div>
+          <div class="text-sm font-mono font-bold text-stone-950">
+            $${(product.price * quantity).toFixed(2)}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchDrawerStep(step) {
+      if (step === 'checkout' && cart.length === 0) {
+        showToast("Your bag is empty!");
+        return;
+      }
+
+      document.getElementById('step-cart').classList.add('hidden');
+      document.getElementById('step-checkout').classList.add('hidden');
+      document.getElementById('step-confirmation').classList.add('hidden');
+      document.getElementById('back-to-cart-btn').classList.add('hidden');
+
+      if (step === 'cart') {
+        document.getElementById('drawer-title').innerText = "Your Bag";
+        document.getElementById('step-cart').classList.remove('hidden');
+      } else if (step === 'checkout') {
+        document.getElementById('drawer-title').innerText = "Checkout";
+        document.getElementById('back-to-cart-btn').classList.remove('hidden');
+        document.getElementById('step-checkout').classList.remove('hidden');
+      } else if (step === 'confirmation') {
+        document.getElementById('drawer-title').innerText = "Receipt";
+        document.getElementById('step-confirmation').classList.remove('hidden');
+      }
+    }
+
+    function submitOrder(event) {
+      event.preventDefault();
+      const name = document.getElementById('cust-name').value;
+      const email = document.getElementById('cust-email').value;
+      const address = document.getElementById('cust-address').value;
+      const city = document.getElementById('cust-city').value;
+      const zip = document.getElementById('cust-zip').value;
+      const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+      const orderId = `#BC-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      document.getElementById('receipt-name').innerText = name;
+      document.getElementById('receipt-id').innerText = orderId;
+      document.getElementById('receipt-email').innerText = email;
+      document.getElementById('receipt-address').innerText = `${address}, ${city} ${zip}`;
+      document.getElementById('receipt-total').innerText = `$${totalPrice.toFixed(2)}`;
+
+      cart = [];
+      updateCartUI();
+      event.target.reset();
+      switchDrawerStep('confirmation');
+    }
+
+    function openCart() {
+      updateCartUI();
+      switchDrawerStep('cart');
+      document.getElementById('cart-modal').classList.remove('hidden');
+    }
+
+    function closeCart() {
+      document.getElementById('cart-modal').classList.add('hidden');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2400);
+    }
+
+    // 启动全部模块
+    renderCollections();
+    initHeroTilt();
+    initComparisonSlider();
+    loadProductsFromSanity();
+  </script>
+</body>
+</html>
