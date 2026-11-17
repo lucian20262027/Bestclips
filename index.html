@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" class="scroll-smooth">
+<html lang="en" data-theme="light" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,36 +21,34 @@
     }
   </script>
   <style>
+    :root[data-theme="light"] {
+      --bg-primary: #f5f2eb;
+      --bg-elevated: #ece7dd;
+      --bg-card: rgba(255, 253, 249, 0.78);
+      --bg-pill: rgba(24, 22, 19, 0.045);
+      --bg-pill-active: rgba(24, 22, 19, 0.1);
+      --text-primary: #151412;
+      --text-secondary: rgba(21, 20, 18, 0.65);
+      --text-muted: rgba(21, 20, 18, 0.44);
+      --border-hairline: rgba(21, 20, 18, 0.09);
+      --border-active: rgba(21, 20, 18, 0.48);
+      --accent-cta: #1c2420;
+      --accent-cta-hover: #2e3b35;
+    }
+
     :root[data-theme="dark"] {
       --bg-primary: #0d1110;
       --bg-elevated: #141918;
-      --bg-card: rgba(24, 30, 28, 0.72);
+      --bg-card: rgba(24, 30, 28, 0.74);
       --bg-pill: rgba(255, 255, 255, 0.05);
-      --bg-pill-active: rgba(255, 255, 255, 0.12);
+      --bg-pill-active: rgba(255, 255, 255, 0.13);
       --text-primary: #f5f7f6;
       --text-secondary: rgba(245, 247, 246, 0.64);
       --text-muted: rgba(245, 247, 246, 0.42);
       --border-hairline: rgba(255, 255, 255, 0.09);
-      --border-active: rgba(255, 255, 255, 0.38);
+      --border-active: rgba(255, 255, 255, 0.42);
       --accent-cta: #567d64;
       --accent-cta-hover: #659175;
-      --contour-stroke: rgba(255, 255, 255, 0.03);
-    }
-
-    :root[data-theme="light"] {
-      --bg-primary: #f7f7f5;
-      --bg-elevated: #efefeb;
-      --bg-card: rgba(255, 255, 255, 0.82);
-      --bg-pill: rgba(0, 0, 0, 0.04);
-      --bg-pill-active: rgba(0, 0, 0, 0.09);
-      --text-primary: #121514;
-      --text-secondary: rgba(18, 21, 20, 0.64);
-      --text-muted: rgba(18, 21, 20, 0.44);
-      --border-hairline: rgba(18, 21, 20, 0.09);
-      --border-active: rgba(18, 21, 20, 0.42);
-      --accent-cta: #1c2421;
-      --accent-cta-hover: #33423c;
-      --contour-stroke: rgba(0, 0, 0, 0.035);
     }
 
     body {
@@ -66,7 +64,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(150,160,155,0.055)' stroke-width='1'%3E%3Cpath d='M-100 200 C 150 100, 350 350, 600 200 S 850 50, 950 250'/%3E%3Cpath d='M-100 320 C 180 220, 380 470, 640 320 S 850 170, 950 370'/%3E%3Cpath d='M-100 460 C 200 360, 400 610, 660 460 S 850 310, 950 510'/%3E%3Cpath d='M-100 620 C 220 520, 420 770, 680 620 S 850 470, 950 670'/%3E%3C/g%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(140,132,120,0.06)' stroke-width='1'%3E%3Cpath d='M-100 200 C 150 100, 350 350, 600 200 S 850 50, 950 250'/%3E%3Cpath d='M-100 320 C 180 220, 380 470, 640 320 S 850 170, 950 370'/%3E%3Cpath d='M-100 460 C 200 360, 400 610, 660 460 S 850 310, 950 510'/%3E%3Cpath d='M-100 620 C 220 520, 420 770, 680 620 S 850 470, 950 670'/%3E%3C/g%3E%3C/svg%3E");
       background-size: 900px 900px;
     }
 
@@ -81,9 +79,9 @@
     .hairline-b { border-bottom: 1px solid var(--border-hairline); }
     .hairline-border { border: 1px solid var(--border-hairline); }
 
-    /* Hardware-accelerated studio stage transitions */
+    /* Hardware-accelerated studio stage transitions (Material Flask cubic-bezier) */
     .stage-img {
-      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1), filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform, opacity, filter;
     }
 
@@ -108,6 +106,21 @@
       color: var(--text-primary);
     }
 
+    .thumb-card {
+      border: 1px solid var(--border-hairline);
+      opacity: 0.62;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .thumb-card:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+    }
+    .thumb-card.active {
+      opacity: 1;
+      border-color: var(--border-active);
+      box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.16);
+    }
+
     .cta-btn {
       background-color: var(--accent-cta);
       color: #ffffff;
@@ -127,21 +140,19 @@
   <!-- Topographic Subtle Background -->
   <div class="topo-bg" aria-hidden="true"></div>
 
-  <!-- 1. Minimalist Sticky Glass Header (Material Flask Style) -->
-  <header class="sticky top-0 z-40 hairline-b bg-[var(--bg-primary)]/80 backdrop-blur-xl">
+  <!-- 1. Minimalist Sticky Glass Header (Undo Hairware × Material Flask Style) -->
+  <header class="sticky top-0 z-40 hairline-b bg-[var(--bg-primary)]/85 backdrop-blur-xl">
     <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#hero" class="flex items-center gap-2.5 text-base font-semibold tracking-tight">
-        <svg class="w-5 h-5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 17l5-9 4 6 3-4 4 7H4z" />
-        </svg>
+      <a href="#hero" class="flex items-center gap-2.5 text-base font-bold tracking-tight">
+        <span class="w-2.5 h-2.5 rounded-full" style="background-color: var(--accent-cta);"></span>
         <span>BestClips</span>
       </a>
 
       <nav class="hidden md:flex items-center gap-7 text-xs font-medium tracking-wide" style="color: var(--text-secondary);">
-        <a href="#city-cali" class="hover:opacity-100 transition">Spring in Cali</a>
-        <a href="#city-miami" class="hover:opacity-100 transition">Hot Miami</a>
-        <a href="#city-nyc" class="hover:opacity-100 transition">NYC Office</a>
-        <a href="#city-tokyo" class="hover:opacity-100 transition">Tokyo Trade</a>
+        <a href="#city-cali" class="hover:opacity-100 transition">01 · Spring in Cali</a>
+        <a href="#city-miami" class="hover:opacity-100 transition">02 · Hot Miami</a>
+        <a href="#city-nyc" class="hover:opacity-100 transition">03 · NYC Office</a>
+        <a href="#city-tokyo" class="hover:opacity-100 transition">04 · Tokyo Trade</a>
         <a href="#showcase" class="hover:opacity-100 transition">Lookbook</a>
         <a href="#craft" class="hover:opacity-100 transition">Specs</a>
       </nav>
@@ -152,9 +163,9 @@
           <span id="sync-text">Studio Live</span>
         </div>
 
-        <!-- Theme Switcher (Dark / Light) -->
-        <button onclick="toggleTheme()" aria-label="Toggle theme" class="w-9 h-9 rounded-full hairline-border flex items-center justify-center hover:opacity-80 transition">
-          <svg id="theme-icon-sun" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+        <!-- Theme Switcher (Alabaster Stone Light / Obsidian Dark) -->
+        <button onclick="toggleTheme()" aria-label="Toggle theme" title="Switch Light / Dark Studio Mode" class="w-9 h-9 rounded-full hairline-border flex items-center justify-center hover:opacity-80 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"></path>
           </svg>
@@ -173,60 +184,75 @@
 
   <main class="relative z-10">
 
-    <!-- 2. Hero Section ("Built for all-day hold." — Single Central Asset + Floating Mood Switcher) -->
-    <section id="hero" class="max-w-6xl mx-auto px-6 pt-16 pb-24 lg:py-28">
+    <!-- 2. Hero Section ("Sculpted for effortless hold." — Bespoke Travertine Studio Asset + Floating City Switcher) -->
+    <section id="hero" class="max-w-6xl mx-auto px-6 pt-14 pb-24 lg:py-24">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <!-- Left Copy -->
         <div class="lg:col-span-6 space-y-6">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium hairline-border" style="background: var(--bg-pill); color: var(--text-secondary);">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span>4 City Editions · Botanical Cellulose Acetate</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span>4 City Capsules · Custom Studio Travertine Series</span>
           </div>
 
-          <h1 class="font-bold tracking-[-0.03em] leading-[1.06]" style="font-size: clamp(2.6rem, 5.5vw, 4.4rem);">
+          <h1 class="font-bold tracking-[-0.03em] leading-[1.05]" style="font-size: clamp(2.6rem, 5.5vw, 4.35rem);">
             Sculpted for effortless hold.
           </h1>
 
           <p class="text-base leading-relaxed max-w-md" style="color: var(--text-secondary);">
-            Four city-inspired hair clip capsules carved from plant-based cellulose acetate and calibrated with double-coil tension springs. Zero snagging. All-day balance.
+            Carved from plant-based Italian cellulose acetate and calibrated with 304 stainless double-coil springs. Four city-inspired capsules photographed on architectural travertine.
           </p>
 
           <div class="pt-2 flex flex-wrap items-center gap-3">
             <a href="#city-cali" class="cta-btn px-7 py-3.5 rounded-full text-sm font-semibold">
-              Configure Your Clip
+              Explore 4 City Studios
             </a>
-            <a href="#showcase" class="pill-option px-7 py-3.5 rounded-full text-sm font-medium">
-              Explore Lookbook
+            <a href="#finish-compare" class="pill-option px-7 py-3.5 rounded-full text-sm font-medium">
+              Compare Finishes
             </a>
+          </div>
+
+          <div class="pt-4 grid grid-cols-3 gap-4 max-w-md hairline-t text-xs tabular-nums">
+            <div>
+              <div class="font-bold text-base">50,000+</div>
+              <div style="color: var(--text-muted);">Spring tension cycles</div>
+            </div>
+            <div>
+              <div class="font-bold text-base">6 Hours</div>
+              <div style="color: var(--text-muted);">Wood-barrel polish</div>
+            </div>
+            <div>
+              <div class="font-bold text-base">$35+ Free</div>
+              <div style="color: var(--text-muted);">US tracked shipping</div>
+            </div>
           </div>
         </div>
 
-        <!-- Right Interactive Stage with Floating Variant Switcher -->
+        <!-- Right Interactive Studio Stage with Floating City Switcher -->
         <div class="lg:col-span-6 flex flex-col items-center">
-          <div class="surface-card relative w-full rounded-3xl overflow-hidden aspect-[4/3] flex items-center justify-center group">
-            <img id="hero-stage-img" src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="BestClips Hero" class="stage-img w-full h-full object-cover" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent"></div>
+          <div class="surface-card relative w-full rounded-3xl overflow-hidden aspect-square max-w-[520px] flex items-center justify-center shadow-xl">
+            <img id="hero-stage-img" src="assets/studio/cali-1.jpg" alt="BestClips Flagship Studio Shot" class="stage-img w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/65 via-black/20 to-transparent"></div>
 
             <!-- Minimal Floating Overlay Info -->
             <div class="absolute bottom-5 left-6 right-6 flex items-end justify-between text-white">
               <div>
-                <div id="hero-stage-city" class="text-[11px] font-mono uppercase tracking-widest opacity-75">01 · Spring in Cali</div>
-                <div id="hero-stage-name" class="text-lg font-semibold tracking-tight">Malibu Sunset Pastel Claw</div>
+                <div id="hero-stage-city" class="text-[11px] font-mono uppercase tracking-widest opacity-80">01 · Spring in Cali Flagship</div>
+                <div id="hero-stage-name" class="text-lg font-semibold tracking-tight">Malibu Sunset Claw</div>
               </div>
-              <button id="hero-stage-cta" onclick="addToCart('cali-1')" class="bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white text-xs font-medium px-4 py-2 rounded-full transition tabular-nums">
+              <button id="hero-stage-cta" onclick="addToCart('cali-1')" class="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/25 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition tabular-nums">
                 Quick Add — $16
               </button>
             </div>
           </div>
 
-          <!-- Floating Segmented City Switcher Pill Dock (Material Flask Hero Switcher) -->
-          <div class="mt-4 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full surface-card">
+          <!-- Floating Segmented City Switcher Pill Dock -->
+          <div class="mt-4 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full surface-card shadow-sm">
             <button onclick="switchHeroCity('cali')" data-hero="cali" class="hero-pill pill-option active px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full" style="background:#F5B7B1;"></span>
               <span>Spring in Cali</span>
             </button>
             <button onclick="switchHeroCity('miami')" data-hero="miami" class="hero-pill pill-option px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full" style="background:#D97706;"></span>
+              <span class="w-2.5 h-2.5 rounded-full" style="background:#B45309;"></span>
               <span>Hot Miami</span>
             </button>
             <button onclick="switchHeroCity('nyc')" data-hero="nyc" class="hero-pill pill-option px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
@@ -242,37 +268,36 @@
       </div>
     </section>
 
-    <!-- 3. THE 4 CITY CONFIGURATOR STAGES (Material Flask #order Paradigm for LA, Miami, NYC, Tokyo) -->
-    <!-- Instead of a cluttered 20-card grid, each city is a sleek two-column interactive configurator -->
+    <!-- 3. THE 4 CITY STUDIO CONFIGURATORS (Undo Hairware Studio Photography × Material Flask Configurator) -->
     <div id="city-stages-container" class="space-y-28 py-12">
       <!-- Populated dynamically by renderCityStages() -->
     </div>
 
-    <!-- 4. Full-Bleed Editorial Showcase with Segmented Angle Tabs (Material Flask #showcase Paradigm) -->
+    <!-- 4. Full-Bleed Editorial Studio Showcase with Segmented Angle Tabs -->
     <section id="showcase" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
-          <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">All-Day Carry</div>
-          <h2 class="font-bold tracking-[-0.03em]" style="font-size: clamp(2rem, 4vw, 3rem);">Four cities. Endless styling.</h2>
+          <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">Atelier Gallery</div>
+          <h2 class="font-bold tracking-[-0.03em]" style="font-size: clamp(2rem, 4vw, 3rem);">Four cities. One studio standard.</h2>
         </div>
         <p class="text-sm max-w-sm" style="color: var(--text-secondary);">
-          Switch angles to inspect how our hand-tumbled cellulose acetate and hollow-arch alloys catch natural light.
+          Every piece is hand-tumbled for 6 hours and photographed under natural directional light on travertine stone.
         </p>
       </div>
 
-      <div class="surface-card relative rounded-3xl overflow-hidden aspect-[16/9] max-h-[540px] w-full">
-        <img id="lookbook-img" src="https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Lookbook Angle" class="stage-img w-full h-full object-cover" />
+      <div class="surface-card relative rounded-3xl overflow-hidden aspect-[16/10] max-h-[560px] w-full shadow-lg">
+        <img id="lookbook-img" src="assets/studio/miami-4.jpg" alt="Lookbook Angle" class="stage-img w-full h-full object-cover" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent"></div>
 
         <!-- Bottom Left Caption -->
         <div class="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 text-white max-w-md">
-          <div id="lookbook-tag" class="text-xs font-mono uppercase tracking-widest opacity-75">Angle 01 · Malibu Coastal Light</div>
-          <div id="lookbook-caption" class="text-lg sm:text-xl font-semibold mt-1">Hand-marbled pastel cellulose acetate in morning Pacific sun.</div>
+          <div id="lookbook-tag" class="text-xs font-mono uppercase tracking-widest opacity-80">Angle 01 · Brickell 24K Havana</div>
+          <div id="lookbook-caption" class="text-lg sm:text-xl font-semibold mt-1">Genuine 24K gold leaf suspended inside translucent Italian tortoiseshell.</div>
         </div>
 
         <!-- Bottom Right Segmented Dash Tabs (Angle 1 - Angle 4) -->
-        <div class="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 flex items-center gap-2 bg-black/45 backdrop-blur-md p-1.5 rounded-full border border-white/15">
-          <button onclick="setLookbookAngle(0)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/20 transition">Angle 1</button>
+        <div class="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 flex items-center gap-1.5 bg-black/55 backdrop-blur-md p-1.5 rounded-full border border-white/15">
+          <button onclick="setLookbookAngle(0)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/25 transition">Angle 1</button>
           <button onclick="setLookbookAngle(1)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 2</button>
           <button onclick="setLookbookAngle(2)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 3</button>
           <button onclick="setLookbookAngle(3)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 4</button>
@@ -280,29 +305,29 @@
       </div>
     </section>
 
-    <!-- 5. Interactive Split Comparison Slider (Material Flask #insulation Paradigm) -->
+    <!-- 5. Interactive Split Comparison Slider (Bespoke Mirror Gloss vs. Velvet Matte on Travertine) -->
     <section id="finish-compare" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <!-- Left Split Canvas -->
         <div class="lg:col-span-7">
-          <div id="comp-container" class="no-select surface-card relative rounded-3xl overflow-hidden aspect-[16/10] cursor-ew-resize">
-            <!-- Right / Base Layer: Velvet Matte -->
-            <img src="https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Velvet Matte" class="absolute inset-0 w-full h-full object-cover" />
+          <div id="comp-container" class="no-select surface-card relative rounded-3xl overflow-hidden aspect-square max-h-[500px] w-full cursor-ew-resize shadow-lg">
+            <!-- Right / Base Layer: Velvet Matte (Oat Milk Cloud Matte Studio Shot) -->
+            <img src="assets/studio/cali-2.jpg" alt="Velvet Matte Finish" class="absolute inset-0 w-full h-full object-cover" />
             <span class="absolute top-4 right-4 bg-black/65 backdrop-blur-md text-white font-mono text-[11px] px-3 py-1 rounded-full border border-white/15">
               Velvet Matte · Fine Hair Grip
             </span>
 
-            <!-- Left / Clipped Layer: Mirror Gloss -->
+            <!-- Left / Clipped Layer: Mirror Gloss (Italian Tortoise Macro Studio Shot) -->
             <div id="comp-overlay" class="absolute inset-0 overflow-hidden" style="clip-path: inset(0 50% 0 0);">
-              <img src="https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Mirror Gloss Acetate" class="absolute inset-0 w-full h-full object-cover" />
-              <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-stone-950 font-mono text-[11px] font-medium px-3 py-1 rounded-full">
+              <img src="assets/studio/macro-gloss.jpg" alt="Mirror Gloss Acetate" class="absolute inset-0 w-full h-full object-cover" />
+              <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-stone-950 font-mono text-[11px] font-medium px-3 py-1 rounded-full shadow-xs">
                 Mirror Gloss · Italian Acetate
               </span>
             </div>
 
             <!-- Center Handle -->
-            <div id="comp-handle" class="absolute top-0 bottom-0 w-px bg-white/90 pointer-events-none" style="left: 50%;">
-              <div class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/75 backdrop-blur-md text-white border border-white/30 flex items-center justify-center shadow-lg">
+            <div id="comp-handle" class="absolute top-0 bottom-0 w-0.5 bg-white pointer-events-none shadow-md" style="left: 50%;">
+              <div class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/80 backdrop-blur-md text-white border border-white/30 flex items-center justify-center shadow-lg">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l-3 3 3 3m8-6l3 3-3 3" />
                 </svg>
@@ -318,7 +343,7 @@
             Mirror gloss or cloud-matte grip.
           </h2>
           <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
-            Drag the divider or toggle below. Our hand-buffed <strong>Glossy Acetate</strong> delivers deep marble luminosity, while <strong>Velvet Matte</strong> adds micro-friction so silky hair never slips.
+            Drag the divider across our travertine studio shots. Choose hand-buffed <strong>Mirror Gloss Acetate</strong> for deep amber luminosity, or <strong>Velvet Matte</strong> for micro-friction on fine, silky hair.
           </p>
 
           <div class="inline-flex p-1 rounded-full surface-card gap-1">
@@ -347,7 +372,7 @@
       </div>
     </section>
 
-    <!-- 6. Asymmetric 3-Card Bento Specs (Material Flask #craft Paradigm) -->
+    <!-- 6. Asymmetric 3-Card Bento Specs (Using Bespoke Macro Studio Shots) -->
     <section id="craft" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
       <div class="mb-12">
         <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">Architecture &amp; Specs</div>
@@ -356,25 +381,25 @@
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
         <!-- Left Tall Macro Card -->
-        <article class="md:col-span-6 surface-card relative rounded-3xl overflow-hidden min-h-[400px] flex flex-col justify-end group">
-          <img src="https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Double Coil Tension" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+        <article class="md:col-span-6 surface-card relative rounded-3xl overflow-hidden min-h-[420px] flex flex-col justify-end group shadow-md">
+          <img src="assets/studio/macro-spring.jpg" alt="Double Coil Tension Spring Macro" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
           <div class="relative z-10 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-8 text-white">
-            <div class="font-mono text-[11px] uppercase tracking-widest opacity-70">01 · Core Tension</div>
-            <h3 class="text-xl font-bold mt-1">Calibrated Double-Coil Spring</h3>
-            <p class="text-xs text-white/75 mt-2 leading-relaxed max-w-md">
-              304 stainless steel coils tested across 50,000+ open-close cycles—locking thick, long, or curly hair without scalp pull.
+            <div class="font-mono text-[11px] uppercase tracking-widest opacity-75">01 · Core Mechanics</div>
+            <h3 class="text-xl font-bold mt-1">Calibrated 304 Double-Coil Spring</h3>
+            <p class="text-xs text-white/80 mt-2 leading-relaxed max-w-md">
+              High-torque stainless coils tested across 50,000+ open-close cycles—locking thick, long, or curly hair in a French twist without slipping.
             </p>
           </div>
         </article>
 
         <!-- Right Stacked Cards -->
         <div class="md:col-span-6 flex flex-col gap-6">
-          <article class="surface-card relative rounded-3xl overflow-hidden min-h-[230px] flex flex-col justify-end group">
-            <img src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Plant Cellulose Acetate" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+          <article class="surface-card relative rounded-3xl overflow-hidden min-h-[240px] flex flex-col justify-end group shadow-md">
+            <img src="assets/studio/miami-4.jpg" alt="Plant Cellulose Acetate with 24K Gold" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
             <div class="relative z-10 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-7 text-white">
-              <div class="font-mono text-[11px] uppercase tracking-widest opacity-70">02 · Botanical Shell</div>
-              <h3 class="text-lg font-bold mt-1">Plant-Based Cellulose Acetate</h3>
-              <p class="text-xs text-white/75 mt-1">Warm, flexible, and shatter-resistant—never brittle like injection-molded plastic.</p>
+              <div class="font-mono text-[11px] uppercase tracking-widest opacity-75">02 · Botanical Shell</div>
+              <h3 class="text-lg font-bold mt-1">Italian Plant Cellulose Acetate</h3>
+              <p class="text-xs text-white/80 mt-1">Carved from renewable wood-pulp &amp; cotton resin sheets—flexible, warm to the touch, and shatter-resistant.</p>
             </div>
           </article>
 
@@ -393,7 +418,7 @@
 
   </main>
 
-  <!-- 7. Ultra-Clean Single-Row Footer (Material Flask Style) -->
+  <!-- 7. Ultra-Clean Single-Row Footer -->
   <footer class="relative z-10 hairline-t py-10 px-6 text-xs" style="color: var(--text-muted);">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
@@ -411,7 +436,7 @@
 
   <!-- 8. Slide-Out Glassmorphic Bag Drawer -->
   <div id="cart-modal" class="fixed inset-0 z-50 hidden">
-    <div onclick="closeCart()" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+    <div onclick="closeCart()" class="fixed inset-0 bg-black/55 backdrop-blur-sm transition-opacity"></div>
     <div class="fixed inset-y-0 right-0 max-w-md w-full hairline-border flex flex-col justify-between z-10 shadow-2xl" style="background-color: var(--bg-elevated); color: var(--text-primary);">
       <!-- Drawer Header -->
       <div class="px-6 py-5 hairline-b flex items-center justify-between">
@@ -456,7 +481,7 @@
               <span>Subtotal</span>
               <span id="cart-subtotal" class="font-mono">$0.00</span>
             </div>
-            <div id="cart-discount-row" class="flex justify-between text-emerald-400 font-medium hidden">
+            <div id="cart-discount-row" class="flex justify-between text-emerald-600 font-medium hidden">
               <span id="cart-discount-label">Promo (PRETTY15 · 15% Off)</span>
               <span id="cart-discount-val" class="font-mono">-$0.00</span>
             </div>
@@ -510,13 +535,13 @@
       <!-- Step C: Order Confirmation -->
       <div id="step-confirmation" class="hidden flex-1 flex flex-col justify-between px-6 py-8 text-center overflow-y-auto">
         <div class="my-auto space-y-4">
-          <div class="w-12 h-12 rounded-full hairline-border flex items-center justify-center mx-auto text-emerald-400">
+          <div class="w-12 h-12 rounded-full hairline-border flex items-center justify-center mx-auto text-emerald-500">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
           <div>
-            <div class="text-xs font-mono uppercase tracking-widest text-emerald-400">Order Confirmed</div>
+            <div class="text-xs font-mono uppercase tracking-widest text-emerald-600">Order Confirmed</div>
             <h3 class="text-2xl font-bold mt-1">Thank you, <span id="receipt-name">Gorgeous</span></h3>
             <p class="text-xs mt-1" style="color: var(--text-secondary);">Order <span id="receipt-id" class="font-mono">#BC-000000</span> is queued for studio dispatch.</p>
           </div>
@@ -549,73 +574,74 @@
 
   <script>
     // ==========================================
-    // 1. SANITY.IO HEADLESS CONFIG (ycnr19bp)
+    // 1. SANITY.IO HEADLESS CONFIG & BESPOKE TRAVERTINE STUDIO ASSETS
     // ==========================================
     const SANITY_PROJECT_ID = 'ycnr19bp';
     const SANITY_DATASET = 'production';
     const SANITY_API_VERSION = '2024-03-01';
 
+    // All 20 items use our cohesive bespoke travertine stone studio photographs
+    // with hardware-accelerated CSS finish grading for secondary colorways (Material Flask paradigm)
     const fallbackItems = {
       cali: [
-        { id: "cali-1", name: "Malibu Sunset Claw", shade: "Peach & Lavender", swatch: "#F5B7B1", price: 16, material: "Hand-Marbled Cellulose Acetate", dimensions: "11.0 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Sun-washed pastel cellulose acetate carved for effortless coastal updos with zero scalp pull.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "cali-2", name: "Oat Milk Cloud Matte", shade: "Warm Oat Cream", swatch: "#EDE0D4", price: 14, material: "Velvet Matte Plant Acetate", dimensions: "10.5 cm · Micro-Grip Teeth", hairType: "Fine & Silky Hair", desc: "Cloud-soft matte finish engineered with extra inner tooth friction so silky hair stays locked.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "cali-3", name: "Big Sur Seafoam Claw", shade: "Matcha Coastal Mint", swatch: "#A3B18A", price: 15, material: "Translucent Botanical Resin", dimensions: "10.2 cm · Stainless Coil", hairType: "Medium to Thick Hair", desc: "Translucent sage-green resin inspired by Pacific cove glass, tumbled for 6 hours.", image: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "cali-4", name: "Santa Barbara Daisy Set", shade: "Buttercream & Ivory", swatch: "#FEF08A", price: 13, material: "Carved Plant Acetate", dimensions: "3.2 cm · 4-Piece Mini Set", hairType: "Half-Up & Bangs", desc: "Four miniature floral claws for pinning back sun-kissed layers and braids.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "cali-5", name: "Venice Jelly Rectangle", shade: "Translucent Rose", swatch: "#F4ACB7", price: 15, material: "Crystal Jelly Acetate", dimensions: "9.8 cm · Architectural Frame", hairType: "Fine to Medium Hair", desc: "90s-inspired open rectangle profile with high-gloss translucent depth.", image: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000" }
+        { id: "cali-1", name: "Malibu Sunset Claw", shade: "Peach & Lavender Marble", swatch: "#F5B7B1", price: 16, material: "Hand-Marbled Cellulose Acetate", dimensions: "11.0 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Sun-washed pastel peach and lavender cellulose acetate carved for effortless coastal updos with zero scalp pull.", image: "assets/studio/cali-1.jpg", filter: "none" },
+        { id: "cali-2", name: "Oat Milk Cloud Matte", shade: "Warm Oat Cream", swatch: "#EDE0D4", price: 14, material: "Velvet Matte Plant Acetate", dimensions: "10.5 cm · Micro-Grip Teeth", hairType: "Fine & Silky Hair", desc: "Sculpted cloud-wave contour in velvety matte cream with rounded snag-free teeth that lock silky hair.", image: "assets/studio/cali-2.jpg", filter: "none" },
+        { id: "cali-3", name: "Big Sur Seafoam Claw", shade: "Matcha Coastal Mint", swatch: "#A3B18A", price: 15, material: "Translucent Botanical Resin", dimensions: "10.2 cm · Stainless Coil", hairType: "Medium to Thick Hair", desc: "Translucent coastal sage-mint resin inspired by Pacific sea glass, hand-tumbled in wood barrels for 6 hours.", image: "assets/studio/cali-1.jpg", filter: "hue-rotate(115deg) saturate(0.85) brightness(1.02)" },
+        { id: "cali-4", name: "Santa Barbara Mini Set", shade: "Pastel & Pearl (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Carved Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Half-Up & Bangs", desc: "Six miniature studio-polished claws in blush, milk-tea, and mother-of-pearl for pinning face-framing layers.", image: "assets/studio/tokyo-3.jpg", filter: "brightness(1.04) saturate(1.08)" },
+        { id: "cali-5", name: "Venice Rose Cloud Claw", shade: "Blush Rose Matte", swatch: "#F4ACB7", price: 15, material: "Soft-Touch Bio-Acetate", dimensions: "10.5 cm · Sculpted Wave", hairType: "Fine to Medium Hair", desc: "Warm sunset rose edition of our cloud-wave silhouette with non-slip inner tooth geometry.", image: "assets/studio/cali-2.jpg", filter: "sepia(0.25) hue-rotate(315deg) saturate(1.35)" }
       ],
       miami: [
-        { id: "miami-1", name: "South Beach Tiger Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18, material: "Italian Patterned Acetate", dimensions: "11.8 cm · High-Tension Jumbo", hairType: "Thick & Curly Hair", desc: "Bold tiger-stripe Italian cellulose acetate built with our highest-torque double spring.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "miami-2", name: "Wynwood Leopard Jaw", shade: "Espresso Tortoise", swatch: "#78350F", price: 17, material: "Hand-Buffed Tortoiseshell", dimensions: "11.0 cm · Deep Rounded Teeth", hairType: "All Hair Volumes", desc: "High-contrast wildcat tortoiseshell polished to a liquid mirror shine.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "miami-3", name: "Ocean Drive Flame Coral", shade: "Hibiscus Sunset", swatch: "#EA580C", price: 16, material: "Luminous Bio-Acetate", dimensions: "10.5 cm · Resort Profile", hairType: "Medium to Thick Hair", desc: "Saturated tropical coral acetate designed to stand out against golden-hour skin.", image: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "miami-4", name: "Brickell 24K Havana Claw", shade: "Amber & Gold Leaf", swatch: "#D97706", price: 19, material: "Gold-Flecked Acetate", dimensions: "11.2 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Deep Havana brown resin suspended with genuine shimmering metallic flakes.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "miami-5", name: "Star Island Molten Bronze", shade: "Sunlit Metallic Bronze", swatch: "#A16207", price: 21, material: "Sculpted Hollow Alloy", dimensions: "11.0 cm · Featherlight 14g", hairType: "All Hair Types", desc: "Electroplated liquid-bronze silhouette with water-resistant resort durability.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000" }
+        { id: "miami-1", name: "South Beach Tiger Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18, material: "Italian Patterned Acetate", dimensions: "11.8 cm · High-Tension Jumbo", hairType: "Thick & Curly Hair", desc: "High-contrast tiger stripe Italian cellulose acetate built with our highest-torque brass double-coil spring.", image: "assets/studio/miami-1.jpg", filter: "none" },
+        { id: "miami-2", name: "Wynwood Leopard Jaw", shade: "Espresso Tortoise Spot", swatch: "#78350F", price: 17, material: "Hand-Buffed Tortoiseshell", dimensions: "11.0 cm · Deep Rounded Teeth", hairType: "All Hair Volumes", desc: "Sculpted wildcat leopard tortoiseshell polished to a liquid mirror shine for humid resort days.", image: "assets/studio/miami-2.jpg", filter: "none" },
+        { id: "miami-3", name: "Ocean Drive Flame Coral", shade: "Hibiscus Sunset Swirl", swatch: "#EA580C", price: 16, material: "Luminous Bio-Acetate", dimensions: "10.5 cm · Resort Profile", hairType: "Medium to Thick Hair", desc: "Fiery tropical coral and amber swirled resin designed to catch golden-hour sunlight.", image: "assets/studio/miami-3.jpg", filter: "none" },
+        { id: "miami-4", name: "Brickell 24K Havana Claw", shade: "Tortoise & 24K Gold Leaf", swatch: "#D97706", price: 19, material: "Gold-Flecked Italian Acetate", dimensions: "11.2 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Deep Havana tortoiseshell infused with genuine suspended 24K gold leaf flakes.", image: "assets/studio/miami-4.jpg", filter: "none" },
+        { id: "miami-5", name: "Star Island Molten Arch", shade: "Sunlit Molten Bronze", swatch: "#A16207", price: 21, material: "Sculpted Hollow Alloy", dimensions: "11.2 cm · Featherlight 14g", hairType: "All Hair Types", desc: "Architectural open-arch metal claw finished in warm sunlit bronze for poolside-to-evening wear.", image: "assets/studio/nyc-1.jpg", filter: "sepia(0.45) saturate(1.6) brightness(0.92)" }
       ],
       nyc: [
-        { id: "nyc-1", name: "SoHo Brushed Gold Arch", shade: "Champagne Brushed Gold", swatch: "#D4AF37", price: 20, material: "Hollow Architectural Alloy", dimensions: "11.2 cm · Featherlight 12g", hairType: "Medium to Thick Hair", desc: "Minimalist open-arch metal claw engineered to pair with tailored blazers and silk shirts.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "nyc-2", name: "Tribeca Matte Noir Bar", shade: "Obsidian Velvet Matte", swatch: "#27272A", price: 15, material: "Matte Acetate & Steel Clasp", dimensions: "9.0 cm · Low-Profile Barrette", hairType: "Fine & Straight Hair", desc: "Ultra-clean architectural bar clip for sleek low ponytails and sharp center parts.", image: "https://images.pexels.com/photos/8142035/pexels-photo-8142035.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "nyc-3", name: "Fifth Ave French U-Pin", shade: "Classic Dark Havana", swatch: "#451A03", price: 16, material: "Curved Cellulose Acetate", dimensions: "12.5 cm · Ergonomic Curve", hairType: "Medium to Long Hair", desc: "One-motion French chignon pin that secures a boardroom bun without bobby pins.", image: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "nyc-4", name: "Madison Sterling Loop", shade: "Polished Silver Tone", swatch: "#D6D3D1", price: 20, material: "Hollow Zinc Alloy", dimensions: "10.8 cm · Infinity Contour", hairType: "All Hair Volumes", desc: "Sculptural silver infinity-loop claw balanced for zero rear-head pressure.", image: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "nyc-5", name: "Upper East Pearl Duo", shade: "Lustrous Pearl & Brass", swatch: "#F5F5F4", price: 18, material: "Hand-Set Pearl & Brass", dimensions: "7.8 cm · 2-Piece Snap Set", hairType: "Half-Up & Fine Hair", desc: "Tailored pearl snap barrettes that transition seamlessly from desk to dinner.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=1000" }
+        { id: "nyc-1", name: "SoHo Brushed Gold Arch", shade: "Champagne Brushed Gold", swatch: "#D4AF37", price: 20, material: "Hollow Architectural Alloy", dimensions: "11.2 cm · Featherlight 12g", hairType: "Medium to Thick Hair", desc: "Minimalist open-arch metal claw engineered to pair effortlessly with tailored blazers and silk button-downs.", image: "assets/studio/nyc-1.jpg", filter: "none" },
+        { id: "nyc-2", name: "Tribeca Matte Noir Bar", shade: "Obsidian Velvet Matte", swatch: "#27272A", price: 15, material: "Matte Acetate & Steel Clasp", dimensions: "9.0 cm · Low-Profile Barrette", hairType: "Fine & Straight Hair", desc: "Ultra-clean architectural bar clip with a brushed steel French clasp for sleek low ponytails.", image: "assets/studio/nyc-2.jpg", filter: "none" },
+        { id: "nyc-3", name: "Fifth Ave Classic Tortoise", shade: "Heritage Amber Havana", swatch: "#92400E", price: 18, material: "Mirror-Polished Italian Acetate", dimensions: "11.0 cm · Contoured Arch", hairType: "Medium to Long Hair", desc: "Timeless New York editorial tortoiseshell claw with high-gloss bevels and brass tension hardware.", image: "assets/studio/macro-gloss.jpg", filter: "none" },
+        { id: "nyc-4", name: "Madison Sterling Arch", shade: "Brushed Platinum Silver", swatch: "#D6D3D1", price: 20, material: "Hollow Zinc Alloy", dimensions: "11.2 cm · Gallery Contour", hairType: "All Hair Volumes", desc: "Cool-toned brushed platinum silver edition of our signature hollow arch claw with zero rear-head pressure.", image: "assets/studio/nyc-1.jpg", filter: "saturate(0.12) brightness(1.06) contrast(1.05)" },
+        { id: "nyc-5", name: "Upper East Pearl Duo", shade: "Graduated Pearl & Gold", swatch: "#F5F5F4", price: 19, material: "Lustrous Pearl & 18K Gold Bar", dimensions: "7.5 cm · 2-Piece Atelier Set", hairType: "Half-Up & Fine Hair", desc: "Pair of tailored graduated pearl bar pins that transition seamlessly from boardroom to gallery dinner.", image: "assets/studio/tokyo-2.jpg", filter: "none" }
       ],
       tokyo: [
-        { id: "tokyo-1", name: "Harajuku Silk Ribbon Bow", shade: "Sakura Blush Pink", swatch: "#F4C2C2", price: 16, material: "100% Mulberry Silk & Clasp", dimensions: "15.5 cm Width · French Clasp", hairType: "Half-Up & Ponytails", desc: "Pure mulberry silk ribbon bow mounted on a snag-free brushed steel clasp.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "tokyo-2", name: "Ginza Akoya Pearl Pin Set", shade: "Warm Akoya Pearl", swatch: "#FFFBEB", price: 19, material: "Organic Resin Pearl & Gold", dimensions: "7.5 cm · Boutique Pair", hairType: "Fine & Half-Up Styles", desc: "Luminous graduated pearls inspired by Ginza jewelry ateliers.", image: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "tokyo-3", name: "Shibuya Pastel Mini Pack", shade: "Sakura & Milk Tea (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Japanese Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Bangs & Face Layers", desc: "Six featherlight micro-claws in sakura blush, cream pearl, and roasted milk tea.", image: "https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "tokyo-4", name: "Aoyama Velvet Double Bow", shade: "Bordeaux Wine Velvet", swatch: "#881337", price: 17, material: "Plush Japanese Velvet", dimensions: "14.0 cm · Structured Wing", hairType: "All Hair Types", desc: "Structured double-wing velvet bow that holds its architectural shape all evening.", image: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-        { id: "tokyo-5", name: "Daikanyama Hojicha Claw", shade: "Roasted Milk-Tea Swirl", swatch: "#D6CCC2", price: 16, material: "Marbled Cellulose Acetate", dimensions: "10.2 cm · Salon Balance", hairType: "Medium to Thick Hair", desc: "Warm roasted milk-tea swirl acetate favored by Tokyo editorial stylists.", image: "https://images.pexels.com/photos/8142038/pexels-photo-8142038.jpeg?auto=compress&cs=tinysrgb&w=1000" }
+        { id: "tokyo-1", name: "Harajuku Silk Ribbon Bow", shade: "Sakura Blush Pink", swatch: "#F4C2C2", price: 16, material: "100% Mulberry Silk & Clasp", dimensions: "15.5 cm Width · French Clasp", hairType: "Half-Up & Ponytails", desc: "Structured double-loop bow crafted from pure sakura mulberry silk on a snag-free gold barrette clasp.", image: "assets/studio/tokyo-1.jpg", filter: "none" },
+        { id: "tokyo-2", name: "Ginza Akoya Pearl Pin Set", shade: "Lustrous White Akoya Pearl", swatch: "#FFFBEB", price: 19, material: "Organic Pearl & Brushed Gold", dimensions: "7.5 cm · Boutique Pair", hairType: "Fine & Half-Up Styles", desc: "Graduated luminous Akoya-style pearls hand-aligned on slender brushed gold atelier pins.", image: "assets/studio/tokyo-2.jpg", filter: "none" },
+        { id: "tokyo-3", name: "Shibuya Pastel Mini Pack", shade: "Sakura, Milk Tea & Pearl (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Japanese Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Bangs & Face Layers", desc: "Six featherlight micro-claws in sakura blush, roasted milk tea, and mother-of-pearl white acetate.", image: "assets/studio/tokyo-3.jpg", filter: "none" },
+        { id: "tokyo-4", name: "Aoyama Bordeaux Bow", shade: "Deep Wine Mulberry Silk", swatch: "#881337", price: 17, material: "Heavyweight Silk Satin", dimensions: "15.5 cm · Structured Wing", hairType: "All Hair Types", desc: "Rich Bordeaux evening edition of our structured silk ribbon bow with tailored cascading tails.", image: "assets/studio/tokyo-1.jpg", filter: "hue-rotate(335deg) saturate(1.65) brightness(0.78) contrast(1.15)" },
+        { id: "tokyo-5", name: "Daikanyama Milk-Tea Claw", shade: "Hojicha Oat Swirl", swatch: "#D6CCC2", price: 16, material: "Velvet Matte Cellulose Acetate", dimensions: "10.5 cm · Salon Balance", hairType: "Medium to Thick Hair", desc: "Warm roasted Hojicha latte matte contour claw favored by Tokyo salon stylists.", image: "assets/studio/cali-2.jpg", filter: "sepia(0.18) brightness(0.95) contrast(1.04)" }
       ]
     };
 
     const collections = [
       { id: "cali", anchor: "city-cali", code: "01", title: "Spring in Cali", tagline: "Sun-washed pastels & cloud-matte grip.", items: [...fallbackItems.cali] },
-      { id: "miami", anchor: "city-miami", code: "02", title: "Hot Miami", tagline: "High-torque Italian tortoise & molten bronze.", items: [...fallbackItems.miami] },
+      { id: "miami", anchor: "city-miami", code: "02", title: "Hot Miami", tagline: "High-torque Italian tortoise & 24K gold leaf.", items: [...fallbackItems.miami] },
       { id: "nyc", anchor: "city-nyc", code: "03", title: "NYC Office OOTD", tagline: "Hollow brushed gold & obsidian matte architecture.", items: [...fallbackItems.nyc] },
-      { id: "tokyo", anchor: "city-tokyo", code: "04", title: "Tokyo Trade", tagline: "Mulberry silk bows, Akoya pearls & milk-tea resin.", items: [...fallbackItems.tokyo] }
+      { id: "tokyo", anchor: "city-tokyo", code: "04", title: "Tokyo Trade", tagline: "Mulberry silk bows, Akoya pearls & pastel minis.", items: [...fallbackItems.tokyo] }
     ];
 
-    // Active variant selection per city configurator stage + active angle (0, 1, 2)
     const cityState = {
-      cali: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' },
-      miami: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' },
-      nyc: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' },
-      tokyo: { itemIndex: 0, angleIndex: 0, holdTier: 'Standard' }
+      cali: { itemIndex: 0, angleIndex: 0 },
+      miami: { itemIndex: 0, angleIndex: 0 },
+      nyc: { itemIndex: 0, angleIndex: 0 },
+      tokyo: { itemIndex: 0, angleIndex: 0 }
     };
 
     const SUPPLEMENTAL_ANGLES = [
-      { name: "Angle 1 · Studio Profile", filter: "none" },
-      { name: "Angle 2 · Tension Spring & Teeth", url: "https://images.pexels.com/photos/7679859/pexels-photo-7679859.jpeg?auto=compress&cs=tinysrgb&w=1000" },
-      { name: "Angle 3 · Surface Macro", url: "https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=1000" }
+      { name: "Angle 1 · 45° Studio Travertine", url: null },
+      { name: "Angle 2 · 304 Double-Coil Tension Macro", url: "assets/studio/macro-spring.jpg" },
+      { name: "Angle 3 · 6-Hour Tumbled Acetate Polish", url: "assets/studio/macro-gloss.jpg" }
     ];
 
     const LOOKBOOK_SLIDES = [
-      { url: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 01 · Malibu Coastal Light", caption: "Hand-marbled pastel cellulose acetate in morning Pacific sun." },
-      { url: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 02 · Miami Golden Hour", caption: "High-torque Italian tiger-stripe acetate built for thick, curly hair." },
-      { url: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 03 · SoHo Architectural Studio", caption: "Featherlight hollow brushed gold alloy for 9-to-7 tailoring." },
-      { url: "https://images.pexels.com/photos/8142049/pexels-photo-8142049.jpeg?auto=compress&cs=tinysrgb&w=1400", tag: "Angle 04 · Ginza Atelier Detail", caption: "Lustrous Akoya-style pearls and mulberry silk ribbons." }
+      { url: "assets/studio/miami-4.jpg", tag: "Angle 01 · Brickell 24K Havana", caption: "Genuine 24K gold leaf suspended inside translucent Italian tortoiseshell." },
+      { url: "assets/studio/cali-1.jpg", tag: "Angle 02 · Malibu Sunset Marble", caption: "Hand-marbled pastel peach and lavender cellulose acetate in morning light." },
+      { url: "assets/studio/nyc-1.jpg", tag: "Angle 03 · SoHo Brushed Gold Arch", caption: "Featherlight 12g hollow architectural alloy for 9-to-7 tailoring." },
+      { url: "assets/studio/tokyo-2.jpg", tag: "Angle 04 · Ginza Akoya Pearl Atelier", caption: "Graduated lustrous pearls aligned on brushed gold bars." }
     ];
 
     // ==========================================
-    // 2. THEME SWITCHER (DARK / LIGHT)
+    // 2. THEME SWITCHER (LIGHT ALABASTER / DARK OBSIDIAN)
     // ==========================================
     function toggleTheme() {
       const root = document.documentElement;
@@ -649,17 +675,18 @@
       img.classList.add('morphing');
       setTimeout(() => {
         img.src = featured.image;
-        document.getElementById('hero-stage-city').innerText = `${col.code} · ${col.title}`;
+        img.style.filter = featured.filter || 'none';
+        document.getElementById('hero-stage-city').innerText = `${col.code} · ${col.title} Flagship`;
         document.getElementById('hero-stage-name').innerText = featured.name;
         const cta = document.getElementById('hero-stage-cta');
         cta.innerText = `Quick Add — $${featured.price}`;
         cta.onclick = () => addToCart(featured.id);
         img.classList.remove('morphing');
-      }, 220);
+      }, 200);
     }
 
     // ==========================================
-    // 4. MATERIAL FLASK-STYLE 4 CITY CONFIGURATORS
+    // 4. 4 CITY STUDIO CONFIGURATORS (Undo Hairware × Material Flask)
     // ==========================================
     function renderCityStages() {
       const container = document.getElementById('city-stages-container');
@@ -676,23 +703,23 @@
               
               <!-- Studio Visual Stage -->
               <div class="lg:col-span-6 ${isReversed ? 'lg:order-2' : ''}">
-                <div class="surface-card relative rounded-3xl overflow-hidden aspect-square flex items-center justify-center p-4">
+                <div class="surface-card relative rounded-3xl overflow-hidden aspect-square flex items-center justify-center p-3 shadow-lg">
                   <div class="relative w-full h-full rounded-2xl overflow-hidden">
-                    <img id="stage-img-${col.id}" src="${activeItem.image}" alt="${activeItem.name}" class="stage-img w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <img id="stage-img-${col.id}" src="${activeItem.image}" alt="${activeItem.name}" style="filter: ${activeItem.filter || 'none'};" class="stage-img w-full h-full object-cover" />
+                    <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/60 via-black/15 to-transparent"></div>
 
                     <!-- Top Left Capsule Tag -->
-                    <div class="absolute top-4 left-4 bg-black/55 backdrop-blur-md text-white font-mono text-[11px] px-3 py-1 rounded-full border border-white/15">
+                    <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white font-mono text-[11px] px-3.5 py-1 rounded-full border border-white/15">
                       ${col.code} · ${col.title}
                     </div>
 
                     <!-- Bottom Left Angle Label -->
-                    <div id="stage-angle-label-${col.id}" class="absolute bottom-4 left-4 text-white/80 font-mono text-[11px]">
-                      Angle 1 · Studio Profile
+                    <div id="stage-angle-label-${col.id}" class="absolute bottom-4 left-4 text-white/90 font-mono text-[11px]">
+                      Angle 1 · 45° Studio Travertine
                     </div>
 
                     <!-- Bottom Right Minimalist Angle Switcher Pills -->
-                    <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1 bg-black/55 backdrop-blur-md p-1 rounded-full border border-white/15">
+                    <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/15">
                       <button type="button" onclick="switchCityAngle('${col.id}', 0)" id="angle-btn-${col.id}-0" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white bg-white/25 transition">01</button>
                       <button type="button" onclick="switchCityAngle('${col.id}', 1)" id="angle-btn-${col.id}-1" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition">02</button>
                       <button type="button" onclick="switchCityAngle('${col.id}', 2)" id="angle-btn-${col.id}-2" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition">03</button>
@@ -701,49 +728,64 @@
                 </div>
               </div>
 
-              <!-- Interactive Customization Dashboard (Material Flask #order style) -->
+              <!-- Interactive Customization Dashboard -->
               <div class="lg:col-span-6 ${isReversed ? 'lg:order-1' : ''} space-y-6">
                 <div>
                   <div class="text-xs font-mono uppercase tracking-widest mb-1.5" style="color: var(--text-muted);">
                     Capsule ${col.code} · ${col.tagline}
                   </div>
-                  <h2 id="stage-title-${col.id}" class="font-bold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.75rem);">
-                    ${activeItem.name}
-                  </h2>
-                  <div id="stage-price-${col.id}" class="text-2xl font-mono mt-2 tabular-nums" style="color: var(--text-secondary);">
-                    $${activeItem.price.toFixed(2)}
+                  <div class="flex items-baseline justify-between gap-4">
+                    <h2 id="stage-title-${col.id}" class="font-bold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.85rem, 3.4vw, 2.6rem);">
+                      ${activeItem.name}
+                    </h2>
+                    <div id="stage-price-${col.id}" class="text-2xl font-mono font-semibold shrink-0 tabular-nums">
+                      $${activeItem.price.toFixed(2)}
+                    </div>
                   </div>
-                  <p id="stage-desc-${col.id}" class="text-sm mt-3 leading-relaxed" style="color: var(--text-secondary);">
+                  <p id="stage-desc-${col.id}" class="text-sm mt-2.5 leading-relaxed" style="color: var(--text-secondary);">
                     ${activeItem.desc}
                   </p>
                 </div>
 
-                <!-- Finish / Design Selector Pills -->
-                <div>
-                  <div class="text-xs font-medium mb-2.5" style="color: var(--text-secondary);">
-                    Select Design &amp; Finish
+                <!-- 5-Piece Visual Studio Strip + Swatch Selector -->
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="font-medium" style="color: var(--text-secondary);">Select Piece (${col.items.length} Studio Editions)</span>
+                    <span id="stage-shade-top-${col.id}" class="font-mono text-[11px]" style="color: var(--text-muted);">${activeItem.shade}</span>
                   </div>
-                  <div class="flex flex-wrap gap-2" id="pills-${col.id}">
+
+                  <!-- Visual Studio Thumbnail Strip -->
+                  <div class="grid grid-cols-5 gap-2.5">
                     ${col.items.map((item, i) => `
-                      <button type="button" onclick="selectCityVariant('${col.id}', ${i})" id="variant-pill-${col.id}-${i}" class="pill-option ${i === state.itemIndex ? 'active' : ''} px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full shrink-0 border border-white/20" style="background-color: ${item.swatch};"></span>
-                        <span>${item.name.replace(/ Claw| Clip| Set| Jaw| Bow| Bar/g, '')}</span>
+                      <button type="button" onclick="selectCityVariant('${col.id}', ${i})" id="thumb-card-${col.id}-${i}" class="thumb-card ${i === state.itemIndex ? 'active' : ''} rounded-2xl overflow-hidden aspect-square relative group bg-stone-200">
+                        <img src="${item.image}" alt="${item.name}" style="filter: ${item.filter || 'none'};" class="w-full h-full object-cover" />
+                        <span class="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 rounded-full border border-white/80 shadow-xs" style="background-color: ${item.swatch};"></span>
+                      </button>
+                    `).join('')}
+                  </div>
+
+                  <!-- Pill Switcher -->
+                  <div class="flex flex-wrap gap-1.5 pt-1" id="pills-${col.id}">
+                    ${col.items.map((item, i) => `
+                      <button type="button" onclick="selectCityVariant('${col.id}', ${i})" id="variant-pill-${col.id}-${i}" class="pill-option ${i === state.itemIndex ? 'active' : ''} px-3.5 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${item.swatch};"></span>
+                        <span>${item.name.replace(/ Claw| Clip| Set| Jaw| Bow| Bar| Pack| Duo| Arch/g, '')}</span>
                       </button>
                     `).join('')}
                   </div>
                 </div>
 
-                <!-- Spec Hairlines (Exact Material Flask Layout) -->
-                <div class="pt-2 text-xs">
-                  <div class="py-3 hairline-t flex justify-between items-center">
-                    <span style="color: var(--text-muted);">Shade / Finish</span>
+                <!-- Spec Hairlines (Material Flask Layout) -->
+                <div class="pt-1 text-xs">
+                  <div class="py-2.5 hairline-t flex justify-between items-center">
+                    <span style="color: var(--text-muted);">Finish &amp; Shade</span>
                     <span id="spec-shade-${col.id}" class="font-medium">${activeItem.shade}</span>
                   </div>
-                  <div class="py-3 hairline-t flex justify-between items-center">
-                    <span style="color: var(--text-muted);">Architecture</span>
+                  <div class="py-2.5 hairline-t flex justify-between items-center">
+                    <span style="color: var(--text-muted);">Material</span>
                     <span id="spec-mat-${col.id}" class="font-medium">${activeItem.material}</span>
                   </div>
-                  <div class="py-3 hairline-t hairline-b flex justify-between items-center">
+                  <div class="py-2.5 hairline-t hairline-b flex justify-between items-center">
                     <span style="color: var(--text-muted);">Hold &amp; Spec</span>
                     <span id="spec-dim-${col.id}" class="font-mono">${activeItem.dimensions} · ${activeItem.hairType}</span>
                   </div>
@@ -751,7 +793,7 @@
 
                 <!-- Dynamic Full-Width Pill CTA -->
                 <div class="pt-1">
-                  <button type="button" id="stage-cta-${col.id}" onclick="addToCart('${activeItem.id}')" class="cta-btn w-full py-4 px-6 rounded-full text-sm font-semibold tabular-nums">
+                  <button type="button" id="stage-cta-${col.id}" onclick="addToCart('${activeItem.id}')" class="cta-btn w-full py-4 px-6 rounded-full text-sm font-semibold tabular-nums shadow-sm">
                     Add to Bag – $${activeItem.price.toFixed(2)}
                   </button>
                 </div>
@@ -771,10 +813,12 @@
       cityState[cityId].angleIndex = 0;
       const item = col.items[itemIndex];
 
-      // Update active pill styling
+      // Update active pill & studio thumbnail styling
       col.items.forEach((_, idx) => {
         const pill = document.getElementById(`variant-pill-${cityId}-${idx}`);
+        const thumb = document.getElementById(`thumb-card-${cityId}-${idx}`);
         if (pill) pill.classList.toggle('active', idx === itemIndex);
+        if (thumb) thumb.classList.toggle('active', idx === itemIndex);
       });
 
       // Reset angle tab highlight
@@ -787,20 +831,22 @@
         }
       });
 
-      // Smooth hardware-accelerated image & spec transition
+      // Smooth hardware-accelerated image & filter transition
       const img = document.getElementById(`stage-img-${cityId}`);
       if (img) {
         img.classList.add('morphing');
         setTimeout(() => {
           img.src = item.image;
+          img.style.filter = item.filter || 'none';
           img.classList.remove('morphing');
-        }, 200);
+        }, 180);
       }
 
-      document.getElementById(`stage-angle-label-${cityId}`).innerText = "Angle 1 · Studio Profile";
+      document.getElementById(`stage-angle-label-${cityId}`).innerText = "Angle 1 · 45° Studio Travertine";
       document.getElementById(`stage-title-${cityId}`).innerText = item.name;
       document.getElementById(`stage-price-${cityId}`).innerText = `$${item.price.toFixed(2)}`;
       document.getElementById(`stage-desc-${cityId}`).innerText = item.desc;
+      document.getElementById(`stage-shade-top-${cityId}`).innerText = item.shade;
       document.getElementById(`spec-shade-${cityId}`).innerText = item.shade;
       document.getElementById(`spec-mat-${cityId}`).innerText = item.material;
       document.getElementById(`spec-dim-${cityId}`).innerText = `${item.dimensions} · ${item.hairType}`;
@@ -828,11 +874,13 @@
       });
 
       const targetUrl = angleIndex === 0 ? item.image : SUPPLEMENTAL_ANGLES[angleIndex].url;
+      const targetFilter = angleIndex === 0 ? (item.filter || 'none') : 'none';
       const img = document.getElementById(`stage-img-${cityId}`);
       if (img) {
         img.classList.add('morphing');
         setTimeout(() => {
           img.src = targetUrl;
+          img.style.filter = targetFilter;
           img.classList.remove('morphing');
         }, 180);
       }
@@ -848,7 +896,7 @@
 
       document.querySelectorAll('.lookbook-tab').forEach((btn, i) => {
         btn.className = i === idx
-          ? "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/20 transition"
+          ? "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/25 transition"
           : "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition";
       });
 
@@ -859,7 +907,7 @@
         document.getElementById('lookbook-tag').innerText = slide.tag;
         document.getElementById('lookbook-caption').innerText = slide.caption;
         img.classList.remove('morphing');
-      }, 220);
+      }, 200);
     }
 
     // ==========================================
@@ -891,7 +939,8 @@
               dimensions: doc.dimensions || "11.0 cm · Double-Coil",
               hairType: doc.hairType || "All Hair Types",
               desc: doc.desc || "Curated studio release from BestClips.",
-              image: doc.imageUrl ? `${doc.imageUrl}?w=1000&auto=format` : fallbackItems[target][0].image
+              image: doc.imageUrl ? `${doc.imageUrl}?w=1000&auto=format` : fallbackItems[target][0].image,
+              filter: "none"
             });
           });
 
@@ -904,7 +953,7 @@
           renderCityStages();
         }
       } catch (err) {
-        console.warn("Using local studio catalog:", err);
+        console.warn("Using bespoke travertine studio catalog:", err);
       }
     }
 
@@ -1026,11 +1075,11 @@
         savePersistedCart();
         updateCartUI();
         if (feedback) {
-          feedback.className = "text-[11px] text-emerald-400";
+          feedback.className = "text-[11px] text-emerald-600 font-medium";
           feedback.innerText = `✓ ${appliedPromo.code} applied (${appliedPromo.desc})`;
         }
       } else if (feedback) {
-        feedback.className = "text-[11px] text-rose-400";
+        feedback.className = "text-[11px] text-rose-500";
         feedback.innerText = `Try code PRETTY15 for 15% off`;
       }
     }
@@ -1083,18 +1132,18 @@
 
       const giftRow = unlockedFreeGift ? `
         <div class="flex items-center gap-3 p-3 rounded-2xl hairline-border" style="background: var(--bg-pill);">
-          <img src="https://images.pexels.com/photos/7679868/pexels-photo-7679868.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Gift" class="w-12 h-12 rounded-xl object-cover" />
+          <img src="assets/studio/tokyo-3.jpg" alt="Gift" class="w-12 h-12 rounded-xl object-cover" />
           <div class="flex-1 min-w-0">
-            <div class="text-[10px] font-mono uppercase text-emerald-400">Complimentary Gift ($50+)</div>
+            <div class="text-[10px] font-mono uppercase text-emerald-600">Complimentary Gift ($50+)</div>
             <div class="text-xs font-semibold truncate">Sakura Mini Clip</div>
           </div>
-          <span class="text-xs font-mono text-emerald-400">FREE</span>
+          <span class="text-xs font-mono text-emerald-600 font-semibold">FREE</span>
         </div>
       ` : '';
 
       container.innerHTML = cart.map(({ product, quantity }) => `
         <div class="flex items-center gap-4 py-3 hairline-b">
-          <img src="${product.image}" alt="${product.name}" class="w-14 h-14 rounded-xl object-cover" />
+          <img src="${product.image}" alt="${product.name}" style="filter: ${product.filter || 'none'};" class="w-14 h-14 rounded-xl object-cover" />
           <div class="flex-1 min-w-0">
             <h4 class="text-xs font-semibold truncate">${product.name}</h4>
             <p class="text-[11px] mt-0.5" style="color: var(--text-muted);">${product.shade} · $${product.price.toFixed(2)}</p>
