@@ -131,6 +131,10 @@
       transform: translateY(-1px);
     }
 
+    .scale-bar {
+      transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     .no-select { user-select: none; -webkit-user-select: none; }
     .tabular-nums { font-variant-numeric: tabular-nums; }
   </style>
@@ -148,19 +152,20 @@
         <span>BestClips</span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-7 text-xs font-medium tracking-wide" style="color: var(--text-secondary);">
-        <a href="#city-cali" class="hover:opacity-100 transition">01 · Spring in Cali</a>
-        <a href="#city-miami" class="hover:opacity-100 transition">02 · Hot Miami</a>
-        <a href="#city-nyc" class="hover:opacity-100 transition">03 · NYC Office</a>
-        <a href="#city-tokyo" class="hover:opacity-100 transition">04 · Tokyo Trade</a>
-        <a href="#showcase" class="hover:opacity-100 transition">Lookbook</a>
-        <a href="#craft" class="hover:opacity-100 transition">Specs</a>
+      <nav class="hidden lg:flex items-center gap-6 text-xs font-medium tracking-wide" style="color: var(--text-secondary);">
+        <a href="#city-cali" class="hover:opacity-100 transition">01 · Cali</a>
+        <a href="#city-miami" class="hover:opacity-100 transition">02 · Miami</a>
+        <a href="#city-nyc" class="hover:opacity-100 transition">03 · NYC</a>
+        <a href="#city-tokyo" class="hover:opacity-100 transition">04 · Tokyo</a>
+        <a href="#bundle-builder" class="hover:opacity-100 transition font-semibold" style="color: var(--text-primary);">3-Clip Box ($42)</a>
+        <a href="#size-architecture" class="hover:opacity-100 transition">1:1 Size Scale</a>
+        <a href="#finish-compare" class="hover:opacity-100 transition">Finishes</a>
       </nav>
 
       <div class="flex items-center gap-2.5">
         <div id="sync-pill" class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono hairline-border" style="color: var(--text-muted);">
           <span id="sync-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span id="sync-text">Studio Live</span>
+          <span id="sync-text">Sanity Live</span>
         </div>
 
         <!-- Theme Switcher (Alabaster Stone Light / Obsidian Dark) -->
@@ -184,7 +189,7 @@
 
   <main class="relative z-10">
 
-    <!-- 2. Hero Section ("Sculpted for effortless hold." — Bespoke Travertine Studio Asset + Floating City Switcher) -->
+    <!-- 2. Hero Section ("Sculpted for effortless hold.") -->
     <section id="hero" class="max-w-6xl mx-auto px-6 pt-14 pb-24 lg:py-24">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <!-- Left Copy -->
@@ -206,8 +211,8 @@
             <a href="#city-cali" class="cta-btn px-7 py-3.5 rounded-full text-sm font-semibold">
               Explore 4 City Studios
             </a>
-            <a href="#finish-compare" class="pill-option px-7 py-3.5 rounded-full text-sm font-medium">
-              Compare Finishes
+            <a href="#bundle-builder" class="pill-option px-7 py-3.5 rounded-full text-sm font-medium">
+              Build 3-Clip Box ($42)
             </a>
           </div>
 
@@ -221,8 +226,8 @@
               <div style="color: var(--text-muted);">Wood-barrel polish</div>
             </div>
             <div>
-              <div class="font-bold text-base">$35+ Free</div>
-              <div style="color: var(--text-muted);">US tracked shipping</div>
+              <div class="font-bold text-base">3 for $42</div>
+              <div style="color: var(--text-muted);">Custom Capsule Box</div>
             </div>
           </div>
         </div>
@@ -268,44 +273,212 @@
       </div>
     </section>
 
-    <!-- 3. THE 4 CITY STUDIO CONFIGURATORS (Undo Hairware Studio Photography × Material Flask Configurator) -->
+    <!-- 3. THE 4 CITY STUDIO CONFIGURATORS (Now with [Studio | On-Hair | Spring | Polish] Switcher + 5s Twist Ritual + Add to 3-Pack) -->
     <div id="city-stages-container" class="space-y-28 py-12">
       <!-- Populated dynamically by renderCityStages() -->
     </div>
 
-    <!-- 4. Full-Bleed Editorial Studio Showcase with Segmented Angle Tabs -->
-    <section id="showcase" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-        <div>
-          <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">Atelier Gallery</div>
-          <h2 class="font-bold tracking-[-0.03em]" style="font-size: clamp(2rem, 4vw, 3rem);">Four cities. One studio standard.</h2>
+    <!-- 4. TOP-5 DTC POWERHOUSE #1: "CURATE YOUR 3-CLIP CAPSULE — $42" (Emi Jay / Chunks AOV Engine) -->
+    <section id="bundle-builder" class="max-w-6xl mx-auto px-6 py-24 hairline-t scroll-mt-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Left: 3-Slot Interactive Studio Box -->
+        <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider hairline-border mb-3" style="background: var(--bg-pill); color: var(--text-secondary);">
+              <span>Best Value · Unlocks Free US Shipping</span>
+            </div>
+            <h2 class="font-bold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.75rem);">
+              Curate Your 3-Clip Capsule.
+            </h2>
+            <p class="text-sm mt-2 leading-relaxed" style="color: var(--text-secondary);">
+              Mix any 3 clips across California, Miami, NYC, and Tokyo for a flat <strong>$42</strong> (up to $61 value) — presented in our reusable travertine-linen keepsake box.
+            </p>
+          </div>
+
+          <!-- 3 Slots Visual Tray -->
+          <div id="bundle-slots-grid" class="grid grid-cols-3 gap-3">
+            <!-- Rendered by renderBundleBuilder() -->
+          </div>
+
+          <!-- Bundle Pricing & CTA Card -->
+          <div class="surface-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between text-xs">
+              <span style="color: var(--text-secondary);">Capsule Progress</span>
+              <span id="bundle-status-label" class="font-mono font-semibold">3 / 3 Selected</span>
+            </div>
+
+            <div class="py-3 hairline-t hairline-b flex items-baseline justify-between tabular-nums">
+              <div>
+                <div class="text-xs" style="color: var(--text-muted);">3-Piece Box Price</div>
+                <div class="text-[11px] text-emerald-600 font-medium mt-0.5" id="bundle-savings-text">Save $13.00 + Free US Shipping</div>
+              </div>
+              <div class="text-right">
+                <span id="bundle-orig-price" class="text-xs font-mono line-through mr-1.5" style="color: var(--text-muted);">$55.00</span>
+                <span class="text-2xl font-mono font-bold">$42.00</span>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button type="button" id="bundle-add-cta" onclick="addBundleToCart()" class="cta-btn flex-1 py-3.5 px-5 rounded-full text-xs sm:text-sm font-semibold tabular-nums">
+                Add 3-Clip Box to Bag — $42.00
+              </button>
+              <button type="button" onclick="autofillBestSellersBundle()" title="Auto-fill with top 3 city flagships" class="pill-option px-4 py-3.5 rounded-full text-xs font-medium shrink-0">
+                Auto-Curate
+              </button>
+            </div>
+          </div>
         </div>
-        <p class="text-sm max-w-sm" style="color: var(--text-secondary);">
-          Every piece is hand-tumbled for 6 hours and photographed under natural directional light on travertine stone.
-        </p>
+
+        <!-- Right: Compact Studio Picker Grid by City -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="text-xs font-mono uppercase tracking-widest" style="color: var(--text-muted);">
+              Tap Any Clip to Add to Your Box
+            </div>
+            <div class="inline-flex p-1 rounded-full surface-card gap-1" id="bundle-city-tabs">
+              <button type="button" onclick="setBundleTab('all')" data-btab="all" class="bundle-tab pill-option active px-3.5 py-1.5 rounded-full text-xs font-medium">All (20)</button>
+              <button type="button" onclick="setBundleTab('cali')" data-btab="cali" class="bundle-tab pill-option px-3.5 py-1.5 rounded-full text-xs font-medium">Cali</button>
+              <button type="button" onclick="setBundleTab('miami')" data-btab="miami" class="bundle-tab pill-option px-3.5 py-1.5 rounded-full text-xs font-medium">Miami</button>
+              <button type="button" onclick="setBundleTab('nyc')" data-btab="nyc" class="bundle-tab pill-option px-3.5 py-1.5 rounded-full text-xs font-medium">NYC</button>
+              <button type="button" onclick="setBundleTab('tokyo')" data-btab="tokyo" class="bundle-tab pill-option px-3.5 py-1.5 rounded-full text-xs font-medium">Tokyo</button>
+            </div>
+          </div>
+
+          <div id="bundle-picker-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+            <!-- Rendered by renderBundleBuilder() -->
+          </div>
+        </div>
+
       </div>
+    </section>
 
-      <div class="surface-card relative rounded-3xl overflow-hidden aspect-[16/10] max-h-[560px] w-full shadow-lg">
-        <img id="lookbook-img" src="assets/studio/miami-4.jpg" alt="Lookbook Angle" class="stage-img w-full h-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent"></div>
+    <!-- 5. TOP-5 DTC POWERHOUSE #2: 1:1 VISUAL SIZE & HAIR-VOLUME SCALE (Undo Hairware / Machete Size Architecture) -->
+    <section id="size-architecture" class="max-w-6xl mx-auto px-6 py-24 hairline-t scroll-mt-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left: Interactive 1:1 Scale Visualizer -->
+        <div class="lg:col-span-7">
+          <div class="surface-card rounded-3xl p-6 sm:p-8 space-y-7 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-[11px] font-mono uppercase tracking-widest" style="color: var(--text-muted);">1:1 Proportional Scale</div>
+                <h3 id="scale-active-title" class="text-xl font-bold mt-0.5">Jumbo 11.8 cm · High-Torque Claw</h3>
+              </div>
+              <span id="scale-active-badge" class="font-mono text-xs px-3 py-1 rounded-full hairline-border" style="background: var(--bg-pill);">
+                Jaw Opening: 62 mm
+              </span>
+            </div>
 
-        <!-- Bottom Left Caption -->
-        <div class="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 text-white max-w-md">
-          <div id="lookbook-tag" class="text-xs font-mono uppercase tracking-widest opacity-80">Angle 01 · Brickell 24K Havana</div>
-          <div id="lookbook-caption" class="text-lg sm:text-xl font-semibold mt-1">Genuine 24K gold leaf suspended inside translucent Italian tortoiseshell.</div>
+            <!-- Proportional Architectural Bars Comparing All 4 Sizes against a Credit Card (8.5 cm) -->
+            <div class="space-y-4 py-2 font-mono text-xs">
+              <!-- Size 1: Mini 2.5cm -->
+              <div onclick="selectSizeScale(0)" class="cursor-pointer group space-y-1.5">
+                <div class="flex justify-between items-center">
+                  <span id="scale-label-0" class="transition" style="color: var(--text-secondary);">01 · Mini Claw (Shibuya / Santa Barbara)</span>
+                  <span class="tabular-nums">2.5 cm / 1.0 in</span>
+                </div>
+                <div class="w-full h-3 rounded-full overflow-hidden p-0.5" style="background: var(--bg-pill);">
+                  <div id="scale-bar-0" class="scale-bar h-full rounded-full opacity-45" style="width: 21%; background-color: var(--accent-cta);"></div>
+                </div>
+              </div>
+
+              <!-- Size 2: Barrette / Pearl Pin 8.5–9.0cm -->
+              <div onclick="selectSizeScale(1)" class="cursor-pointer group space-y-1.5">
+                <div class="flex justify-between items-center">
+                  <span id="scale-label-1" class="transition" style="color: var(--text-secondary);">02 · Tailored Barrette &amp; Pearl Pin (Tribeca / Ginza)</span>
+                  <span class="tabular-nums">9.0 cm / 3.5 in</span>
+                </div>
+                <div class="w-full h-3 rounded-full overflow-hidden p-0.5" style="background: var(--bg-pill);">
+                  <div id="scale-bar-1" class="scale-bar h-full rounded-full opacity-45" style="width: 76%; background-color: var(--accent-cta);"></div>
+                </div>
+              </div>
+
+              <!-- Size 3: Classic Arch 10.5–11.0cm -->
+              <div onclick="selectSizeScale(2)" class="cursor-pointer group space-y-1.5">
+                <div class="flex justify-between items-center">
+                  <span id="scale-label-2" class="transition" style="color: var(--text-secondary);">03 · Classic Full Claw (Malibu / Oat Cloud / SoHo)</span>
+                  <span class="tabular-nums">11.0 cm / 4.3 in</span>
+                </div>
+                <div class="w-full h-3 rounded-full overflow-hidden p-0.5" style="background: var(--bg-pill);">
+                  <div id="scale-bar-2" class="scale-bar h-full rounded-full opacity-45" style="width: 93%; background-color: var(--accent-cta);"></div>
+                </div>
+              </div>
+
+              <!-- Size 4: Jumbo 11.8cm -->
+              <div onclick="selectSizeScale(3)" class="cursor-pointer group space-y-1.5">
+                <div class="flex justify-between items-center">
+                  <span id="scale-label-3" class="font-bold transition" style="color: var(--text-primary);">04 · Jumbo Double-Coil Claw (South Beach / Brickell)</span>
+                  <span class="tabular-nums font-bold">11.8 cm / 4.6 in</span>
+                </div>
+                <div class="w-full h-3 rounded-full overflow-hidden p-0.5" style="background: var(--bg-pill);">
+                  <div id="scale-bar-3" class="scale-bar h-full rounded-full" style="width: 100%; background-color: var(--accent-cta);"></div>
+                </div>
+              </div>
+
+              <!-- Reference Line: Standard Credit Card (8.5 cm) -->
+              <div class="pt-3 hairline-t flex items-center justify-between text-[11px]" style="color: var(--text-muted);">
+                <span>Reference: Standard Credit Card / ID Width = 8.5 cm (72% of bar)</span>
+                <span>1:1 Ratio</span>
+              </div>
+            </div>
+
+            <!-- Selected Size Match Card -->
+            <div class="rounded-2xl p-4 hairline-border flex items-center justify-between gap-4" style="background: var(--bg-pill);">
+              <div class="flex items-center gap-3.5 min-w-0">
+                <img id="scale-rec-img" src="assets/studio/miami-1.jpg" alt="Size Match" class="w-14 h-14 rounded-xl object-cover shrink-0" />
+                <div class="min-w-0">
+                  <div id="scale-rec-hair" class="text-[10px] font-mono uppercase tracking-wider text-emerald-600 font-semibold">Best For: Thick, Long &amp; Curly (3B–4C)</div>
+                  <div id="scale-rec-desc" class="text-xs font-medium truncate mt-0.5">Swallows waist-length or heavy curls in a single French twist.</div>
+                </div>
+              </div>
+              <button id="scale-rec-btn" onclick="addToCart('miami-1')" class="pill-option px-4 py-2 rounded-full text-xs font-semibold shrink-0">
+                Add Match — $18
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Bottom Right Segmented Dash Tabs (Angle 1 - Angle 4) -->
-        <div class="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 flex items-center gap-1.5 bg-black/55 backdrop-blur-md p-1.5 rounded-full border border-white/15">
-          <button onclick="setLookbookAngle(0)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/25 transition">Angle 1</button>
-          <button onclick="setLookbookAngle(1)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 2</button>
-          <button onclick="setLookbookAngle(2)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 3</button>
-          <button onclick="setLookbookAngle(3)" class="lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition">Angle 4</button>
+        <!-- Right: Size & Hair Volume Guidance + 5-Second Twist Guide -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="text-xs font-mono uppercase tracking-widest" style="color: var(--text-muted);">Ergonomic Sizing &amp; Ritual</div>
+          <h2 class="font-bold tracking-[-0.03em] leading-tight" style="font-size: clamp(1.85rem, 3.5vw, 2.75rem);">
+            Engineered for your exact hair volume.
+          </h2>
+          <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
+            Click any size tier on the scale to compare capacity. Every contour is shaped to match the occipital curve of your head—so you can lean back in a car seat or office chair comfortably.
+          </p>
+
+          <!-- 4 Size Selector Pills -->
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="selectSizeScale(0)" class="size-pill pill-option px-4 py-2 rounded-full text-xs font-medium">2.5 cm Mini</button>
+            <button type="button" onclick="selectSizeScale(1)" class="size-pill pill-option px-4 py-2 rounded-full text-xs font-medium">9.0 cm Barrette</button>
+            <button type="button" onclick="selectSizeScale(2)" class="size-pill pill-option px-4 py-2 rounded-full text-xs font-medium">11.0 cm Classic</button>
+            <button type="button" onclick="selectSizeScale(3)" class="size-pill pill-option active px-4 py-2 rounded-full text-xs font-medium">11.8 cm Jumbo</button>
+          </div>
+
+          <!-- Top-5 DTC Powerhouse #3: The 5-Second French Twist Ritual -->
+          <div class="pt-4 hairline-t space-y-3">
+            <div class="text-xs font-mono uppercase tracking-widest" style="color: var(--text-muted);">The 5-Second All-Day Updo Ritual</div>
+            <div class="grid grid-cols-3 gap-3 text-xs">
+              <div class="p-3 rounded-2xl hairline-border" style="background: var(--bg-pill);">
+                <div class="font-mono text-[11px] font-bold mb-1">01 · Gather</div>
+                <p class="text-[11px] leading-snug" style="color: var(--text-secondary);">Twist hair upward from the nape of the neck.</p>
+              </div>
+              <div class="p-3 rounded-2xl hairline-border" style="background: var(--bg-pill);">
+                <div class="font-mono text-[11px] font-bold mb-1">02 · Fold</div>
+                <p class="text-[11px] leading-snug" style="color: var(--text-secondary);">Tuck ends inward against your crown.</p>
+              </div>
+              <div class="p-3 rounded-2xl hairline-border" style="background: var(--bg-pill);">
+                <div class="font-mono text-[11px] font-bold mb-1">03 · Lock</div>
+                <p class="text-[11px] leading-snug" style="color: var(--text-secondary);">Clamp horizontally across the twist seam.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 5. Interactive Split Comparison Slider (Bespoke Mirror Gloss vs. Velvet Matte on Travertine) -->
+    <!-- 6. Interactive Split Comparison Slider (Bespoke Mirror Gloss vs. Velvet Matte on Travertine) -->
     <section id="finish-compare" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <!-- Left Split Canvas -->
@@ -372,7 +545,7 @@
       </div>
     </section>
 
-    <!-- 6. Asymmetric 3-Card Bento Specs (Using Bespoke Macro Studio Shots) -->
+    <!-- 7. Asymmetric 3-Card Bento Specs (Using Bespoke Macro Studio Shots) -->
     <section id="craft" class="max-w-6xl mx-auto px-6 py-24 hairline-t">
       <div class="mb-12">
         <div class="text-xs font-mono uppercase tracking-widest mb-2" style="color: var(--text-muted);">Architecture &amp; Specs</div>
@@ -418,7 +591,7 @@
 
   </main>
 
-  <!-- 7. Ultra-Clean Single-Row Footer -->
+  <!-- 8. Ultra-Clean Single-Row Footer -->
   <footer class="relative z-10 hairline-t py-10 px-6 text-xs" style="color: var(--text-muted);">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
@@ -434,7 +607,7 @@
     </div>
   </footer>
 
-  <!-- 8. Slide-Out Glassmorphic Bag Drawer -->
+  <!-- 9. Slide-Out Glassmorphic Bag Drawer -->
   <div id="cart-modal" class="fixed inset-0 z-50 hidden">
     <div onclick="closeCart()" class="fixed inset-0 bg-black/55 backdrop-blur-sm transition-opacity"></div>
     <div class="fixed inset-y-0 right-0 max-w-md w-full hairline-border flex flex-col justify-between z-10 shadow-2xl" style="background-color: var(--bg-elevated); color: var(--text-primary);">
@@ -574,42 +747,48 @@
 
   <script>
     // ==========================================
-    // 1. SANITY.IO HEADLESS CONFIG & BESPOKE TRAVERTINE STUDIO ASSETS
+    // 1. MODULAR SHELF ADAPTER (Sanity Now -> Google Sheets / Shopify Ready Later)
     // ==========================================
     const SANITY_PROJECT_ID = 'ycnr19bp';
     const SANITY_DATASET = 'production';
     const SANITY_API_VERSION = '2024-03-01';
 
-    // All 20 items use our cohesive bespoke travertine stone studio photographs
-    // with hardware-accelerated CSS finish grading for secondary colorways (Material Flask paradigm)
+    // Editorial On-Hair Lookbook references paired per city for [Studio | On-Hair] toggle
+    const ON_HAIR_LOOKS = {
+      cali: { url: "https://images.pexels.com/photos/7679863/pexels-photo-7679863.jpeg?auto=compress&cs=tinysrgb&w=1000", note: "On-Hair Look · Effortless Malibu French Twist (Thick Wavy Hair)" },
+      miami: { url: "https://images.pexels.com/photos/8142041/pexels-photo-8142041.jpeg?auto=compress&cs=tinysrgb&w=1000", note: "On-Hair Look · High-Hold Crown Updo (Long Curly 3B Hair)" },
+      nyc: { url: "https://images.pexels.com/photos/8142045/pexels-photo-8142045.jpeg?auto=compress&cs=tinysrgb&w=1000", note: "On-Hair Look · Tailored SoHo Low Chignon (Medium Straight Hair)" },
+      tokyo: { url: "https://images.pexels.com/photos/6941026/pexels-photo-6941026.jpeg?auto=compress&cs=tinysrgb&w=1000", note: "On-Hair Look · Harajuku Half-Up Silk Ribbon Styling" }
+    };
+
     const fallbackItems = {
       cali: [
-        { id: "cali-1", name: "Malibu Sunset Claw", shade: "Peach & Lavender Marble", swatch: "#F5B7B1", price: 16, material: "Hand-Marbled Cellulose Acetate", dimensions: "11.0 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Sun-washed pastel peach and lavender cellulose acetate carved for effortless coastal updos with zero scalp pull.", image: "assets/studio/cali-1.jpg", filter: "none" },
-        { id: "cali-2", name: "Oat Milk Cloud Matte", shade: "Warm Oat Cream", swatch: "#EDE0D4", price: 14, material: "Velvet Matte Plant Acetate", dimensions: "10.5 cm · Micro-Grip Teeth", hairType: "Fine & Silky Hair", desc: "Sculpted cloud-wave contour in velvety matte cream with rounded snag-free teeth that lock silky hair.", image: "assets/studio/cali-2.jpg", filter: "none" },
-        { id: "cali-3", name: "Big Sur Seafoam Claw", shade: "Matcha Coastal Mint", swatch: "#A3B18A", price: 15, material: "Translucent Botanical Resin", dimensions: "10.2 cm · Stainless Coil", hairType: "Medium to Thick Hair", desc: "Translucent coastal sage-mint resin inspired by Pacific sea glass, hand-tumbled in wood barrels for 6 hours.", image: "assets/studio/cali-1.jpg", filter: "hue-rotate(115deg) saturate(0.85) brightness(1.02)" },
-        { id: "cali-4", name: "Santa Barbara Mini Set", shade: "Pastel & Pearl (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Carved Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Half-Up & Bangs", desc: "Six miniature studio-polished claws in blush, milk-tea, and mother-of-pearl for pinning face-framing layers.", image: "assets/studio/tokyo-3.jpg", filter: "brightness(1.04) saturate(1.08)" },
-        { id: "cali-5", name: "Venice Rose Cloud Claw", shade: "Blush Rose Matte", swatch: "#F4ACB7", price: 15, material: "Soft-Touch Bio-Acetate", dimensions: "10.5 cm · Sculpted Wave", hairType: "Fine to Medium Hair", desc: "Warm sunset rose edition of our cloud-wave silhouette with non-slip inner tooth geometry.", image: "assets/studio/cali-2.jpg", filter: "sepia(0.25) hue-rotate(315deg) saturate(1.35)" }
+        { id: "cali-1", city: "cali", name: "Malibu Sunset Claw", shade: "Peach & Lavender Marble", swatch: "#F5B7B1", price: 16, material: "Hand-Marbled Cellulose Acetate", dimensions: "11.0 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Sun-washed pastel peach and lavender cellulose acetate carved for effortless coastal updos with zero scalp pull.", image: "assets/studio/cali-1.jpg", filter: "none" },
+        { id: "cali-2", city: "cali", name: "Oat Milk Cloud Matte", shade: "Warm Oat Cream", swatch: "#EDE0D4", price: 14, material: "Velvet Matte Plant Acetate", dimensions: "10.5 cm · Micro-Grip Teeth", hairType: "Fine & Silky Hair", desc: "Sculpted cloud-wave contour in velvety matte cream with rounded snag-free teeth that lock silky hair.", image: "assets/studio/cali-2.jpg", filter: "none" },
+        { id: "cali-3", city: "cali", name: "Big Sur Seafoam Claw", shade: "Matcha Coastal Mint", swatch: "#A3B18A", price: 15, material: "Translucent Botanical Resin", dimensions: "10.2 cm · Stainless Coil", hairType: "Medium to Thick Hair", desc: "Translucent coastal sage-mint resin inspired by Pacific sea glass, hand-tumbled in wood barrels for 6 hours.", image: "assets/studio/cali-1.jpg", filter: "hue-rotate(115deg) saturate(0.85) brightness(1.02)" },
+        { id: "cali-4", city: "cali", name: "Santa Barbara Mini Set", shade: "Pastel & Pearl (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Carved Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Half-Up & Bangs", desc: "Six miniature studio-polished claws in blush, milk-tea, and mother-of-pearl for pinning face-framing layers.", image: "assets/studio/tokyo-3.jpg", filter: "brightness(1.04) saturate(1.08)" },
+        { id: "cali-5", city: "cali", name: "Venice Rose Cloud Claw", shade: "Blush Rose Matte", swatch: "#F4ACB7", price: 15, material: "Soft-Touch Bio-Acetate", dimensions: "10.5 cm · Sculpted Wave", hairType: "Fine to Medium Hair", desc: "Warm sunset rose edition of our cloud-wave silhouette with non-slip inner tooth geometry.", image: "assets/studio/cali-2.jpg", filter: "sepia(0.25) hue-rotate(315deg) saturate(1.35)" }
       ],
       miami: [
-        { id: "miami-1", name: "South Beach Tiger Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18, material: "Italian Patterned Acetate", dimensions: "11.8 cm · High-Tension Jumbo", hairType: "Thick & Curly Hair", desc: "High-contrast tiger stripe Italian cellulose acetate built with our highest-torque brass double-coil spring.", image: "assets/studio/miami-1.jpg", filter: "none" },
-        { id: "miami-2", name: "Wynwood Leopard Jaw", shade: "Espresso Tortoise Spot", swatch: "#78350F", price: 17, material: "Hand-Buffed Tortoiseshell", dimensions: "11.0 cm · Deep Rounded Teeth", hairType: "All Hair Volumes", desc: "Sculpted wildcat leopard tortoiseshell polished to a liquid mirror shine for humid resort days.", image: "assets/studio/miami-2.jpg", filter: "none" },
-        { id: "miami-3", name: "Ocean Drive Flame Coral", shade: "Hibiscus Sunset Swirl", swatch: "#EA580C", price: 16, material: "Luminous Bio-Acetate", dimensions: "10.5 cm · Resort Profile", hairType: "Medium to Thick Hair", desc: "Fiery tropical coral and amber swirled resin designed to catch golden-hour sunlight.", image: "assets/studio/miami-3.jpg", filter: "none" },
-        { id: "miami-4", name: "Brickell 24K Havana Claw", shade: "Tortoise & 24K Gold Leaf", swatch: "#D97706", price: 19, material: "Gold-Flecked Italian Acetate", dimensions: "11.2 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Deep Havana tortoiseshell infused with genuine suspended 24K gold leaf flakes.", image: "assets/studio/miami-4.jpg", filter: "none" },
-        { id: "miami-5", name: "Star Island Molten Arch", shade: "Sunlit Molten Bronze", swatch: "#A16207", price: 21, material: "Sculpted Hollow Alloy", dimensions: "11.2 cm · Featherlight 14g", hairType: "All Hair Types", desc: "Architectural open-arch metal claw finished in warm sunlit bronze for poolside-to-evening wear.", image: "assets/studio/nyc-1.jpg", filter: "sepia(0.45) saturate(1.6) brightness(0.92)" }
+        { id: "miami-1", city: "miami", name: "South Beach Tiger Claw", shade: "Bengal Amber & Noir", swatch: "#B45309", price: 18, material: "Italian Patterned Acetate", dimensions: "11.8 cm · High-Tension Jumbo", hairType: "Thick & Curly Hair", desc: "High-contrast tiger stripe Italian cellulose acetate built with our highest-torque brass double-coil spring.", image: "assets/studio/miami-1.jpg", filter: "none" },
+        { id: "miami-2", city: "miami", name: "Wynwood Leopard Jaw", shade: "Espresso Tortoise Spot", swatch: "#78350F", price: 17, material: "Hand-Buffed Tortoiseshell", dimensions: "11.0 cm · Deep Rounded Teeth", hairType: "All Hair Volumes", desc: "Sculpted wildcat leopard tortoiseshell polished to a liquid mirror shine for humid resort days.", image: "assets/studio/miami-2.jpg", filter: "none" },
+        { id: "miami-3", city: "miami", name: "Ocean Drive Flame Coral", shade: "Hibiscus Sunset Swirl", swatch: "#EA580C", price: 16, material: "Luminous Bio-Acetate", dimensions: "10.5 cm · Resort Profile", hairType: "Medium to Thick Hair", desc: "Fiery tropical coral and amber swirled resin designed to catch golden-hour sunlight.", image: "assets/studio/miami-3.jpg", filter: "none" },
+        { id: "miami-4", city: "miami", name: "Brickell 24K Havana Claw", shade: "Tortoise & 24K Gold Leaf", swatch: "#D97706", price: 19, material: "Gold-Flecked Italian Acetate", dimensions: "11.2 cm · Double-Coil Spring", hairType: "Thick & Long Hair", desc: "Deep Havana tortoiseshell infused with genuine suspended 24K gold leaf flakes.", image: "assets/studio/miami-4.jpg", filter: "none" },
+        { id: "miami-5", city: "miami", name: "Star Island Molten Arch", shade: "Sunlit Molten Bronze", swatch: "#A16207", price: 21, material: "Sculpted Hollow Alloy", dimensions: "11.2 cm · Featherlight 14g", hairType: "All Hair Types", desc: "Architectural open-arch metal claw finished in warm sunlit bronze for poolside-to-evening wear.", image: "assets/studio/nyc-1.jpg", filter: "sepia(0.45) saturate(1.6) brightness(0.92)" }
       ],
       nyc: [
-        { id: "nyc-1", name: "SoHo Brushed Gold Arch", shade: "Champagne Brushed Gold", swatch: "#D4AF37", price: 20, material: "Hollow Architectural Alloy", dimensions: "11.2 cm · Featherlight 12g", hairType: "Medium to Thick Hair", desc: "Minimalist open-arch metal claw engineered to pair effortlessly with tailored blazers and silk button-downs.", image: "assets/studio/nyc-1.jpg", filter: "none" },
-        { id: "nyc-2", name: "Tribeca Matte Noir Bar", shade: "Obsidian Velvet Matte", swatch: "#27272A", price: 15, material: "Matte Acetate & Steel Clasp", dimensions: "9.0 cm · Low-Profile Barrette", hairType: "Fine & Straight Hair", desc: "Ultra-clean architectural bar clip with a brushed steel French clasp for sleek low ponytails.", image: "assets/studio/nyc-2.jpg", filter: "none" },
-        { id: "nyc-3", name: "Fifth Ave Classic Tortoise", shade: "Heritage Amber Havana", swatch: "#92400E", price: 18, material: "Mirror-Polished Italian Acetate", dimensions: "11.0 cm · Contoured Arch", hairType: "Medium to Long Hair", desc: "Timeless New York editorial tortoiseshell claw with high-gloss bevels and brass tension hardware.", image: "assets/studio/macro-gloss.jpg", filter: "none" },
-        { id: "nyc-4", name: "Madison Sterling Arch", shade: "Brushed Platinum Silver", swatch: "#D6D3D1", price: 20, material: "Hollow Zinc Alloy", dimensions: "11.2 cm · Gallery Contour", hairType: "All Hair Volumes", desc: "Cool-toned brushed platinum silver edition of our signature hollow arch claw with zero rear-head pressure.", image: "assets/studio/nyc-1.jpg", filter: "saturate(0.12) brightness(1.06) contrast(1.05)" },
-        { id: "nyc-5", name: "Upper East Pearl Duo", shade: "Graduated Pearl & Gold", swatch: "#F5F5F4", price: 19, material: "Lustrous Pearl & 18K Gold Bar", dimensions: "7.5 cm · 2-Piece Atelier Set", hairType: "Half-Up & Fine Hair", desc: "Pair of tailored graduated pearl bar pins that transition seamlessly from boardroom to gallery dinner.", image: "assets/studio/tokyo-2.jpg", filter: "none" }
+        { id: "nyc-1", city: "nyc", name: "SoHo Brushed Gold Arch", shade: "Champagne Brushed Gold", swatch: "#D4AF37", price: 20, material: "Hollow Architectural Alloy", dimensions: "11.2 cm · Featherlight 12g", hairType: "Medium to Thick Hair", desc: "Minimalist open-arch metal claw engineered to pair effortlessly with tailored blazers and silk button-downs.", image: "assets/studio/nyc-1.jpg", filter: "none" },
+        { id: "nyc-2", city: "nyc", name: "Tribeca Matte Noir Bar", shade: "Obsidian Velvet Matte", swatch: "#27272A", price: 15, material: "Matte Acetate & Steel Clasp", dimensions: "9.0 cm · Low-Profile Barrette", hairType: "Fine & Straight Hair", desc: "Ultra-clean architectural bar clip with a brushed steel French clasp for sleek low ponytails.", image: "assets/studio/nyc-2.jpg", filter: "none" },
+        { id: "nyc-3", city: "nyc", name: "Fifth Ave Classic Tortoise", shade: "Heritage Amber Havana", swatch: "#92400E", price: 18, material: "Mirror-Polished Italian Acetate", dimensions: "11.0 cm · Contoured Arch", hairType: "Medium to Long Hair", desc: "Timeless New York editorial tortoiseshell claw with high-gloss bevels and brass tension hardware.", image: "assets/studio/macro-gloss.jpg", filter: "none" },
+        { id: "nyc-4", city: "nyc", name: "Madison Sterling Arch", shade: "Brushed Platinum Silver", swatch: "#D6D3D1", price: 20, material: "Hollow Zinc Alloy", dimensions: "11.2 cm · Gallery Contour", hairType: "All Hair Volumes", desc: "Cool-toned brushed platinum silver edition of our signature hollow arch claw with zero rear-head pressure.", image: "assets/studio/nyc-1.jpg", filter: "saturate(0.12) brightness(1.06) contrast(1.05)" },
+        { id: "nyc-5", city: "nyc", name: "Upper East Pearl Duo", shade: "Graduated Pearl & Gold", swatch: "#F5F5F4", price: 19, material: "Lustrous Pearl & 18K Gold Bar", dimensions: "7.5 cm · 2-Piece Atelier Set", hairType: "Half-Up & Fine Hair", desc: "Pair of tailored graduated pearl bar pins that transition seamlessly from boardroom to gallery dinner.", image: "assets/studio/tokyo-2.jpg", filter: "none" }
       ],
       tokyo: [
-        { id: "tokyo-1", name: "Harajuku Silk Ribbon Bow", shade: "Sakura Blush Pink", swatch: "#F4C2C2", price: 16, material: "100% Mulberry Silk & Clasp", dimensions: "15.5 cm Width · French Clasp", hairType: "Half-Up & Ponytails", desc: "Structured double-loop bow crafted from pure sakura mulberry silk on a snag-free gold barrette clasp.", image: "assets/studio/tokyo-1.jpg", filter: "none" },
-        { id: "tokyo-2", name: "Ginza Akoya Pearl Pin Set", shade: "Lustrous White Akoya Pearl", swatch: "#FFFBEB", price: 19, material: "Organic Pearl & Brushed Gold", dimensions: "7.5 cm · Boutique Pair", hairType: "Fine & Half-Up Styles", desc: "Graduated luminous Akoya-style pearls hand-aligned on slender brushed gold atelier pins.", image: "assets/studio/tokyo-2.jpg", filter: "none" },
-        { id: "tokyo-3", name: "Shibuya Pastel Mini Pack", shade: "Sakura, Milk Tea & Pearl (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Japanese Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Bangs & Face Layers", desc: "Six featherlight micro-claws in sakura blush, roasted milk tea, and mother-of-pearl white acetate.", image: "assets/studio/tokyo-3.jpg", filter: "none" },
-        { id: "tokyo-4", name: "Aoyama Bordeaux Bow", shade: "Deep Wine Mulberry Silk", swatch: "#881337", price: 17, material: "Heavyweight Silk Satin", dimensions: "15.5 cm · Structured Wing", hairType: "All Hair Types", desc: "Rich Bordeaux evening edition of our structured silk ribbon bow with tailored cascading tails.", image: "assets/studio/tokyo-1.jpg", filter: "hue-rotate(335deg) saturate(1.65) brightness(0.78) contrast(1.15)" },
-        { id: "tokyo-5", name: "Daikanyama Milk-Tea Claw", shade: "Hojicha Oat Swirl", swatch: "#D6CCC2", price: 16, material: "Velvet Matte Cellulose Acetate", dimensions: "10.5 cm · Salon Balance", hairType: "Medium to Thick Hair", desc: "Warm roasted Hojicha latte matte contour claw favored by Tokyo salon stylists.", image: "assets/studio/cali-2.jpg", filter: "sepia(0.18) brightness(0.95) contrast(1.04)" }
+        { id: "tokyo-1", city: "tokyo", name: "Harajuku Silk Ribbon Bow", shade: "Sakura Blush Pink", swatch: "#F4C2C2", price: 16, material: "100% Mulberry Silk & Clasp", dimensions: "15.5 cm Width · French Clasp", hairType: "Half-Up & Ponytails", desc: "Structured double-loop bow crafted from pure sakura mulberry silk on a snag-free gold barrette clasp.", image: "assets/studio/tokyo-1.jpg", filter: "none" },
+        { id: "tokyo-2", city: "tokyo", name: "Ginza Akoya Pearl Pin Set", shade: "Lustrous White Akoya Pearl", swatch: "#FFFBEB", price: 19, material: "Organic Pearl & Brushed Gold", dimensions: "7.5 cm · Boutique Pair", hairType: "Fine & Half-Up Styles", desc: "Graduated luminous Akoya-style pearls hand-aligned on slender brushed gold atelier pins.", image: "assets/studio/tokyo-2.jpg", filter: "none" },
+        { id: "tokyo-3", city: "tokyo", name: "Shibuya Pastel Mini Pack", shade: "Sakura, Milk Tea & Pearl (6-Pack)", swatch: "#FBCFE8", price: 15, material: "Japanese Plant Acetate", dimensions: "2.5 cm · 6 Mini Claws", hairType: "Bangs & Face Layers", desc: "Six featherlight micro-claws in sakura blush, roasted milk tea, and mother-of-pearl white acetate.", image: "assets/studio/tokyo-3.jpg", filter: "none" },
+        { id: "tokyo-4", city: "tokyo", name: "Aoyama Bordeaux Bow", shade: "Deep Wine Mulberry Silk", swatch: "#881337", price: 17, material: "Heavyweight Silk Satin", dimensions: "15.5 cm · Structured Wing", hairType: "All Hair Types", desc: "Rich Bordeaux evening edition of our structured silk ribbon bow with tailored cascading tails.", image: "assets/studio/tokyo-1.jpg", filter: "hue-rotate(335deg) saturate(1.65) brightness(0.78) contrast(1.15)" },
+        { id: "tokyo-5", city: "tokyo", name: "Daikanyama Milk-Tea Claw", shade: "Hojicha Oat Swirl", swatch: "#D6CCC2", price: 16, material: "Velvet Matte Cellulose Acetate", dimensions: "10.5 cm · Salon Balance", hairType: "Medium to Thick Hair", desc: "Warm roasted Hojicha latte matte contour claw favored by Tokyo salon stylists.", image: "assets/studio/cali-2.jpg", filter: "sepia(0.18) brightness(0.95) contrast(1.04)" }
       ]
     };
 
@@ -627,21 +806,19 @@
       tokyo: { itemIndex: 0, angleIndex: 0 }
     };
 
-    const SUPPLEMENTAL_ANGLES = [
-      { name: "Angle 1 · 45° Studio Travertine", url: null },
-      { name: "Angle 2 · 304 Double-Coil Tension Macro", url: "assets/studio/macro-spring.jpg" },
-      { name: "Angle 3 · 6-Hour Tumbled Acetate Polish", url: "assets/studio/macro-gloss.jpg" }
-    ];
-
-    const LOOKBOOK_SLIDES = [
-      { url: "assets/studio/miami-4.jpg", tag: "Angle 01 · Brickell 24K Havana", caption: "Genuine 24K gold leaf suspended inside translucent Italian tortoiseshell." },
-      { url: "assets/studio/cali-1.jpg", tag: "Angle 02 · Malibu Sunset Marble", caption: "Hand-marbled pastel peach and lavender cellulose acetate in morning light." },
-      { url: "assets/studio/nyc-1.jpg", tag: "Angle 03 · SoHo Brushed Gold Arch", caption: "Featherlight 12g hollow architectural alloy for 9-to-7 tailoring." },
-      { url: "assets/studio/tokyo-2.jpg", tag: "Angle 04 · Ginza Akoya Pearl Atelier", caption: "Graduated lustrous pearls aligned on brushed gold bars." }
-    ];
+    // 4-Mode View Switcher per City Stage: Studio | On-Hair | Spring Macro | Polish Macro
+    function getStageAnglesForCity(cityId, item) {
+      const onHair = ON_HAIR_LOOKS[cityId] || ON_HAIR_LOOKS.cali;
+      return [
+        { short: "Studio", name: "Studio View · 45° Travertine Pedestal", url: item.image, filter: item.filter || 'none' },
+        { short: "On Hair", name: onHair.note, url: onHair.url, filter: "none" },
+        { short: "Spring", name: "Engineering View · 304 Double-Coil Tension Spring", url: "assets/studio/macro-spring.jpg", filter: "none" },
+        { short: "Polish", name: "Surface View · 6-Hour Wood-Barrel Tumbled Bevel", url: "assets/studio/macro-gloss.jpg", filter: "none" }
+      ];
+    }
 
     // ==========================================
-    // 2. THEME SWITCHER (LIGHT ALABASTER / DARK OBSIDIAN)
+    // 2. THEME SWITCHER
     // ==========================================
     function toggleTheme() {
       const root = document.documentElement;
@@ -660,7 +837,7 @@
     })();
 
     // ==========================================
-    // 3. HERO MOOD SWITCHER (Smooth Crossfade)
+    // 3. HERO MOOD SWITCHER
     // ==========================================
     function switchHeroCity(cityId) {
       const col = collections.find(c => c.id === cityId);
@@ -686,7 +863,7 @@
     }
 
     // ==========================================
-    // 4. 4 CITY STUDIO CONFIGURATORS (Undo Hairware × Material Flask)
+    // 4. 4 CITY STUDIO CONFIGURATORS (With [Studio | On Hair | Spring | Polish] Switcher)
     // ==========================================
     function renderCityStages() {
       const container = document.getElementById('city-stages-container');
@@ -696,6 +873,7 @@
         const state = cityState[col.id];
         const activeItem = col.items[state.itemIndex] || col.items[0];
         const isReversed = idx % 2 === 1;
+        const angles = getStageAnglesForCity(col.id, activeItem);
 
         return `
           <section id="${col.anchor}" class="max-w-6xl mx-auto px-6 scroll-mt-24">
@@ -706,23 +884,30 @@
                 <div class="surface-card relative rounded-3xl overflow-hidden aspect-square flex items-center justify-center p-3 shadow-lg">
                   <div class="relative w-full h-full rounded-2xl overflow-hidden">
                     <img id="stage-img-${col.id}" src="${activeItem.image}" alt="${activeItem.name}" style="filter: ${activeItem.filter || 'none'};" class="stage-img w-full h-full object-cover" />
-                    <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/60 via-black/15 to-transparent"></div>
+                    <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
                     <!-- Top Left Capsule Tag -->
                     <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white font-mono text-[11px] px-3.5 py-1 rounded-full border border-white/15">
                       ${col.code} · ${col.title}
                     </div>
 
+                    <!-- Top Right Quick Studio vs On-Hair Pill -->
+                    <button type="button" onclick="toggleQuickOnHair('${col.id}')" id="quick-onhair-${col.id}" class="absolute top-4 right-4 bg-white/90 hover:bg-white text-stone-950 font-mono text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm transition">
+                      See On Hair &rarr;
+                    </button>
+
                     <!-- Bottom Left Angle Label -->
-                    <div id="stage-angle-label-${col.id}" class="absolute bottom-4 left-4 text-white/90 font-mono text-[11px]">
-                      Angle 1 · 45° Studio Travertine
+                    <div id="stage-angle-label-${col.id}" class="absolute bottom-4 left-4 right-44 text-white/90 font-mono text-[11px] truncate">
+                      ${angles[0].name}
                     </div>
 
-                    <!-- Bottom Right Minimalist Angle Switcher Pills -->
-                    <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/15">
-                      <button type="button" onclick="switchCityAngle('${col.id}', 0)" id="angle-btn-${col.id}-0" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white bg-white/25 transition">01</button>
-                      <button type="button" onclick="switchCityAngle('${col.id}', 1)" id="angle-btn-${col.id}-1" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition">02</button>
-                      <button type="button" onclick="switchCityAngle('${col.id}', 2)" id="angle-btn-${col.id}-2" class="px-2.5 py-1 rounded-full text-[10px] font-mono text-white/60 hover:text-white transition">03</button>
+                    <!-- Bottom Right 4-Mode Switcher: Studio | On Hair | Spring | Polish -->
+                    <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1 bg-black/65 backdrop-blur-md p-1 rounded-full border border-white/15">
+                      ${angles.map((ang, aIdx) => `
+                        <button type="button" onclick="switchCityAngle('${col.id}', ${aIdx})" id="angle-btn-${col.id}-${aIdx}" class="px-2.5 py-1 rounded-full text-[10px] font-mono ${aIdx === 0 ? 'text-white bg-white/25' : 'text-white/60 hover:text-white'} transition">
+                          ${ang.short}
+                        </button>
+                      `).join('')}
                     </div>
                   </div>
                 </div>
@@ -791,10 +976,13 @@
                   </div>
                 </div>
 
-                <!-- Dynamic Full-Width Pill CTA -->
-                <div class="pt-1">
-                  <button type="button" id="stage-cta-${col.id}" onclick="addToCart('${activeItem.id}')" class="cta-btn w-full py-4 px-6 rounded-full text-sm font-semibold tabular-nums shadow-sm">
+                <!-- Dual Action Row: Single Add OR Add to $42 3-Clip Box -->
+                <div class="pt-1 flex flex-col sm:flex-row gap-2.5">
+                  <button type="button" id="stage-cta-${col.id}" onclick="addToCart('${activeItem.id}')" class="cta-btn flex-1 py-4 px-6 rounded-full text-sm font-semibold tabular-nums shadow-sm">
                     Add to Bag – $${activeItem.price.toFixed(2)}
+                  </button>
+                  <button type="button" id="stage-bundle-btn-${col.id}" onclick="addClipToBundleSlot('${activeItem.id}', true)" class="pill-option py-4 px-5 rounded-full text-xs font-semibold shrink-0">
+                    + Add to $42 3-Pack
                   </button>
                 </div>
               </div>
@@ -812,8 +1000,8 @@
       cityState[cityId].itemIndex = itemIndex;
       cityState[cityId].angleIndex = 0;
       const item = col.items[itemIndex];
+      const angles = getStageAnglesForCity(cityId, item);
 
-      // Update active pill & studio thumbnail styling
       col.items.forEach((_, idx) => {
         const pill = document.getElementById(`variant-pill-${cityId}-${idx}`);
         const thumb = document.getElementById(`thumb-card-${cityId}-${idx}`);
@@ -821,8 +1009,7 @@
         if (thumb) thumb.classList.toggle('active', idx === itemIndex);
       });
 
-      // Reset angle tab highlight
-      [0, 1, 2].forEach(a => {
+      [0, 1, 2, 3].forEach(a => {
         const abtn = document.getElementById(`angle-btn-${cityId}-${a}`);
         if (abtn) {
           abtn.className = a === 0
@@ -831,7 +1018,9 @@
         }
       });
 
-      // Smooth hardware-accelerated image & filter transition
+      const quickBtn = document.getElementById(`quick-onhair-${cityId}`);
+      if (quickBtn) quickBtn.innerHTML = "See On Hair &rarr;";
+
       const img = document.getElementById(`stage-img-${cityId}`);
       if (img) {
         img.classList.add('morphing');
@@ -842,7 +1031,7 @@
         }, 180);
       }
 
-      document.getElementById(`stage-angle-label-${cityId}`).innerText = "Angle 1 · 45° Studio Travertine";
+      document.getElementById(`stage-angle-label-${cityId}`).innerText = angles[0].name;
       document.getElementById(`stage-title-${cityId}`).innerText = item.name;
       document.getElementById(`stage-price-${cityId}`).innerText = `$${item.price.toFixed(2)}`;
       document.getElementById(`stage-desc-${cityId}`).innerText = item.desc;
@@ -856,15 +1045,22 @@
         cta.innerText = `Add to Bag – $${item.price.toFixed(2)}`;
         cta.onclick = () => addToCart(item.id);
       }
+      const bbtn = document.getElementById(`stage-bundle-btn-${cityId}`);
+      if (bbtn) {
+        bbtn.onclick = () => addClipToBundleSlot(item.id, true);
+      }
     }
 
     function switchCityAngle(cityId, angleIndex) {
       const col = collections.find(c => c.id === cityId);
       if (!col) return;
       const item = col.items[cityState[cityId].itemIndex] || col.items[0];
+      const angles = getStageAnglesForCity(cityId, item);
+      if (!angles[angleIndex]) return;
+
       cityState[cityId].angleIndex = angleIndex;
 
-      [0, 1, 2].forEach(a => {
+      [0, 1, 2, 3].forEach(a => {
         const abtn = document.getElementById(`angle-btn-${cityId}-${a}`);
         if (abtn) {
           abtn.className = a === angleIndex
@@ -873,45 +1069,254 @@
         }
       });
 
-      const targetUrl = angleIndex === 0 ? item.image : SUPPLEMENTAL_ANGLES[angleIndex].url;
-      const targetFilter = angleIndex === 0 ? (item.filter || 'none') : 'none';
+      const quickBtn = document.getElementById(`quick-onhair-${cityId}`);
+      if (quickBtn) {
+        quickBtn.innerHTML = angleIndex === 1 ? "&larr; Back to Studio" : "See On Hair &rarr;";
+      }
+
       const img = document.getElementById(`stage-img-${cityId}`);
       if (img) {
         img.classList.add('morphing');
         setTimeout(() => {
-          img.src = targetUrl;
-          img.style.filter = targetFilter;
+          img.src = angles[angleIndex].url;
+          img.style.filter = angles[angleIndex].filter;
           img.classList.remove('morphing');
         }, 180);
       }
-      document.getElementById(`stage-angle-label-${cityId}`).innerText = SUPPLEMENTAL_ANGLES[angleIndex].name;
+      document.getElementById(`stage-angle-label-${cityId}`).innerText = angles[angleIndex].name;
+    }
+
+    function toggleQuickOnHair(cityId) {
+      const nextAngle = cityState[cityId].angleIndex === 1 ? 0 : 1;
+      switchCityAngle(cityId, nextAngle);
     }
 
     // ==========================================
-    // 5. LOOKBOOK CROSSFADE GALLERY
+    // 5. TOP-5 DTC BUNDLE BUILDER ("3-CLIP CAPSULE — $42")
     // ==========================================
-    function setLookbookAngle(idx) {
-      const slide = LOOKBOOK_SLIDES[idx];
-      if (!slide) return;
+    let bundleSlots = ['cali-1', 'miami-1', 'nyc-1']; // Pre-curated with 3 city flagships
+    let activeBundleTab = 'all';
+    const BUNDLE_FLAT_PRICE = 42.00;
 
-      document.querySelectorAll('.lookbook-tab').forEach((btn, i) => {
-        btn.className = i === idx
-          ? "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white bg-white/25 transition"
-          : "lookbook-tab px-3.5 py-1.5 rounded-full text-xs font-mono text-white/60 hover:text-white transition";
+    function getAllCatalogItems() {
+      return collections.flatMap(col => col.items.map(i => ({ ...i, cityTitle: col.title })));
+    }
+
+    function setBundleTab(tabKey) {
+      activeBundleTab = tabKey;
+      document.querySelectorAll('.bundle-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-btab') === tabKey);
+      });
+      renderBundleBuilder();
+    }
+
+    function addClipToBundleSlot(productId, scrollToBox = false) {
+      if (bundleSlots.length < 3) {
+        bundleSlots.push(productId);
+      } else {
+        // Rotate into last slot or first empty
+        bundleSlots[2] = productId;
+      }
+      renderBundleBuilder();
+      const prod = findProductById(productId);
+      if (prod) showToast(`Added "${prod.name}" to your 3-Clip Box`);
+      if (scrollToBox) {
+        const el = document.getElementById('bundle-builder');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function removeBundleSlot(slotIdx) {
+      bundleSlots.splice(slotIdx, 1);
+      renderBundleBuilder();
+    }
+
+    function autofillBestSellersBundle() {
+      bundleSlots = ['cali-1', 'miami-4', 'tokyo-1'];
+      renderBundleBuilder();
+      showToast('Auto-curated Top 3 City Flagships');
+    }
+
+    function renderBundleBuilder() {
+      const slotsGrid = document.getElementById('bundle-slots-grid');
+      const pickerGrid = document.getElementById('bundle-picker-grid');
+      if (!slotsGrid || !pickerGrid) return;
+
+      const resolvedSlots = [0, 1, 2].map(i => bundleSlots[i] ? findProductById(bundleSlots[i]) : null);
+
+      slotsGrid.innerHTML = resolvedSlots.map((item, idx) => {
+        if (!item) {
+          return `
+            <div class="rounded-2xl hairline-border border-dashed aspect-square flex flex-col items-center justify-center p-3 text-center" style="background: var(--bg-pill);">
+              <span class="font-mono text-xs" style="color: var(--text-muted);">Slot 0${idx + 1}</span>
+              <span class="text-[11px] mt-1" style="color: var(--text-muted);">Tap a clip &rarr;</span>
+            </div>
+          `;
+        }
+        return `
+          <div class="surface-card rounded-2xl overflow-hidden relative group aspect-square flex flex-col justify-end">
+            <img src="${item.image}" alt="${item.name}" style="filter: ${item.filter || 'none'};" class="absolute inset-0 w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent"></div>
+            <button type="button" onclick="removeBundleSlot(${idx})" title="Remove from box" class="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/65 text-white text-xs flex items-center justify-center hover:bg-black transition">
+              &times;
+            </button>
+            <div class="relative z-10 p-2.5 text-white">
+              <div class="font-mono text-[9px] uppercase opacity-75">Slot 0${idx + 1} · $${item.price}</div>
+              <div class="text-[11px] font-semibold truncate">${item.name}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const filledItems = resolvedSlots.filter(Boolean);
+      const origSum = filledItems.reduce((s, i) => s + i.price, 0);
+      const savings = Math.max(0, origSum - BUNDLE_FLAT_PRICE);
+
+      document.getElementById('bundle-status-label').innerText = `${filledItems.length} / 3 Selected`;
+      const origEl = document.getElementById('bundle-orig-price');
+      const saveEl = document.getElementById('bundle-savings-text');
+      const addCta = document.getElementById('bundle-add-cta');
+
+      if (filledItems.length === 3) {
+        origEl.innerText = `$${origSum.toFixed(2)}`;
+        saveEl.innerText = `Save $${savings.toFixed(2)} + Free US Shipping`;
+        addCta.disabled = false;
+        addCta.className = "cta-btn flex-1 py-3.5 px-5 rounded-full text-xs sm:text-sm font-semibold tabular-nums";
+        addCta.innerText = `Add 3-Clip Box to Bag — $42.00`;
+      } else {
+        origEl.innerText = "";
+        const needed = 3 - filledItems.length;
+        saveEl.innerText = `Select ${needed} more clip${needed > 1 ? 's' : ''} to unlock $42 Box`;
+        addCta.disabled = true;
+        addCta.className = "pill-option opacity-50 cursor-not-allowed flex-1 py-3.5 px-5 rounded-full text-xs sm:text-sm font-semibold tabular-nums";
+        addCta.innerText = `Pick ${needed} More Clip${needed > 1 ? 's' : ''}`;
+      }
+
+      const allItems = getAllCatalogItems();
+      const visible = activeBundleTab === 'all' ? allItems : allItems.filter(i => i.city === activeBundleTab);
+
+      pickerGrid.innerHTML = visible.map(item => {
+        const countInBox = bundleSlots.filter(id => id === item.id).length;
+        return `
+          <div onclick="addClipToBundleSlot('${item.id}')" class="surface-card rounded-2xl p-2.5 cursor-pointer hover:border-[var(--border-active)] transition flex flex-col justify-between group">
+            <div class="relative rounded-xl overflow-hidden aspect-square bg-stone-200 mb-2">
+              <img src="${item.image}" alt="${item.name}" style="filter: ${item.filter || 'none'};" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+              ${countInBox > 0 ? `
+                <span class="absolute top-2 left-2 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  In Box ×${countInBox}
+                </span>
+              ` : ''}
+              <span class="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-black/70 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                +
+              </span>
+            </div>
+            <div class="px-1 flex items-center justify-between gap-2 text-xs">
+              <span class="font-semibold truncate">${item.name.replace(/ Claw| Clip| Set/g, '')}</span>
+              <span class="font-mono text-[11px] shrink-0" style="color: var(--text-muted);">$${item.price}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addBundleToCart() {
+      if (bundleSlots.length < 3) return;
+      const resolved = bundleSlots.slice(0, 3).map(id => findProductById(id)).filter(Boolean);
+      if (resolved.length < 3) return;
+
+      const names = resolved.map(i => i.name.replace(/ Claw| Clip| Set/g, '')).join(' + ');
+      const bundleProduct = {
+        id: `bundle-${bundleSlots.join('-')}`,
+        name: `3-Clip Capsule Box`,
+        shade: names,
+        price: BUNDLE_FLAT_PRICE,
+        image: resolved[0].image,
+        filter: resolved[0].filter || 'none'
+      };
+
+      const existing = cart.find(item => item.product.id === bundleProduct.id);
+      if (existing) existing.quantity += 1;
+      else cart.push({ product: bundleProduct, quantity: 1 });
+
+      savePersistedCart();
+      updateCartUI();
+      openCart();
+      showToast('Added 3-Clip Capsule Box ($42) to Bag');
+    }
+
+    // ==========================================
+    // 6. 1:1 VISUAL SIZE & HAIR-VOLUME SCALE
+    // ==========================================
+    const SIZE_TIERS = [
+      {
+        title: "Mini 2.5 cm · Dainty Accent Claw",
+        badge: "Jaw Opening: 18 mm",
+        hair: "Best For: Bangs, Face Layers & Braids",
+        desc: "Featherlight 2g micro-claws that pin back bangs and half-up twists without creasing.",
+        recId: "tokyo-3",
+        recLabel: "Add Mini 6-Pack — $15"
+      },
+      {
+        title: "Tailored 9.0 cm · Architectural Barrette & Pin",
+        badge: "Low-Profile Clasp",
+        hair: "Best For: Fine, Silky & Straight Hair",
+        desc: "Locks sleek low ponytails and half-up styles flush against the head without sliding.",
+        recId: "nyc-2",
+        recLabel: "Add Noir Bar — $15"
+      },
+      {
+        title: "Classic 11.0 cm · Full Everyday Claw",
+        badge: "Jaw Opening: 52 mm",
+        hair: "Best For: Medium to Thick Shoulder-Length Hair",
+        desc: "Our signature all-day French twist silhouette balanced for zero scalp tension.",
+        recId: "cali-1",
+        recLabel: "Add Malibu Claw — $16"
+      },
+      {
+        title: "Jumbo 11.8 cm · High-Torque Double-Coil Claw",
+        badge: "Jaw Opening: 62 mm",
+        hair: "Best For: Thick, Long & Curly (3B–4C)",
+        desc: "Swallows waist-length or heavy curls in a single French twist with double-coil grip.",
+        recId: "miami-1",
+        recLabel: "Add Tiger Jumbo — $18"
+      }
+    ];
+
+    function selectSizeScale(tierIdx) {
+      const tier = SIZE_TIERS[tierIdx];
+      if (!tier) return;
+
+      document.getElementById('scale-active-title').innerText = tier.title;
+      document.getElementById('scale-active-badge').innerText = tier.badge;
+      document.getElementById('scale-rec-hair').innerText = tier.hair;
+      document.getElementById('scale-rec-desc').innerText = tier.desc;
+
+      const prod = findProductById(tier.recId);
+      if (prod) {
+        document.getElementById('scale-rec-img').src = prod.image;
+        document.getElementById('scale-rec-img').style.filter = prod.filter || 'none';
+        const btn = document.getElementById('scale-rec-btn');
+        btn.innerText = tier.recLabel;
+        btn.onclick = () => addToCart(prod.id);
+      }
+
+      [0, 1, 2, 3].forEach(i => {
+        const bar = document.getElementById(`scale-bar-${i}`);
+        const lbl = document.getElementById(`scale-label-${i}`);
+        if (bar) bar.classList.toggle('opacity-45', i !== tierIdx);
+        if (lbl) {
+          lbl.classList.toggle('font-bold', i === tierIdx);
+          lbl.style.color = i === tierIdx ? 'var(--text-primary)' : 'var(--text-secondary)';
+        }
       });
 
-      const img = document.getElementById('lookbook-img');
-      img.classList.add('morphing');
-      setTimeout(() => {
-        img.src = slide.url;
-        document.getElementById('lookbook-tag').innerText = slide.tag;
-        document.getElementById('lookbook-caption').innerText = slide.caption;
-        img.classList.remove('morphing');
-      }, 200);
+      document.querySelectorAll('.size-pill').forEach((p, i) => {
+        p.classList.toggle('active', i === tierIdx);
+      });
     }
 
     // ==========================================
-    // 6. SANITY.IO LIVE CLOUD SYNC
+    // 7. SANITY.IO LIVE CLOUD SYNC
     // ==========================================
     async function loadProductsFromSanity() {
       const query = encodeURIComponent(`*[_type == "clipProduct"] | order(_createdAt desc) {
@@ -931,6 +1336,7 @@
             const target = grouped[doc.series] ? doc.series : 'cali';
             grouped[target].push({
               id: doc._id,
+              city: target,
               name: doc.name || "Studio Clip",
               shade: doc.shade || "Signature Finish",
               swatch: doc.swatch || "#D4AF37",
@@ -949,8 +1355,9 @@
             col.items = live.length >= 5 ? live : [...live, ...fallbackItems[col.id].slice(0, 5 - live.length)];
           });
 
-          document.getElementById('sync-text').innerText = `${studioItems.length} Live SKU${studioItems.length > 1 ? 's' : ''}`;
+          document.getElementById('sync-text').innerText = `${studioItems.length} Sanity SKU${studioItems.length > 1 ? 's' : ''}`;
           renderCityStages();
+          renderBundleBuilder();
         }
       } catch (err) {
         console.warn("Using bespoke travertine studio catalog:", err);
@@ -958,7 +1365,7 @@
     }
 
     // ==========================================
-    // 7. SPLIT COMPARISON SLIDER
+    // 8. SPLIT COMPARISON SLIDER
     // ==========================================
     function setComparePct(pct) {
       const clamped = Math.max(0, Math.min(100, pct));
@@ -995,7 +1402,7 @@
     }
 
     // ==========================================
-    // 8. SLIDE-OUT BAG & PROMO ENGINE
+    // 9. SLIDE-OUT BAG & PROMO ENGINE
     // ==========================================
     let cart = [];
     let appliedPromo = null;
@@ -1146,7 +1553,7 @@
           <img src="${product.image}" alt="${product.name}" style="filter: ${product.filter || 'none'};" class="w-14 h-14 rounded-xl object-cover" />
           <div class="flex-1 min-w-0">
             <h4 class="text-xs font-semibold truncate">${product.name}</h4>
-            <p class="text-[11px] mt-0.5" style="color: var(--text-muted);">${product.shade} · $${product.price.toFixed(2)}</p>
+            <p class="text-[11px] mt-0.5 truncate" style="color: var(--text-muted);">${product.shade} · $${product.price.toFixed(2)}</p>
             <div class="flex items-center gap-2 mt-2">
               <button onclick="updateQuantity('${product.id}', -1)" class="w-6 h-6 rounded-full hairline-border flex items-center justify-center text-xs">-</button>
               <span class="text-xs font-mono w-4 text-center">${quantity}</span>
@@ -1202,6 +1609,7 @@
     // Boot
     loadPersistedCart();
     renderCityStages();
+    renderBundleBuilder();
     initComparisonSlider();
     loadProductsFromSanity();
     updateCartUI();
