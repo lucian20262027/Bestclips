@@ -8,13 +8,10 @@ import {
 import { CartItem, CityCollection, CityId, ProductItem, PromoCode } from './types';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { CityChapters } from './components/CityChapters';
-import { CatalogExplorer } from './components/CatalogExplorer';
+import { CityShowroom } from './components/CityShowroom';
 import { CapsuleBuilder } from './components/CapsuleBuilder';
-import { HairFitQuiz } from './components/HairFitQuiz';
-import { LookbookBanner } from './components/LookbookBanner';
-import { CraftAndScale } from './components/CraftAndScale';
-import { ReviewsSection } from './components/ReviewsSection';
+import { ShowroomCraftAndReviews } from './components/ShowroomCraftAndReviews';
+import { HairFitModal } from './components/HairFitModal';
 import { ProductModal } from './components/ProductModal';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
@@ -25,13 +22,14 @@ export function App() {
       const saved = localStorage.getItem('bestclips_theme');
       if (saved === 'light' || saved === 'dark') return saved;
     } catch {
-      // ignore storage errors
+      // ignore
     }
     return 'light';
   });
 
   const [collections, setCollections] = useState<CityCollection[]>(CITY_COLLECTIONS);
-  const [liveSkuCount, setLiveSkuCount] = useState<number | null>(null);
+  const [activeCityTab, setActiveCityTab] = useState<'all' | CityId>('cali');
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
 
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
@@ -118,7 +116,6 @@ export function App() {
         if (!active) return;
         const studioItems = data?.result || [];
         if (studioItems.length > 0) {
-          setLiveSkuCount(studioItems.length);
           const grouped: Record<CityId, ProductItem[]> = {
             cali: [],
             miami: [],
@@ -161,7 +158,7 @@ export function App() {
         }
       })
       .catch(() => {
-        // Fallback smoothly to local curated studio catalog
+        // Fallback smoothly to curated showroom catalog
       });
 
     return () => {
@@ -253,14 +250,6 @@ export function App() {
     setIsCartOpen(true);
   };
 
-  const handleJumpCatalog = () => {
-    const el = document.getElementById('catalog');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-    window.setTimeout(() => {
-      document.getElementById('catalog-search-input')?.focus();
-    }, 350);
-  };
-
   return (
     <div className="min-h-screen flex flex-col justify-between relative">
       <div className="topo-bg" aria-hidden="true" />
@@ -271,9 +260,8 @@ export function App() {
         cartCount={totalCartCount}
         wishlistCount={wishlistIds.length}
         onOpenCart={() => setIsCartOpen(true)}
-        onJumpCatalog={handleJumpCatalog}
+        onOpenQuiz={() => setIsQuizOpen(true)}
         onApplyPromo={handleQuickPromo}
-        liveSkuCount={liveSkuCount}
       />
 
       <main className="relative z-10">
@@ -281,18 +269,14 @@ export function App() {
           collections={collections}
           onAddToCart={handleAddToCart}
           onInspectProduct={setInspectingProduct}
+          onOpenQuiz={() => setIsQuizOpen(true)}
+          onSelectCityTab={(cityId) => setActiveCityTab(cityId)}
         />
 
-        <CityChapters
+        <CityShowroom
           collections={collections}
-          wishlistIds={wishlistIds}
-          onToggleWishlist={handleToggleWishlist}
-          onAddToCart={handleAddToCart}
-          onInspectProduct={setInspectingProduct}
-        />
-
-        <CatalogExplorer
-          products={allProducts}
+          activeTab={activeCityTab}
+          onTabChange={setActiveCityTab}
           wishlistIds={wishlistIds}
           onToggleWishlist={handleToggleWishlist}
           onAddToCart={handleAddToCart}
@@ -304,24 +288,18 @@ export function App() {
           onAddBundle={handleAddBundle}
         />
 
-        <HairFitQuiz
-          products={allProducts}
-          onAddToCart={handleAddToCart}
-          onInspectProduct={setInspectingProduct}
-        />
-
-        <LookbookBanner
-          collections={collections}
-          onInspectProduct={setInspectingProduct}
-          onAddToCart={handleAddToCart}
-        />
-
-        <CraftAndScale />
-
-        <ReviewsSection />
+        <ShowroomCraftAndReviews />
       </main>
 
       <Footer onApplyPromo={handleQuickPromo} />
+
+      <HairFitModal
+        isOpen={isQuizOpen}
+        products={allProducts.length ? allProducts : ALL_PRODUCTS}
+        onClose={() => setIsQuizOpen(false)}
+        onAddToCart={handleAddToCart}
+        onInspectProduct={setInspectingProduct}
+      />
 
       <ProductModal
         product={inspectingProduct}
@@ -351,7 +329,6 @@ export function App() {
         onClearCart={() => setCart([])}
       />
 
-      {/* Minimal Toast */}
       <div
         className={`fixed bottom-6 right-6 z-50 surface-card text-xs font-medium px-5 py-3 rounded-full shadow-2xl transition-all duration-300 pointer-events-none ${
           toastMsg ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'
