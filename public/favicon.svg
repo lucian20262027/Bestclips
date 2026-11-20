@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#1B2420" />
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#E5D3B3" stroke-opacity="0.28" stroke-width="1.5" />
+  <!-- Sculpted Architectural Claw Crest -->
+  <path
+    d="M14 40C14 27 22 18 32 18C42 18 50 27 50 40"
+    stroke="#F4E7D1"
+    stroke-width="3.2"
+    stroke-linecap="round"
+  />
+  <!-- Hinge Tab & Coil -->
+  <path
+    d="M25 18.5C26 13.5 28.5 11 32 11C35.5 11 38 13.5 39 18.5"
+    stroke="#D4AF37"
+    stroke-width="2.6"
+    stroke-linecap="round"
+  />
+  <circle cx="32" cy="21" r="2.6" fill="#D4AF37" />
+  <!-- Symmetrical Interlocking Claw Teeth -->
+  <path
+    d="M17.5 40V46.5M24.5 38.5V47.5M32 37.5V48M39.5 38.5V47.5M46.5 40V46.5"
+    stroke="#F4E7D1"
+    stroke-width="2.8"
+    stroke-linecap="round"
+  />
+  <path
+    d="M14 39.5H50"
+    stroke="#F4E7D1"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    stroke-opacity="0.65"
+  />
+</svg>

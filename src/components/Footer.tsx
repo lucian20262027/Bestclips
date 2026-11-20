@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrandLogo } from './BrandLogo';
 
 interface FooterProps {
   onApplyPromo: (code: string) => void;
@@ -9,12 +10,10 @@ export const Footer: React.FC<FooterProps> = ({ onApplyPromo }) => {
     <footer className="relative z-10 hairline-t py-14 px-5 sm:px-8 text-xs" style={{ color: 'var(--text-muted)' }}>
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 hairline-b">
         <div className="md:col-span-5 space-y-3">
-          <div className="font-serif text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            BestClips Atelier
-          </div>
-          <p className="leading-relaxed max-w-sm" style={{ color: 'var(--text-secondary)' }}>
-            Engineered hair architecture designed in California &amp; New York, crafted with
-            plant-based cellulose acetate, hollow architectural alloys, and 22-momme mulberry silk.
+          <BrandLogo showSlogan size="md" />
+          <p className="leading-relaxed max-w-sm pt-1" style={{ color: 'var(--text-secondary)' }}>
+            US-headquartered hair architecture collective partnering with independent designers
+            across California, Miami, New York, and Tokyo—precision crafted in China &amp; Japan.
           </p>
         </div>
 
@@ -23,10 +22,10 @@ export const Footer: React.FC<FooterProps> = ({ onApplyPromo }) => {
             City Capsules
           </div>
           <ul className="space-y-1.5">
-            <li><a href="#city-cali" className="hover:underline">01 · Spring in Cali</a></li>
-            <li><a href="#city-miami" className="hover:underline">02 · Hot Miami</a></li>
-            <li><a href="#city-nyc" className="hover:underline">03 · NYC Office OOTD</a></li>
-            <li><a href="#city-tokyo" className="hover:underline">04 · Tokyo Trade</a></li>
+            <li><a href="#showroom" className="hover:underline">01 · Spring in Cali</a></li>
+            <li><a href="#showroom" className="hover:underline">02 · Hot Miami</a></li>
+            <li><a href="#showroom" className="hover:underline">03 · NYC Office OOTD</a></li>
+            <li><a href="#showroom" className="hover:underline">04 · Tokyo Trade</a></li>
           </ul>
         </div>
 
@@ -46,8 +45,8 @@ export const Footer: React.FC<FooterProps> = ({ onApplyPromo }) => {
       </div>
 
       <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <span>© 2026 BestClips.app · Sculpted for effortless hold.</span>
-        <span className="font-mono">Designed in CA &amp; NYC · Craftsmanship in CN &amp; JP</span>
+        <span>© 2026 BestClips.app · Clip Your City. Hold Your World.</span>
+        <span className="font-mono">US Indie City Design · Crafted in China &amp; Japan</span>
       </div>
     </footer>
   );

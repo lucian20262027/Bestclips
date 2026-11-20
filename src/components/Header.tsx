@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, Moon, ShoppingBag, Sparkles, Sun } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 
 interface HeaderProps {
   theme: 'light' | 'dark';
@@ -32,10 +33,10 @@ export const Header: React.FC<HeaderProps> = ({
       >
         <span className="inline-flex items-center gap-1.5">
           <Sparkles className="w-3 h-3 text-amber-300" />
-          <span>FREE US TRACKED SHIPPING $35+</span>
+          <span>US INDIE CITY DESIGNERS · CRAFTED IN CHINA &amp; JAPAN</span>
         </span>
         <span className="opacity-40 hidden sm:inline">·</span>
-        <span className="hidden sm:inline">COMPLIMENTARY SAKURA MINI CLIP AT $50</span>
+        <span className="hidden sm:inline">FREE US SHIPPING $35+ · FREE GIFT AT $50</span>
         <span className="opacity-40 hidden md:inline">·</span>
         <button
           type="button"
@@ -48,17 +49,13 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Single-Row Clean Flagship Navigation */}
       <div className="hairline-b bg-[var(--bg-primary)]/85 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-4">
-          <a href="#hero" className="flex items-center gap-2.5 group shrink-0">
-            <span
-              className="w-2.5 h-2.5 rounded-full transition-transform group-hover:scale-125"
-              style={{ backgroundColor: 'var(--accent-cta)' }}
-            />
-            <span className="font-serif text-2xl font-semibold tracking-tight">BestClips</span>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-[68px] flex items-center justify-between gap-4">
+          <a href="#hero" className="shrink-0">
+            <BrandLogo showSlogan size="sm" />
           </a>
 
           <nav
-            className="hidden md:flex items-center gap-8 text-xs font-medium tracking-wide"
+            className="hidden lg:flex items-center gap-7 text-xs font-medium tracking-wide"
             style={{ color: 'var(--text-secondary)' }}
           >
             <a href="#showroom" className="hover:text-[var(--text-primary)] transition">

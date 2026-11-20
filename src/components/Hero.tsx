@@ -48,21 +48,21 @@ export const Hero: React.FC<HeroProps> = ({
             style={{ backgroundColor: 'var(--bg-pill)', color: 'var(--text-secondary)' }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span>4 CITY CAPSULES · ITALIAN CELLULOSE ACETATE</span>
+            <span>US HQ · INDEPENDENT CITY DESIGNERS · CRAFTED IN CN &amp; JP</span>
           </div>
 
           <h1 className="font-serif font-semibold tracking-[-0.02em] leading-[0.97] text-[clamp(2.85rem,5.8vw,4.75rem)]">
-            Architectural hold,{' '}
-            <span className="italic font-medium">sculpted</span> for four cities.
+            Clip your city.{' '}
+            <span className="italic font-medium">Hold</span> your world.
           </h1>
 
           <p
             className="text-base leading-relaxed max-w-lg"
             style={{ color: 'var(--text-secondary)' }}
           >
-            Carved from plant-based Italian cellulose acetate, featherlight hollow alloys, and
-            22-momme mulberry silk. Tension-calibrated for zero-slip comfort from fine strands to
-            thick curls.
+            Directed in the United States with independent designers across California, Miami,
+            New York, and Tokyo—and precision-crafted in China and Japan from plant cellulose
+            acetate, hollow alloys, and 22-momme mulberry silk.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-1">
