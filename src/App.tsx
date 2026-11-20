@@ -6,6 +6,7 @@ import {
   SANITY_CONFIG,
 } from './data/catalog';
 import { CartItem, CityCollection, CityId, ProductItem, PromoCode } from './types';
+import { trackEvent } from './utils/analytics';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { CityShowroom } from './components/CityShowroom';
@@ -14,6 +15,7 @@ import { ShowroomCraftAndReviews } from './components/ShowroomCraftAndReviews';
 import { HairFitModal } from './components/HairFitModal';
 import { ProductModal } from './components/ProductModal';
 import { CartDrawer } from './components/CartDrawer';
+import { PolicyFaqModal, PolicyTab } from './components/PolicyFaqModal';
 import { Footer } from './components/Footer';
 
 export function App() {
@@ -30,6 +32,7 @@ export function App() {
   const [collections, setCollections] = useState<CityCollection[]>(CITY_COLLECTIONS);
   const [activeCityTab, setActiveCityTab] = useState<'all' | CityId>('cali');
   const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [activePolicyTab, setActivePolicyTab] = useState<PolicyTab | null>(null);
 
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
@@ -65,6 +68,13 @@ export function App() {
   const [inspectingProduct, setInspectingProduct] = useState<ProductItem | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    window.setTimeout(() => {
+      setToastMsg((prev) => (prev === msg ? null : prev));
+    }, 2800);
+  };
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     try {
@@ -98,6 +108,45 @@ export function App() {
       // ignore
     }
   }, [appliedPromo]);
+
+  // Deep-linking for paid ad campaigns (?clip=miami-4, ?city=nyc, ?quiz=1, ?policy=shipping, ?checkout=success)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const clipId = params.get('clip');
+    const cityParam = params.get('city');
+    const quizParam = params.get('quiz');
+    const policyParam = params.get('policy') as PolicyTab | null;
+    const checkoutParam = params.get('checkout');
+
+    if (cityParam === 'all' || cityParam === 'cali' || cityParam === 'miami' || cityParam === 'nyc' || cityParam === 'tokyo') {
+      setActiveCityTab(cityParam);
+    }
+    if (clipId) {
+      const target = ALL_PRODUCTS.find((p) => p.id === clipId);
+      if (target) {
+        setActiveCityTab(target.cityId);
+        setInspectingProduct(target);
+        trackEvent('view_item', {
+          item_id: target.id,
+          item_name: target.name,
+          value: target.price,
+        });
+      }
+    }
+    if (quizParam === '1') setIsQuizOpen(true);
+    if (policyParam && ['shipping', 'faq', 'privacy', 'terms'].includes(policyParam)) {
+      setActivePolicyTab(policyParam);
+    }
+    if (checkoutParam === 'success') {
+      setCart([]);
+      showToast('Payment confirmed — thank you for your BestClips order!');
+      window.history.replaceState({}, '', window.location.pathname);
+    } else if (checkoutParam === 'cancelled') {
+      setIsCartOpen(true);
+      showToast('Checkout paused — your bag is saved');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   // Preserve Sanity.io headless CMS live sync capability
   useEffect(() => {
@@ -166,13 +215,6 @@ export function App() {
     };
   }, []);
 
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    window.setTimeout(() => {
-      setToastMsg((prev) => (prev === msg ? null : prev));
-    }, 2400);
-  };
-
   const allProducts = useMemo(
     () => collections.flatMap((c) => c.items),
     [collections]
@@ -183,6 +225,27 @@ export function App() {
     [cart]
   );
 
+  const handleInspectProduct = (product: ProductItem) => {
+    setInspectingProduct(product);
+    trackEvent('view_item', {
+      item_id: product.id,
+      item_name: product.name,
+      value: product.price,
+    });
+    const url = new URL(window.location.href);
+    url.searchParams.set('clip', product.id);
+    window.history.replaceState({}, '', url.toString());
+  };
+
+  const handleCloseProduct = () => {
+    setInspectingProduct(null);
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('clip')) {
+      url.searchParams.delete('clip');
+      window.history.replaceState({}, '', url.toString());
+    }
+  };
+
   const handleAddToCart = (product: ProductItem) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
@@ -192,6 +255,11 @@ export function App() {
         );
       }
       return [...prev, { product, quantity: 1 }];
+    });
+    trackEvent('add_to_cart', {
+      item_id: product.id,
+      item_name: product.name,
+      value: product.price,
     });
     setIsCartOpen(true);
     showToast(`${product.name} added to bag`);
@@ -209,6 +277,12 @@ export function App() {
         }
       });
       return next;
+    });
+    const bundleVal = items.reduce((s, i) => s + i.price, 0) * 0.85;
+    trackEvent('add_to_cart', {
+      item_id: items.map((i) => i.id).join(','),
+      item_name: '3-Piece City Capsule',
+      value: bundleVal,
     });
     setAppliedPromo(PROMO_CODES.CAPSULE15);
     setIsCartOpen(true);
@@ -239,6 +313,7 @@ export function App() {
     const code = raw.trim().toUpperCase();
     if (PROMO_CODES[code]) {
       setAppliedPromo(PROMO_CODES[code]);
+      trackEvent('apply_promo', { promo_code: code });
       showToast(`${code} applied`);
       return { ok: true, msg: `✓ ${code} applied (${PROMO_CODES[code].desc})` };
     }
@@ -268,7 +343,7 @@ export function App() {
         <Hero
           collections={collections}
           onAddToCart={handleAddToCart}
-          onInspectProduct={setInspectingProduct}
+          onInspectProduct={handleInspectProduct}
           onOpenQuiz={() => setIsQuizOpen(true)}
           onSelectCityTab={(cityId) => setActiveCityTab(cityId)}
         />
@@ -280,7 +355,7 @@ export function App() {
           wishlistIds={wishlistIds}
           onToggleWishlist={handleToggleWishlist}
           onAddToCart={handleAddToCart}
-          onInspectProduct={setInspectingProduct}
+          onInspectProduct={handleInspectProduct}
         />
 
         <CapsuleBuilder
@@ -291,14 +366,17 @@ export function App() {
         <ShowroomCraftAndReviews />
       </main>
 
-      <Footer onApplyPromo={handleQuickPromo} />
+      <Footer
+        onApplyPromo={handleQuickPromo}
+        onOpenPolicy={(tab) => setActivePolicyTab(tab)}
+      />
 
       <HairFitModal
         isOpen={isQuizOpen}
         products={allProducts.length ? allProducts : ALL_PRODUCTS}
         onClose={() => setIsQuizOpen(false)}
         onAddToCart={handleAddToCart}
-        onInspectProduct={setInspectingProduct}
+        onInspectProduct={handleInspectProduct}
       />
 
       <ProductModal
@@ -308,9 +386,15 @@ export function App() {
           inspectingProduct ? wishlistIds.includes(inspectingProduct.id) : false
         }
         onToggleWishlist={handleToggleWishlist}
-        onClose={() => setInspectingProduct(null)}
+        onClose={handleCloseProduct}
         onAddToCart={handleAddToCart}
-        onSelectProduct={setInspectingProduct}
+        onSelectProduct={handleInspectProduct}
+      />
+
+      <PolicyFaqModal
+        activeTab={activePolicyTab}
+        onSelectTab={setActivePolicyTab}
+        onClose={() => setActivePolicyTab(null)}
       />
 
       <CartDrawer

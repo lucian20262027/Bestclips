@@ -1,6 +1,6 @@
-# BestClips Flagship Showroom
+# BestClips Atelier
 
-Architectural hair accessories designed in California & New York.
+US-headquartered hair architecture collective partnering with independent city designers across California, Miami, New York, and Tokyo—crafted in China & Japan.
 
 ## Local Development
 ```bash
@@ -9,8 +9,19 @@ npm run dev
 npm run build
 ```
 
+## Activating Real Payments (Stripe Checkout)
+`api/create-checkout-session.ts` is pre-wired for Stripe Checkout (Credit Card, Apple Pay, Google Pay, Link) with server-side price & promo verification:
+1. Add `STRIPE_SECRET_KEY=sk_live_...` (or `sk_test_...`) in Vercel → Project Settings → Environment Variables.
+2. Redeploy. Without `STRIPE_SECRET_KEY`, checkout automatically runs in Showroom Demo Mode.
+
+## Paid Ad Deep Links
+- Direct product landing page: `https://www.bestclips.app/?clip=miami-4`
+- City tab pre-selected: `https://www.bestclips.app/?city=nyc`
+- Open Hair Fit Quiz: `https://www.bestclips.app/?quiz=1`
+- Open Policies / FAQ: `https://www.bestclips.app/?policy=shipping` or `?policy=faq`
+
 ## Swapping Showroom Images With Real Yiwu Photography
-All product and editorial images live in `public/assets/studio/`. Replace any file below 1-for-1 (recommended `1024x1024` JPG) and push to `main` to auto-deploy to Vercel:
+All product and editorial images live in `public/assets/studio/`. Replace any file below 1-for-1 (recommended `1080x1080` JPG) and push to `main` to auto-deploy to Vercel:
 
 - **01 · Spring in Cali**: `cali-1.jpg` (Malibu Sunset), `cali-2.jpg` (Oat Milk Cloud Matte), `cali-3.jpg` (Big Sur Seafoam), `cali-4.jpg` (Santa Barbara Mini Set), `cali-5.jpg` (Venice Rose Cloud), `editorial-cali.jpg`
 - **02 · Hot Miami**: `miami-1.jpg` (South Beach Tiger), `miami-2.jpg` (Wynwood Leopard), `miami-3.jpg` (Ocean Drive Coral), `miami-4.jpg` (Brickell 24K Havana), `miami-5.jpg` (Star Island Bronze Arch), `editorial-miami.jpg`

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Check, Gift, Minus, Plus, ShieldCheck, X } from 'lucide-react';
+import { ArrowLeft, Check, Gift, Loader2, Minus, Plus, ShieldCheck, X } from 'lucide-react';
 import { CartItem, ProductItem, PromoCode } from '../types';
+import { trackEvent } from '../utils/analytics';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [step, setStep] = useState<'cart' | 'checkout' | 'confirmation'>('cart');
   const [promoInput, setPromoInput] = useState('');
   const [promoFeedback, setPromoFeedback] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [isLaunchingCheckout, setIsLaunchingCheckout] = useState(false);
+  const [checkoutNotice, setCheckoutNotice] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<{
     id: string;
     name: string;
@@ -57,12 +60,55 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     setPromoFeedback(res);
   };
 
+  const handleBeginCheckout = async () => {
+    if (cart.length === 0 || isLaunchingCheckout) return;
+
+    trackEvent('begin_checkout', {
+      value: finalTotal,
+      items_count: totalItems,
+      promo_code: effectivePromo?.code,
+    });
+
+    setIsLaunchingCheckout(true);
+    setCheckoutNotice(null);
+
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.map((c) => ({ id: c.product.id, quantity: c.quantity })),
+          promoCode: effectivePromo?.code ?? null,
+        }),
+      });
+
+      if (response.ok) {
+        const data = (await response.json()) as { url?: string };
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+      }
+
+      if (response.status === 503) {
+        setCheckoutNotice('Showroom Demo Mode: live Stripe payments activate once STRIPE_SECRET_KEY is added in Vercel.');
+      }
+    } catch {
+      // Local Vite dev or offline fallback goes smoothly to showroom demo checkout
+    } finally {
+      setIsLaunchingCheckout(false);
+    }
+
+    setStep('checkout');
+  };
+
   const handleCheckoutSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = String(formData.get('name') || 'Guest');
     const email = String(formData.get('email') || '');
     const address = `${formData.get('address')}, ${formData.get('city')}`;
+    trackEvent('purchase', { value: finalTotal, items_count: totalItems });
     setReceipt({
       id: `#BC-${Math.floor(100000 + Math.random() * 900000)}`,
       name,
@@ -303,22 +349,29 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               <button
                 type="button"
-                disabled={cart.length === 0}
-                onClick={() => setStep('checkout')}
-                className={`w-full py-3.5 px-4 rounded-full text-sm font-semibold ${
+                disabled={cart.length === 0 || isLaunchingCheckout}
+                onClick={handleBeginCheckout}
+                className={`w-full py-3.5 px-4 rounded-full text-sm font-semibold inline-flex items-center justify-center gap-2 ${
                   cart.length > 0 ? 'cta-btn' : 'opacity-45 cursor-not-allowed hairline-border'
                 }`}
               >
-                Continue to Checkout
+                {isLaunchingCheckout && <Loader2 className="w-4 h-4 animate-spin" />}
+                <span>Continue to Checkout</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 2: Checkout */}
+        {/* Step 2: Showroom Demo Checkout Fallback */}
         {step === 'checkout' && (
           <form onSubmit={handleCheckoutSubmit} className="flex-1 flex flex-col justify-between overflow-y-auto">
             <div className="px-6 py-5 space-y-4">
+              {checkoutNotice && (
+                <div className="rounded-2xl p-3 hairline-border text-[11px]" style={{ backgroundColor: 'var(--bg-pill)', color: 'var(--text-secondary)' }}>
+                  {checkoutNotice}
+                </div>
+              )}
+
               <div
                 className="rounded-2xl p-4 hairline-border flex justify-between items-center text-sm"
                 style={{ backgroundColor: 'var(--bg-pill)' }}
@@ -327,15 +380,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   Order Total (<span className="font-mono">{totalItems + (unlockedFreeGift ? 1 : 0)}</span> items)
                 </span>
                 <span className="text-lg font-mono font-bold tabular-nums">${finalTotal.toFixed(2)}</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div className="py-2.5 rounded-xl bg-black text-white text-center text-xs font-semibold">
-                   Pay Express Ready
-                </div>
-                <div className="py-2.5 rounded-xl bg-indigo-600 text-white text-center text-xs font-semibold">
-                  Shop Pay · 4x Interest-Free
-                </div>
               </div>
 
               <div>
@@ -398,7 +442,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <span>30-Day Hold Guarantee · Easy Returns</span>
               </div>
               <button type="submit" className="cta-btn w-full py-3.5 px-4 rounded-full text-sm font-semibold">
-                Place Studio Order
+                Place Showroom Order
               </button>
             </div>
           </form>

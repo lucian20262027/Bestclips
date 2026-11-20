@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Heart, Plus, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { Check, ChevronDown, Heart, Link2, Plus, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { ProductItem } from '../types';
 
 interface ProductModalProps {
@@ -23,8 +23,16 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 }) => {
   const [galleryTab, setGalleryTab] = useState<'studio' | 'editorial' | 'spring'>('studio');
   const [openAccordion, setOpenAccordion] = useState<'material' | 'care' | null>('material');
+  const [copiedLink, setCopiedLink] = useState(false);
 
   if (!product) return null;
+
+  const handleCopyShareLink = () => {
+    const shareUrl = `${window.location.origin}/?clip=${encodeURIComponent(product.id)}`;
+    navigator.clipboard?.writeText(shareUrl).catch(() => {});
+    setCopiedLink(true);
+    window.setTimeout(() => setCopiedLink(false), 2000);
+  };
 
   const activeImg =
     galleryTab === 'editorial'
@@ -96,10 +104,16 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         {/* Right PDP Details */}
         <div className="md:col-span-6 p-6 sm:p-8 flex flex-col justify-between gap-6">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
-              <span>{product.cityId.toUpperCase()} CAPSULE</span>
-              <span>·</span>
-              <span>★ {product.rating.toFixed(1)} ({product.reviewCount})</span>
+            <div className="flex items-center justify-between gap-2 text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
+              <span>{product.cityId.toUpperCase()} CAPSULE · ★ {product.rating.toFixed(1)} ({product.reviewCount})</span>
+              <button
+                type="button"
+                onClick={handleCopyShareLink}
+                className="pill-option px-2.5 py-1 rounded-full text-[10px] inline-flex items-center gap-1 mr-8"
+              >
+                {copiedLink ? <Check className="w-3 h-3 text-emerald-600" /> : <Link2 className="w-3 h-3" />}
+                <span>{copiedLink ? 'Link Copied' : 'Share Link'}</span>
+              </button>
             </div>
 
             <div className="flex items-baseline justify-between gap-3">
